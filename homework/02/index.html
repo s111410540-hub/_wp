@@ -10,7 +10,7 @@
 
 <div class="form-container">
     <h2>📝 助教時間預約表單</h2>
-    <form action="#" method="POST">
+    <form action="#" method="POST" enctype="multipart/form-data">
         
         <fieldset>
             <legend>學生基本資料</legend>
@@ -111,6 +111,22 @@
             </div>
         </fieldset>
 
+        <fieldset>
+            <legend>附加檔案 (選填)</legend>
+
+            <div class="form-group">
+                <label for="question_image">上傳題目照片 (僅限圖片)：</label>
+                <input type="file" id="question_image" name="question_image" accept="image/png, image/jpeg, image/jpg">
+                <p class="hint">支援格式：JPG, PNG</p>
+            </div>
+
+            <div class="form-group">
+                <label for="doc_file">上傳考卷或講義檔案 (PDF / Word)：</label>
+                <input type="file" id="doc_file" name="doc_file" accept=".pdf, .doc, .docx" multiple>
+                <p class="hint">支援格式：PDF, DOC, DOCX (可多選)</p>
+            </div>
+        </fieldset>
+        
         <div class="btn-group">
             <input type="reset" value="重新填寫" class="btn-reset">
             <input type="submit" value="送出預約" class="btn-submit">

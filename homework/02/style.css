@@ -123,3 +123,29 @@ input[type="reset"] {
 .btn-reset:hover {
     background-color: #c82333;
 }
+/* 針對 file input 本身的基礎設定 */
+input[type="file"] {
+    padding: 10px 0;
+    font-size: 15px;
+    color: #555;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+}
+
+/* 專門美化「選擇檔案」那個按鈕 */
+input[type="file"]::file-selector-button {
+    padding: 8px 15px;
+    margin-right: 15px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #004494;
+}
