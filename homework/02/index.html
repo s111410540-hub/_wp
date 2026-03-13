@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>補習班助教時間預約表單</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="form-container">
+    <h2>📝 助教時間預約表單</h2>
+    <form action="#" method="POST">
+        
+        <fieldset>
+            <legend>學生基本資料</legend>
+            
+            <div class="form-group">
+                <label for="student_id">學生 ID (必填)：</label>
+                <input type="text" id="student_id" name="student_id" placeholder="例如：S1234567" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">聯絡信箱：</label>
+                <input type="email" id="email" name="email" placeholder="student@example.com">
+            </div>
+
+            <div class="form-group">
+                <label>目前年級：</label>
+                <div class="radio-group">
+                    <input type="radio" id="grade1" name="grade" value="1" checked>
+                    <label for="grade1">高一</label>
+                    <input type="radio" id="grade2" name="grade" value="2">
+                    <label for="grade2">高二</label>
+                    <input type="radio" id="grade3" name="grade" value="3">
+                    <label for="grade3">高三</label>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>預約資訊</legend>
+
+            <div class="form-group">
+                <label for="book_date">預約日期 (星期一至六)：</label>
+                <input type="date" id="book_date" name="book_date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="teacher_select">選擇輔導科目與老師：</label>
+                <select id="teacher_select" name="teacher" required>
+                    <option value="" disabled selected>請選擇科目與老師...</option>
+                    
+                    <optgroup label="國文科">
+                        <option value="chi_1">張國文 老師</option>
+                        <option valude="chi_2"> 王奕翔 老師<option>
+                    </optgroup>
+                    <optgroup label="英文科">
+                        <option value="eng_1">Lin 老師</option>
+                        <option value="eng_2">David 老師</option>
+                    </optgroup>
+                    <optgroup label="數學科">
+                        <option value="math_1">陳高斯 老師</option>
+                        <option value="math_2">李尤拉 老師</option>
+                        <option value="math_3">王費馬 老師</option>
+                    </optgroup>
+                    <optgroup label="物理科">
+                        <option value="phy_1">牛頓 老師</option>
+                        <option value="phy_2">愛因斯坦 老師</option>
+                    </optgroup>
+                    <optgroup label="化學科">
+                        <option value="chem_1">居禮 老師</option>
+                    </optgroup>
+                    <optgroup label="生物科">
+                        <option value="bio_1">達爾文 老師</option>
+                        <option value="bio_2">孟德爾 老師</option>
+                    </optgroup>
+                    <optgroup label="地科科">
+                        <option value="earth_1">韋格納 老師</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>選擇時段 (一天最多預約 2 個時段)：</label>
+                <p class="hint">開放時間：17:30 - 21:30 (每 30 分鐘為一節)</p>
+                
+                <select name="time_slot_1" required>
+                    <option value="" disabled selected>-- 選擇時段一 (必填) --</option>
+                    <option value="1730">17:30 - 18:00</option>
+                    <option value="1800">18:00 - 18:30</option>
+                    <option value="1830">18:30 - 19:00</option>
+                    <option value="1900">19:00 - 19:30</option>
+                    <option value="1930">19:30 - 20:00</option>
+                    <option value="2000">20:00 - 20:30</option>
+                    <option value="2030">20:30 - 21:00</option>
+                    <option value="2100">21:00 - 21:30</option>
+                </select>
+
+                <select name="time_slot_2" style="margin-top: 10px;">
+                    <option value="" selected>-- 選擇時段二 (選填) --</option>
+                    <option value="1730">17:30 - 18:00</option>
+                    <option value="1800">18:00 - 18:30</option>
+                    <option value="1830">18:30 - 19:00</option>
+                    <option value="1900">19:00 - 19:30</option>
+                    <option value="1930">19:30 - 20:00</option>
+                    <option value="2000">20:00 - 20:30</option>
+                    <option value="2030">20:30 - 21:00</option>
+                    <option value="2100">21:00 - 21:30</option>
+                </select>
+            </div>
+        </fieldset>
+
+        <div class="btn-group">
+            <input type="reset" value="重新填寫" class="btn-reset">
+            <input type="submit" value="送出預約" class="btn-submit">
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
