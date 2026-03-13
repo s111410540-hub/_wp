@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的個人網站</title>
+    <style>
+        /* CSS 區塊：負責網頁的顏色與排版 */
+        
+        /* 清除預設邊距，設定基礎字體 */
+        body, h1, h2, p, ul, li { 
+            margin: 0; 
+            padding: 0; 
+            list-style: none; /* 移除列表的預設黑點 */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+        
+        /* 設定藍白底色 */
+        body { 
+            background-color: #f0f8ff; /* 淺藍白色 (Alice Blue) */
+            color: #333; 
+            line-height: 1.6; 
+        }
+
+        /* 開頭橫幅 (Header) 的藍色漸層設計 */
+        header {
+            background: linear-gradient(135deg, #005c97, #363795);
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+        }
+        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        header p { font-size: 1.2rem; margin-bottom: 30px; }
+
+        /* 按鈕設計 */
+        .btn {
+            background-color: #ffffff;
+            color: #005c97;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer; /* 滑鼠移過去會變成手指圖案 */
+            transition: background-color 0.3s, transform 0.2s; /* 增加動畫過渡效果 */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover { 
+            background-color: #e0f2fe; 
+            transform: translateY(-2px); /* 滑鼠懸停時微微向上浮動 */
+        }
+
+        /* 隱藏的資訊區塊 */
+        #more-info {
+            display: none; /* 初始狀態設為隱藏 (Hidden) */
+            padding: 50px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-in-out; /* 淡入動畫 */
+        }
+
+        /* 設定淡入動畫的關鍵影格 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 三大資訊的卡片排版 */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 自動適應螢幕大小排列 */
+            gap: 20px;
+        }
+        .card {
+            background-color: white;
+            border-top: 5px solid #005c97; /* 卡片頂部的深藍色邊框 */
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card h2 { 
+            color: #005c97; 
+            margin-bottom: 15px; 
+            font-size: 1.5rem; 
+            border-bottom: 2px solid #e0f2fe; 
+            padding-bottom: 5px; 
+        }
+        .card ul li { 
+            margin-bottom: 10px; 
+            padding-left: 20px; 
+            position: relative; 
+        }
+        .card ul li::before { 
+            content: "🔹"; /* 自訂列表的圖示 */
+            position: absolute; 
+            left: 0; 
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>你好，我是資訊工程系學生</h1>
+        <p>目前就讀於國立金門大學大一。希望能夠在未來獲得能夠讀當一面的能力</p>
+        <button class="btn" id="learn-more-btn" onclick="revealInfo()">深入了解</button>
+    </header>
+
+    <section id="more-info">
+        <div class="info-grid">
+            <div class="card">
+                <h2>🎵 我喜歡的歌單</h2>
+                <ul>
+                    <li>《魔女之旅》片頭曲</li>
+                    <li>各類日文歌曲練習</li>
+                    <li>專注時的純音樂</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>🎮 我喜愛的遊戲</h2>
+                <ul>
+                    <li>Apex Legends (Apex 英雄)</li>
+                    <li>Palworld (幻獸帕魯)</li>
+                    <li>Anno 系列 (紀元系列)</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>💻 我正在做的事</h2>
+                <ul>
+                    <li>寫網頁設計作業</li>
+                    <li>執行瘦身計畫</li>
+                    <li>撰寫個人小說</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function revealInfo() {
+            // DOM (Document Object Model，文件物件模型)：這是一個能讓程式讀取並改變網頁內容的介面。
+            // 這裡我們透過 ID 抓取 HTML 中的元素。
+            const infoSection = document.getElementById('more-info');
+            const btn = document.getElementById('learn-more-btn');
+
+            // 判斷目前的顯示狀態，進行切換 (Toggle)
+            if (infoSection.style.display === 'none' || infoSection.style.display === '') {
+                infoSection.style.display = 'block'; // Block 代表顯示為區塊元素
+                btn.textContent = '收起資訊'; // 改變按鈕上的文字
+            } else {
+                infoSection.style.display = 'none'; // None 代表隱藏
+                btn.textContent = '深入了解';
+            }
+        }
+    </script>
+</body>
+</html>
