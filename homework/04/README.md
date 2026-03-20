@@ -127,7 +127,7 @@ function getSuspiciousIPs(connections) {
     | `[1, 2, 3, 4, 5]` | `[5, 4, 3, 2, 1]` |
 * **答案與解析**：
     * **時間複雜度**：$O(N)$。
-    * **空間複雜度**：$O(1)$ (極度節省記憶體的寫法)。
+    
 ```javascript
 function reverseArray(arr) {
     let left = 0;                  // 1. 左指標 (Left Pointer)：從索引 0 開始
