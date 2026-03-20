@@ -1,6 +1,3 @@
-這就為你將這 10 個練習題整合為一個完整的題庫格式，包含題目敘述、學習重點、範例測資以及附帶逐行解析與時間複雜度 (Time Complexity) 的答案。
-
-這樣的結構非常適合用來建立個人的程式語法字典，未來在進入資料結構與演算法 (DSA) 的學習時，也能隨時回頭檢視這些基礎的資料操作。
 
 ---
 
@@ -14,23 +11,24 @@
     | `[]` | `null` |
 * **答案與解析**：
     * **時間複雜度**：$O(N)$，需遍歷陣列一次。
-    * **空間複雜度**：$O(1)$。
+    
 ```javascript
 function findMax(numbers) {
-    // 1. 處理邊界條件：空陣列直接回傳 null
+   
     if (numbers.length === 0) return null;
+    //在js相等符號是三個，跟c語言不同。
+    //numbers.length是JS自帶的語法，當建立一個array時，這個物件會獲得名
     
-    // 2. 初始化：將陣列的第一個元素設為目前的「最大值」
     let max = numbers[0];
     
-    // 3. 使用 for 迴圈從第二個元素 (索引 1) 開始往後檢查
+  
     for (let i = 1; i < numbers.length; i++) {
-        // 4. 如果當前檢查的數字大於目前記錄的 max
+        
         if (numbers[i] > max) {
-            max = numbers[i]; // 5. 更新最大值
+            max = numbers[i]; 
         }
     }
-    // 6. 迴圈結束後，回傳最終找到的最大值
+    
     return max;
 }
 ```
@@ -47,28 +45,28 @@ function findMax(numbers) {
     * **時間複雜度**：$O(N)$。
 ```javascript
 function validatePassword(password) {
-    // 1. 快速過濾：長度不到 8 直接淘汰
+   
     if (password.length < 8) return false;
 
     let i = 0;
-    let hasUpperCase = false; // 2. 標記 (Flag)：是否含大寫
-    let hasNumber = false;    // 3. 標記 (Flag)：是否含數字
+    let hasUpperCase = false; 
+    let hasNumber = false;    
 
-    // 4. 使用 while 迴圈逐一檢查每個字元
+    
     while (i < password.length) {
         let char = password[i];
         
-        // 5. 利用 ASCII 編碼概念判斷字元範圍
+        
         if (char >= 'A' && char <= 'Z') hasUpperCase = true;
         if (char >= '0' && char <= '9') hasNumber = true;
         
-        // 6. 效能優化：若兩條件皆滿足，提早結束迴圈 (Early Exit)
+        
         if (hasUpperCase && hasNumber) return true;
         
-        i++; // 7. 推進迴圈計數器
+        i++; 
     }
     
-    // 8. 跑完迴圈若仍未滿足，回傳 false
+    
     return false; 
 }
 ```
