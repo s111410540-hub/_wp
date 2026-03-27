@@ -6,6 +6,169 @@ let pullStartY = 0;
 let pullCurrentY = 0;
 let isPulling = false;
 
+const db = {
+  users: [
+    { id: 1, username: 'writer', password: 'writer123', display_name: '寫作者', bio: '熱愛分享知識與想法的創作者', avatar_url: 'https://api.dicebear.com/7.x/initials/svg?seed=Writer&backgroundColor=0a0a0a', created_at: '2024-01-01' }
+  ],
+  posts: [
+    { id: 1, user_id: 1, title: '探索前端開發的無限可能', subtitle: '從基礎到進階的旅程', content: '前端開發是一個充滿挑戰與創意的領域。在這篇文章中，我們將探討如何從基礎開始，逐步掌握現代前端開發的核心技術。\n\n首先，HTML 是網頁的骨架。了解正確的語義化標籤使用方式，能讓你的頁面更具可訪問性和SEO友好。\n\n其次，CSS 是網頁的皮膚。Flexbox 和 Grid 布局系統讓響應式設計變得更加直觀和強大。\n\n最後，JavaScript 是網頁的心臟。掌握 ES6+ 的新特性，理解非同步編程，是成為優秀前端工程師的必經之路。', tags: '前端,開發,JavaScript', is_featured: 1, read_time: 5, cover_image: '', created_at: '2024-01-15', like_count: 0 },
+    { id: 2, user_id: 1, title: '設計思維：創造更好的用戶體驗', subtitle: '以人為本的設計方法論', content: '設計思維是一種以人為本的創新方法，強調深入理解用戶需求，通過迭代過程找到最佳解決方案。\n\n這個過程包含五個階段：同理心、定義、創意、原型和測試。每一個階段都至關重要，缺一不可。\n\n在同理心階段，我們需要觀察用戶、與他們交談，了解他們真正關心的問題，而不是我們認為他們需要的。\n\n定義階段是將觀察結果提煉成有價值的洞察，形成清晰的問題陳述。\n\n創意階段需要頭腦風暴，產生大量想法，不要急於批判。\n\n原型階段將想法快速轉化為可觸摸的形式。\n\n測試階段則是讓真實用戶驗證原型的有效性。', tags: '設計,用戶體驗,方法論', is_featured: 1, read_time: 4, cover_image: '', created_at: '2024-01-10', like_count: 0 },
+    { id: 3, user_id: 1, title: 'Node.js 性能優化實踐', subtitle: '讓你的服務器跑得更快', content: 'Node.js 以其非阻塞 I/O 模型聞名，但在生產環境中仍需要持續優化。以下是一些實用的優化技巧。\n\n1. 使用進程管理器如 PM2，可以實現自動重啟和負載均衡。\n\n2. 開啟 Redis 緩存，大幅減少數據庫查詢次數。\n\n3. 合理使用連接池，避免頻繁建立和關閉連接。\n\n4. 壓縮響應內容，使用 Gzip 或 Brotli。\n\n5. 使用 HTTP/2 提升資源載入效率。\n\n記住，性能優化是一個持續的過程，需要持續監控和調整。', tags: 'Node.js,性能,後端', is_featured: 0, read_time: 6, cover_image: '', created_at: '2024-01-08', like_count: 0 },
+    { id: 4, user_id: 1, title: 'React Hooks 完全指南', subtitle: '掌握現代 React 開發的核心', content: 'React Hooks 徹底改變了我們撰寫 React 組件的方式。讓我們深入了解最常用的 Hooks。\n\nuseState 是最基礎的 Hook，用於在函數組件中添加狀態。\n\nuseEffect 讓我們可以在函數組件中執行副作用操作，如數據獲取、訂閱、手動 DOM 操作等。\n\nuseContext 解決了 prop drilling 的問題，讓我們可以跨層級傳遞數據。\n\nuseReducer 是 useState 的替代方案，適合管理複雜的狀態邏輯。\n\nuseMemo 和 useCallback 用於優化性能，避免不必要的重新渲染。\n\n掌握這些 Hooks，你就能應對大多數 React 開發場景。', tags: 'React,Hooks,前端', is_featured: 1, read_time: 7, cover_image: '', created_at: '2024-01-05', like_count: 0 },
+    { id: 5, user_id: 1, title: '職場成長的七個關鍵習慣', subtitle: '從菜鳥到專業人士的蛻變', content: '在職場中，技術能力只是基礎。以下這些習慣能幫助你快速成長。\n\n主動學習：不要等待指示，主動尋找學習機會和挑戰。\n\n善於提問：好的問題比好的答案更有價值。學會問對問題。\n\n建立人脈：與同事、前輩建立良好關係，擴展你的職業網絡。\n\n時間管理：學會區分重要和緊急的事情，優先處理真正重要的事。\n\n接受反饋：把批評當作成長的機會，而不是攻擊。\n\n持續反思：每天花時間回顧自己的工作，思考如何做得更好。\n\n保持熱情：對工作保持熱情是長期成功的關鍵。', tags: '職場,成長,習慣', is_featured: 0, read_time: 5, cover_image: '', created_at: '2024-01-03', like_count: 0 },
+    { id: 6, user_id: 1, title: '深入理解 TypeScript 泛型', subtitle: '讓你的代碼更靈活、更類型安全', content: 'TypeScript 的泛型是提高代碼复用性和類型安全性的強大工具。\n\n泛型允許你創建可重用的組件，同時保持完整的類型檢查。\n\n基礎泛型：使用 <T> 來表示一個類型參數。\n\n多個泛型參數：可以同時使用多個泛型參數，如 <T, K>。\n\n約束條件：使用 extends 關鍵字限制泛型的類型範圍。\n\n默認類型參數：為泛型參數指定默認值，增加靈活性。\n\n泛型接口和類：創建泛型的數據結構和類。\n\n實用工具類型：TypeScript 內置了許多實用的泛型工具類型，如 Partial、Required、Pick、Omit 等。', tags: 'TypeScript,JavaScript,前端', is_featured: 0, read_time: 8, cover_image: '', created_at: '2024-01-01', like_count: 0 },
+    { id: 7, user_id: 1, title: '數據可視化：用圖表說故事', subtitle: '從數據到洞察的轉換藝術', content: '數據可視化是將複雜數據轉化為直觀理解的橋樑。好的可視化能讓數據說話。\n\n選擇正確的圖表類型是關鍵：\n\n- 比較數據使用柱狀圖或條形圖\n- 趨勢變化使用折線圖\n- 比例關係使用餅圖或環形圖\n- 分布情況使用直方圖或散點圖\n\n顏色的選擇也很重要：\n\n使用對比鮮明的顏色區分不同數據類別\n考慮色盲友好配色\n保持配色簡潔統一\n\n最後，記住可視化的目的：幫助觀眾快速理解數據，做出正確的決策。', tags: '數據,可視化,圖表', is_featured: 0, read_time: 6, cover_image: '', created_at: '2023-12-28', like_count: 0 },
+    { id: 8, user_id: 1, title: '雲端運算的未來趨勢', subtitle: '無服務器架構與邊緣運算', content: '雲端運算正在經歷革命性的變化。以下趨勢將塑造未來的技術格局。\n\n無服務器架構（Serverless）讓開發者專注於業務邏輯，無需管理服務器。AWS Lambda、Azure Functions、Google Cloud Functions 是這個領域的代表。\n\n邊緣運算將計算推向網絡邊緣，減少延遲，提高響應速度。這對於物聯網和即時應用尤其重要。\n\n容器化和微服務已成為標準實踐。Kubernetes 提供了強大的容器編排能力。\n\nAI 和機器學習服務正變得越來越容易使用，讓每個開發者都能構建智能應用。', tags: '雲端,Serverless,邊緣運算', is_featured: 1, read_time: 6, cover_image: '', created_at: '2023-12-25', like_count: 0 },
+    { id: 9, user_id: 1, title: '寫作的藝術：如何表達你的想法', subtitle: '從思維到文字的轉化', content: '寫作不僅是表達工具，更是深度思考的方式。好的寫作能讓你的想法產生更大的影響力。\n\n明確目標讀者：了解你為誰而寫，他們的背景和需求是什麼。\n\n結構清晰：用簡單的框架組織你的想法，如總分總結構。\n\n語言簡潔：避免冗長的句子和複雜的詞彙。短句更有力量。\n\n舉例說明：抽象的概念需要具體的例子來支撐。\n\n反覆修改：好文章是修改出來的。第一稿往往是粗糙的。\n\n最重要的是：開始寫。完美主義是最大的敵人。', tags: '寫作,表達,溝通', is_featured: 0, read_time: 5, cover_image: '', created_at: '2023-12-20', like_count: 0 },
+    { id: 10, user_id: 1, title: '運動與大腦健康的秘密', subtitle: '為什麼你需要動起來', content: '運動不僅能強健身體，更能優化大腦功能。科學研究證明，定期運動能帶來諸多好處。\n\n改善記憶力：運動促進海馬體神經元生長，增強記憶力。\n\n提升情緒：運動釋放內啡肽，有效緩解壓力和焦慮。\n\n提高專注力：運動後的大腦更專注，學習效率更高。\n\n延緩衰老：運動能保護大腦免受認知衰退的影響。\n\n建議每週至少進行150分鐘的中等強度運動，如快走、游泳或騎自行車。\n\n從今天開始，讓運動成為你生活的一部分。', tags: '健康,運動,大腦', is_featured: 0, read_time: 4, cover_image: '', created_at: '2023-12-15', like_count: 0 }
+  ],
+  likes: []
+};
+
+function getUser(id) {
+  return db.users.find(u => u.id === id);
+}
+
+function getUserByUsername(username) {
+  return db.users.find(u => u.username === username);
+}
+
+function getPost(id) {
+  return db.posts.find(p => p.id === parseInt(id));
+}
+
+function getPosts(options = {}) {
+  let posts = [...db.posts];
+  if (options.featured) {
+    posts = posts.filter(p => p.is_featured === 1);
+  }
+  if (options.userId) {
+    posts = posts.filter(p => p.user_id === options.userId);
+  }
+  if (options.sortByLikes) {
+    posts.sort((a, b) => (b.like_count || 0) - (a.like_count || 0));
+  } else {
+    posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }
+  return posts;
+}
+
+function addPost(post) {
+  const newId = Math.max(...db.posts.map(p => p.id), 0) + 1;
+  const wordCount = post.content.split(/\s+/).length;
+  const readTime = Math.max(1, Math.ceil(wordCount / 200));
+  const newPost = {
+    id: newId,
+    user_id: post.user_id,
+    title: post.title,
+    subtitle: post.subtitle || '',
+    content: post.content,
+    cover_image: post.cover_image || '',
+    tags: post.tags || '',
+    is_featured: 0,
+    read_time: readTime,
+    created_at: new Date().toISOString(),
+    like_count: 0
+  };
+  db.posts.unshift(newPost);
+  saveData();
+  return newPost;
+}
+
+function updatePost(id, data) {
+  const post = getPost(id);
+  if (!post) return null;
+  if (data.title !== undefined) post.title = data.title;
+  if (data.subtitle !== undefined) post.subtitle = data.subtitle;
+  if (data.content !== undefined) {
+    post.content = data.content;
+    const wordCount = data.content.split(/\s+/).length;
+    post.read_time = Math.max(1, Math.ceil(wordCount / 200));
+  }
+  if (data.tags !== undefined) post.tags = data.tags;
+  if (data.cover_image !== undefined) post.cover_image = data.cover_image;
+  saveData();
+  return post;
+}
+
+function deletePost(id) {
+  const index = db.posts.findIndex(p => p.id === parseInt(id));
+  if (index > -1) {
+    db.posts.splice(index, 1);
+    db.likes = db.likes.filter(l => l.post_id !== parseInt(id));
+    saveData();
+    return true;
+  }
+  return false;
+}
+
+function toggleLike(userId, postId) {
+  const existing = db.likes.find(l => l.user_id === userId && l.post_id === postId);
+  const post = getPost(postId);
+  if (!post) return { liked: false };
+  
+  if (existing) {
+    db.likes = db.likes.filter(l => !(l.user_id === userId && l.post_id === postId));
+    post.like_count = Math.max(0, (post.like_count || 0) - 1);
+    saveData();
+    return { liked: false };
+  } else {
+    db.likes.push({ user_id: userId, post_id: postId, created_at: new Date().toISOString() });
+    post.like_count = (post.like_count || 0) + 1;
+    saveData();
+    return { liked: true };
+  }
+}
+
+function registerUser(username, password, display_name) {
+  if (db.users.find(u => u.username === username)) {
+    throw new Error('用户名已被使用');
+  }
+  const avatar_url = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(username)}&backgroundColor=0a0a0a`;
+  const newUser = {
+    id: db.users.length + 1,
+    username,
+    password,
+    display_name: display_name || username,
+    bio: '',
+    avatar_url,
+    created_at: new Date().toISOString()
+  };
+  db.users.push(newUser);
+  saveData();
+  return { id: newUser.id, username: newUser.username, display_name: newUser.display_name, avatar_url: newUser.avatar_url };
+}
+
+function loginUser(username, password) {
+  const user = db.users.find(u => u.username === username && u.password === password);
+  if (!user) {
+    throw new Error('用户名或密码错误');
+  }
+  return { id: user.id, username: user.username, display_name: user.display_name, avatar_url: user.avatar_url, bio: user.bio };
+}
+
+function saveData() {
+  localStorage.setItem('blog_db', JSON.stringify({ users: db.users, posts: db.posts, likes: db.likes }));
+}
+
+function loadData() {
+  const saved = localStorage.getItem('blog_db');
+  if (saved) {
+    const data = JSON.parse(saved);
+    if (data.posts && data.posts.length > 0) {
+      data.posts.forEach(p => {
+        if (!db.posts.find(dp => dp.id === p.id)) db.posts.push(p);
+      });
+    }
+    if (data.users && data.users.length > 0) {
+      data.users.forEach(u => {
+        if (!db.users.find(du => du.id === u.id)) db.users.push(u);
+      });
+    }
+    if (data.likes) db.likes = data.likes;
+  }
+}
+
 function initAuth() {
   const savedUser = localStorage.getItem('currentUser');
   if (savedUser) {
@@ -94,15 +257,108 @@ function toggleUserMenu() {
 }
 
 async function api(url, options = {}) {
-  const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options
-  });
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error || 'Request failed');
+  const [path, query] = url.split('?');
+  const params = {};
+  if (query) {
+    query.split('&').forEach(p => {
+      const [k, v] = p.split('=');
+      params[k] = v;
+    });
   }
-  return res.json();
+
+  const method = options.method || 'GET';
+  const body = options.body ? JSON.parse(options.body) : null;
+
+  if (path === '/api/posts') {
+    const page = parseInt(params.page) || 1;
+    const limit = parseInt(params.limit) || 10;
+    const offset = (page - 1) * limit;
+    const posts = getPosts().map(p => ({
+      ...p,
+      ...getUser(p.user_id)
+    }));
+    return {
+      posts: posts.slice(offset, offset + limit),
+      total: posts.length,
+      page,
+      limit,
+      hasMore: offset + limit < posts.length
+    };
+  }
+
+  if (path === '/api/posts/featured') {
+    return getPosts({ featured: true }).map(p => ({ ...p, ...getUser(p.user_id) }));
+  }
+
+  if (path === '/api/posts/recommended') {
+    return getPosts({ sortByLikes: true }).map(p => ({ ...p, ...getUser(p.user_id) }));
+  }
+
+  if (path === '/api/posts/user/:username') {
+    const username = path.split('/').pop();
+    const user = getUserByUsername(username);
+    if (!user) throw new Error('User not found');
+    const posts = getPosts({ userId: user.id }).map(p => ({ ...p, ...user }));
+    const stats = {
+      posts: posts.length,
+      totalLikes: posts.reduce((sum, p) => sum + (p.like_count || 0), 0)
+    };
+    return { user, posts, stats };
+  }
+
+  const postMatch = path.match(/^\/api\/posts\/(\d+)$/);
+  if (postMatch) {
+    const post = getPost(postMatch[1]);
+    if (!post) throw new Error('Post not found');
+    const user = getUser(post.user_id);
+    return { ...post, ...user };
+  }
+
+  if (method === 'POST' && path === '/api/posts') {
+    if (!body.title || !body.content) throw new Error('Title and content are required');
+    const newPost = addPost({ ...body, user_id: body.user_id || 1 });
+    return newPost;
+  }
+
+  if (method === 'PUT' && path.startsWith('/api/posts/')) {
+    const id = parseInt(path.split('/').pop());
+    const post = updatePost(id, body);
+    if (!post) throw new Error('Post not found');
+    return post;
+  }
+
+  if (method === 'DELETE' && path.startsWith('/api/posts/')) {
+    const id = path.split('/').pop();
+    deletePost(id);
+    return { message: 'Post deleted' };
+  }
+
+  const likeMatch = path.match(/^\/api\/likes\/(\d+)$/);
+  if (method === 'POST' && likeMatch) {
+    const userId = body.user_id || 1;
+    return toggleLike(userId, parseInt(likeMatch[1]));
+  }
+
+  if (path === '/api/users') {
+    return db.users.map(u => ({ id: u.id, username: u.username, display_name: u.display_name, avatar_url: u.avatar_url, created_at: u.created_at }));
+  }
+
+  const userMatch = path.match(/^\/api\/users\/(.+)$/);
+  if (userMatch) {
+    const user = getUserByUsername(userMatch[1]);
+    if (!user) throw new Error('User not found');
+    return user;
+  }
+
+  if (method === 'POST' && path === '/api/auth/register') {
+    return registerUser(body.username, body.password, body.display_name);
+  }
+
+  if (method === 'POST' && path === '/api/auth/login') {
+    return loginUser(body.username, body.password);
+  }
+
+  throw new Error('Unknown API endpoint');
 }
 
 function escapeHtml(text) {
@@ -119,10 +375,10 @@ function formatDate(dateStr) {
 }
 
 function parseRoute() {
-  const path = window.location.pathname;
-  const parts = path.split('/').filter(Boolean);
+  const hash = window.location.hash.slice(1) || '/';
+  const parts = hash.split('/').filter(Boolean);
   
-  if (parts.length === 0) return { page: 'home' };
+  if (hash === '/' || hash === '') return { page: 'home' };
   if (parts[0] === 'login') return { page: 'login' };
   if (parts[0] === 'register') return { page: 'register' };
   if (parts[0] === 'discover') return { page: 'discover' };
@@ -133,7 +389,7 @@ function parseRoute() {
 }
 
 async function navigate(url) {
-  history.pushState(null, '', url);
+  window.location.hash = url;
   const route = parseRoute();
   await render(route);
 }
@@ -939,12 +1195,14 @@ async function render(route) {
   updateNav();
 }
 
-window.addEventListener('popstate', () => render(parseRoute()));
+window.addEventListener('hashchange', () => render(parseRoute()));
 
 document.addEventListener('click', (e) => {
-  if (e.target.matches('a[data-link]')) {
+  const link = e.target.closest('a[data-link]');
+  if (link) {
     e.preventDefault();
-    navigate(e.target.href);
+    const href = link.getAttribute('href');
+    navigate(href);
   }
 });
 
@@ -959,4 +1217,8 @@ window.toggleUserMenu = toggleUserMenu;
 window.logout = logout;
 
 initAuth();
+loadData();
+if (!window.location.hash) {
+  window.location.hash = '/';
+}
 render(parseRoute());
