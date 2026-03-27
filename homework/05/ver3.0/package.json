@@ -1,0 +1,13 @@
+{
+  "name": "medium-blog",
+  "version": "3.0.0",
+  "description": "Medium-style blog with infinite scroll and pull-to-refresh",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js 3002"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "sql.js": "^1.10.3"
+  }
+}

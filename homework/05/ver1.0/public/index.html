@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>簡易網誌</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+    h1 { text-align: center; margin-bottom: 20px; color: #333; }
+    .form { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .form input, .form textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
+    .form textarea { height: 100px; resize: vertical; }
+    .form button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+    .form button:hover { background: #0056b3; }
+    .post { background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .post h2 { margin-bottom: 10px; color: #333; }
+    .post .meta { color: #666; font-size: 0.9em; margin-bottom: 10px; }
+    .post .content { line-height: 1.6; white-space: pre-wrap; }
+    .post .delete { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+    .post .delete:hover { background: #c82333; }
+    #post-detail { display: none; }
+    #post-detail .back { background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; }
+    #post-detail .back:hover { background: #545b62; }
+  </style>
+</head>
+<body>
+  <h1>簡易網誌</h1>
+  
+  <div id="post-list">
+    <div class="form">
+      <h3>新增文章</h3>
+      <input type="text" id="title" placeholder="標題">
+      <textarea id="content" placeholder="內容"></textarea>
+      <button onclick="createPost()">發布</button>
+    </div>
+    <div id="posts"></div>
+  </div>
+
+  <div id="post-detail">
+    <button class="back" onclick="showList()">返回列表</button>
+    <div id="detail-content"></div>
+  </div>
+
+  <script>
+    async function loadPosts() {
+      const res = await fetch('/api/posts');
+      const posts = await res.json();
+      const container = document.getElementById('posts');
+      container.innerHTML = posts.map(post => `
+        <div class="post" onclick="viewPost(${post.id})">
+          <h2>${escapeHtml(post.title)}</h2>
+          <div class="meta">${new Date(post.created_at).toLocaleString('zh-TW')}</div>
+          <div class="content">${escapeHtml(post.content.substring(0, 100))}${post.content.length > 100 ? '...' : ''}</div>
+          <button class="delete" onclick="event.stopPropagation(); deletePost(${post.id})">刪除</button>
+        </div>
+      `).join('');
+    }
+
+    async function createPost() {
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      if (!title || !content) return alert('請填寫標題和內容');
+      
+      await fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content })
+      });
+      document.getElementById('title').value = '';
+      document.getElementById('content').value = '';
+      loadPosts();
+    }
+
+    async function viewPost(id) {
+      const res = await fetch(`/api/posts/${id}`);
+      const post = await res.json();
+      document.getElementById('post-list').style.display = 'none';
+      document.getElementById('post-detail').style.display = 'block';
+      document.getElementById('detail-content').innerHTML = `
+        <div class="post">
+          <h2>${escapeHtml(post.title)}</h2>
+          <div class="meta">${new Date(post.created_at).toLocaleString('zh-TW')}</div>
+          <div class="content">${escapeHtml(post.content)}</div>
+        </div>
+      `;
+    }
+
+    function showList() {
+      document.getElementById('post-list').style.display = 'block';
+      document.getElementById('post-detail').style.display = 'none';
+    }
+
+    async function deletePost(id) {
+      if (!confirm('確定要刪除嗎？')) return;
+      await fetch(`/api/posts/${id}`, { method: 'DELETE' });
+      loadPosts();
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    loadPosts();
+  </script>
+</body>
+</html>

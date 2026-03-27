@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>墨客 - 你的故事值得被看見</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo" data-link>墨客</a>
+      <nav class="nav-links">
+        <a href="/" class="nav-link" data-link>首頁</a>
+        <a href="/discover" class="nav-link" data-link>探索</a>
+        <a href="/profile/writer" class="nav-link" data-link id="nav-profile">我的主頁</a>
+      </nav>
+      <div class="nav-actions" id="nav-actions">
+        <a href="/write" class="btn-write" data-link id="nav-write-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          寫文章
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="app"></main>
+
+  <footer class="footer" id="main-footer">
+    <div class="footer-container">
+      <div class="footer-brand">墨客</div>
+      <div class="footer-links">
+        <a href="/">首頁</a>
+        <a href="/discover">探索</a>
+        <a href="/profile/writer">作者</a>
+      </div>
+      <p class="footer-copy">讓文字的力量被聽見</p>
+    </div>
+  </footer>
+
+  <div id="scroll-to-top" onclick="scrollToTop()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M18 15l-6-6-6 6"/>
+    </svg>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
