@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { usePlayerStore } from '../store/usePlayerStore';
 
 const Hub: React.FC = () => {
+  const navigate = useNavigate();
   const { user, token, logout } = useAuthStore();
   const { stats, fetchStats, loading } = usePlayerStore();
 
@@ -20,7 +22,7 @@ const Hub: React.FC = () => {
         <div className="logo">Mushoku RPG</div>
         <div className="nav-links">
           <span className="active">主城</span>
-          <span>冒險</span>
+          <span onClick={() => navigate('/adventure')}>冒險</span>
           <span>背包</span>
           <span>公會</span>
           <button onClick={logout} className="logout-btn">登出</button>
@@ -75,7 +77,7 @@ const Hub: React.FC = () => {
           <div className="glass action-card">
             <h3>接下來要做什麼？</h3>
             <div className="action-buttons">
-              <button className="btn-fantasy">前往冒險</button>
+              <button className="btn-fantasy" onClick={() => navigate('/adventure')}>前往冒險</button>
               <button className="btn-glass">公會任務</button>
               <button className="btn-glass">休息恢復 (需 10 💰)</button>
             </div>
