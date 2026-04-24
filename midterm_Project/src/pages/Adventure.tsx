@@ -216,18 +216,20 @@ const Adventure: React.FC = () => {
         .arcs-list {
           display: flex;
           flex-direction: column;
-          gap: 10px;
-          overflow-y: auto;
+          gap: 15px; /* 增加間距 */
+          overflow-y: scroll; /* 改為 scroll 強制顯示軌道 */
           padding-right: 10px;
           flex: 1;
+          max-height: 400px; /* 關鍵：強制限制高度為 400px，確保 100% 縮放時也會觸發捲動 */
         }
 
         /* Custom Scrollbar */
-        .arcs-list::-webkit-scrollbar { width: 4px; }
-        .arcs-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        .arcs-list::-webkit-scrollbar { width: 6px; }
+        .arcs-list::-webkit-scrollbar-track { background: rgba(212, 160, 23, 0.05); border-radius: 4px; }
         .arcs-list::-webkit-scrollbar-thumb { 
           background: linear-gradient(to bottom, var(--primary), #8a6d0a); 
           border-radius: 4px; 
+          border: 1px solid rgba(0,0,0,0.3);
         }
 
         .arc-btn {
