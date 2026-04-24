@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 
 const Auth: React.FC = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [searchParams] = useSearchParams();
+  const initialMode = searchParams.get('mode') !== 'register'; // default to login unless 'register'
+  const [isLogin, setIsLogin] = useState(initialMode);
+
+  // Update mode when URL param changes
+  useEffect(() => {
+    setIsLogin(searchParams.get('mode') !== 'register');
+  }, [searchParams]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -44,6 +51,7 @@ const Auth: React.FC = () => {
   return (
     <div className="auth-page">
       <div className="glass auth-card fade-in">
+        <button className="back-link" onClick={() => navigate('/')}>← 返回</button>
         <h2>{isLogin ? '冒險者回歸' : '新的轉生'}</h2>
         <p className="subtitle">{isLogin ? '歡迎回到魯迪烏斯的世界' : '開啟你的第二次人生'}</p>
         
@@ -102,6 +110,23 @@ const Auth: React.FC = () => {
           padding: 40px;
           text-align: center;
           border: 1px solid rgba(212, 160, 23, 0.3);
+          position: relative;
+        }
+
+        .back-link {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          background: none;
+          border: none;
+          color: var(--text-muted);
+          cursor: pointer;
+          font-size: 0.8rem;
+          transition: color 0.3s;
+        }
+
+        .back-link:hover {
+          color: var(--primary);
         }
 
         h2 {

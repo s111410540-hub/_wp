@@ -16,7 +16,7 @@ gameInfo.use('*', async (c, next) => {
   const token = authHeader.split(' ')[1]
   const jwtSecret = c.env.JWT_SECRET || 'super-secret-mushoku-key'
   try {
-    const payload = await verify(token, jwtSecret)
+    const payload = await verify(token, jwtSecret, 'HS256') as { id: number, username: string }
     c.set('jwtPayload', payload)
     await next()
   } catch (e) {

@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build:client": "vite build",
+    "build:server": "vite build --mode server",
+    "build": "npm run build:client && npm run build:server",
     "lint": "eslint .",
     "preview": "vite preview"
   },
