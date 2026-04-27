@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// .wrangler/tmp/bundle-mS7MtG/checked-fetch.js
+// .wrangler/tmp/bundle-ifDLk1/checked-fetch.js
 var urls = /* @__PURE__ */ new Set();
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
@@ -27,7 +27,7 @@ globalThis.fetch = new Proxy(globalThis.fetch, {
   }
 });
 
-// .wrangler/tmp/pages-XBUS1d/bundledWorker-0.45032135518989147.mjs
+// .wrangler/tmp/pages-8kiBJO/bundledWorker-0.9483186372042892.mjs
 var __defProp2 = Object.defineProperty;
 var __name2 = /* @__PURE__ */ __name((target, value) => __defProp2(target, "name", { value, configurable: true }), "__name");
 var urls2 = /* @__PURE__ */ new Set();
@@ -5047,17 +5047,11 @@ async function Bi(e11) {
 }
 __name(Bi, "Bi");
 __name2(Bi, "Bi");
-async function Vi(e11) {
-  await e11.prepare("CREATE TABLE IF NOT EXISTS players (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, username text NOT NULL, password_hash text NOT NULL, hp integer DEFAULT 100 NOT NULL, max_hp integer DEFAULT 100 NOT NULL, mp integer DEFAULT 50 NOT NULL, max_mp integer DEFAULT 50 NOT NULL, magic_skill integer DEFAULT 0 NOT NULL, sword_skill integer DEFAULT 0 NOT NULL, location text DEFAULT 'roanoa' NOT NULL, gold integer DEFAULT 100 NOT NULL, level integer DEFAULT 1 NOT NULL, experience integer DEFAULT 0 NOT NULL)").run(), await e11.prepare("CREATE TABLE IF NOT EXISTS items (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, name text NOT NULL, type text NOT NULL, description text NOT NULL, price integer NOT NULL, power integer DEFAULT 0 NOT NULL)").run(), await e11.prepare("CREATE TABLE IF NOT EXISTS inventory (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, player_id integer NOT NULL, item_id integer NOT NULL, quantity integer DEFAULT 1 NOT NULL)").run();
-}
-__name(Vi, "Vi");
-__name2(Vi, "Vi");
 zi.post("/register", async (e11) => {
-  let { username: t3, password: n2 } = await e11.req.json();
-  await Vi(e11.env.DB);
-  let r2 = Ri(e11.env.DB), i2 = e11.env.JWT_SECRET || "super-secret-mushoku-key";
+  let { username: t3, password: n2 } = await e11.req.json(), r2 = Ri(e11.env.DB), i2 = e11.env.JWT_SECRET || "super-secret-mushoku-key";
   if (await r2.select().from(Z).where(H(Z.username, t3)).get()) return e11.json({ error: "Username already exists" }, 400);
-  let a2 = await Bi(n2), o2 = await r2.insert(Z).values({
+  let a2 = await Bi(n2);
+  await r2.insert(Z).values({
     username: t3,
     passwordHash: a2,
     location: "roanoa",
@@ -5065,10 +5059,15 @@ zi.post("/register", async (e11) => {
     maxHp: 100,
     mp: 50,
     maxMp: 50,
+    magicSkill: 0,
+    swordSkill: 0,
     gold: 100,
     level: 1,
     experience: 0
-  }).returning().get(), s2 = await zt({
+  });
+  let o2 = await r2.select().from(Z).where(H(Z.username, t3)).get();
+  if (!o2) return e11.json({ error: "Failed to retrieve registered user" }, 500);
+  let s2 = await zt({
     id: o2.id,
     username: t3,
     exp: Math.floor(Date.now() / 1e3) + 3600 * 24
@@ -5081,9 +5080,7 @@ zi.post("/register", async (e11) => {
     }
   });
 }), zi.post("/login", async (e11) => {
-  let { username: t3, password: n2 } = await e11.req.json();
-  await Vi(e11.env.DB);
-  let r2 = Ri(e11.env.DB), i2 = e11.env.JWT_SECRET || "super-secret-mushoku-key", a2 = await r2.select().from(Z).where(H(Z.username, t3)).get();
+  let { username: t3, password: n2 } = await e11.req.json(), r2 = Ri(e11.env.DB), i2 = e11.env.JWT_SECRET || "super-secret-mushoku-key", a2 = await r2.select().from(Z).where(H(Z.username, t3)).get();
   if (!a2) return e11.json({ error: "Invalid credentials" }, 401);
   let o2 = await Bi(n2);
   if (a2.passwordHash !== o2) return e11.json({ error: "Invalid credentials" }, 401);
@@ -5100,8 +5097,8 @@ zi.post("/register", async (e11) => {
     }
   });
 });
-var Hi = new Ve();
-Hi.use("*", async (e11, t3) => {
+var Vi = new Ve();
+Vi.use("*", async (e11, t3) => {
   let n2 = e11.req.header("Authorization");
   if (!n2 || !n2.startsWith("Bearer ")) return e11.json({ error: "Unauthorized" }, 401);
   let r2 = n2.split(" ")[1], i2 = e11.env.JWT_SECRET || "super-secret-mushoku-key";
@@ -5111,10 +5108,10 @@ Hi.use("*", async (e11, t3) => {
   } catch {
     return e11.json({ error: "Unauthorized" }, 401);
   }
-}), Hi.get("/player", async (e11) => {
+}), Vi.get("/player", async (e11) => {
   let t3 = e11.get("jwtPayload"), n2 = await Ri(e11.env.DB).select().from(Z).where(H(Z.id, t3.id)).get();
   return n2 ? e11.json({ player: n2 }) : e11.json({ error: "Player not found" }, 404);
-}), Hi.get("/inventory", async (e11) => {
+}), Vi.get("/inventory", async (e11) => {
   let t3 = e11.get("jwtPayload"), n2 = await Ri(e11.env.DB).select({
     id: $.id,
     itemId: $.itemId,
@@ -5125,33 +5122,33 @@ Hi.use("*", async (e11, t3) => {
     power: Q.power
   }).from($).innerJoin(Q, H($.itemId, Q.id)).where(H($.playerId, t3.id)).all();
   return e11.json({ items: n2 });
-}), Hi.post("/apply-choice", async (e11) => {
+}), Vi.post("/apply-choice", async (e11) => {
   let t3 = e11.get("jwtPayload"), n2 = Ri(e11.env.DB), { hpDiff: r2, mpDiff: i2, magicDiff: a2, swordDiff: o2 } = await e11.req.json(), s2 = await n2.select().from(Z).where(H(Z.id, t3.id)).get();
   if (!s2) return e11.json({ error: "Player not found" }, 404);
-  let c2 = s2.hp + (r2 || 0), l2 = s2.mp + (i2 || 0), u2 = s2.magicSkill + (a2 || 0), d2 = s2.swordSkill + (o2 || 0), f2 = false;
-  c2 > s2.maxHp && (c2 = s2.maxHp), l2 > s2.maxMp && (l2 = s2.maxMp), l2 < 0 && (l2 = 0), c2 <= 0 && (f2 = true, c2 = s2.maxHp, l2 = s2.maxMp);
-  let p2 = await n2.update(Z).set({
-    hp: c2,
-    mp: l2,
-    magicSkill: u2,
-    swordSkill: d2
-  }).where(H(Z.id, t3.id)).returning().get();
+  let c2 = typeof s2.hp == "number" ? s2.hp : parseInt(s2.hp) || 100, l2 = typeof s2.mp == "number" ? s2.mp : parseInt(s2.mp) || 50, u2 = typeof s2.magicSkill == "number" ? s2.magicSkill : parseInt(s2.magic_skill) || 0, d2 = typeof s2.swordSkill == "number" ? s2.swordSkill : parseInt(s2.sword_skill) || 0, f2 = c2 + (Number(r2) || 0), p2 = l2 + (Number(i2) || 0), m2 = u2 + (Number(a2) || 0), h2 = d2 + (Number(o2) || 0), g2 = false;
+  f2 > s2.maxHp && (f2 = s2.maxHp), p2 > s2.maxMp && (p2 = s2.maxMp), p2 < 0 && (p2 = 0), f2 <= 0 && (g2 = true, f2 = s2.maxHp, p2 = s2.maxMp), await n2.update(Z).set({
+    hp: f2,
+    mp: p2,
+    magicSkill: m2,
+    swordSkill: h2
+  }).where(H(Z.id, t3.id));
+  let _2 = await n2.select().from(Z).where(H(Z.id, t3.id)).get();
   return e11.json({
-    player: p2,
-    event: f2 ? "died" : "survived"
+    player: _2,
+    event: g2 ? "died" : "survived"
   });
 });
-var Ui = new Ve();
-Ui.use("*", Je()), Ui.onError((e11, t3) => (console.error(`${e11}`), t3.json({
+var Hi = new Ve();
+Hi.use("*", Je()), Hi.onError((e11, t3) => (console.error(`${e11}`), t3.json({
   error: e11.message,
   stack: e11.stack,
   cause: "Internal Server Error"
 }, 500)));
-var Wi = Ui.basePath("/api");
-Wi.get("/health", (e11) => e11.json({
+var Ui = Hi.basePath("/api");
+Ui.get("/health", (e11) => e11.json({
   status: "ok",
   server: "Hono + Vite integration"
-})), Wi.get("/debug-db", async (e11) => {
+})), Ui.get("/debug-db", async (e11) => {
   try {
     let t3 = await e11.env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table'").all();
     return t3.results.some((e12) => e12.name === "players") ? e11.json({
@@ -5174,7 +5171,7 @@ Wi.get("/health", (e11) => e11.json({
       error: t3.message
     });
   }
-}), Wi.route("/auth", zi), Wi.route("/game", Hi), Ui.get("*", async (e11) => e11.env.ASSETS ? await e11.env.ASSETS.fetch(e11.req.raw) : e11.notFound());
+}), Ui.route("/auth", zi), Ui.route("/game", Vi), Hi.get("*", async (e11) => e11.env.ASSETS ? await e11.env.ASSETS.fetch(e11.req.raw) : e11.notFound());
 var drainBody = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
@@ -5217,7 +5214,7 @@ var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
 ];
-var middleware_insertion_facade_default = Ui;
+var middleware_insertion_facade_default = Hi;
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
   __facade_middleware__.push(...args.flat());
@@ -5386,7 +5383,7 @@ var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default2 = jsonError2;
 
-// .wrangler/tmp/bundle-mS7MtG/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-ifDLk1/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__2 = [
   middleware_ensure_req_body_drained_default2,
   middleware_miniflare3_json_error_default2
@@ -5418,7 +5415,7 @@ function __facade_invoke__2(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__2, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-mS7MtG/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-ifDLk1/middleware-loader.entry.ts
 var __Facade_ScheduledController__2 = class ___Facade_ScheduledController__2 {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -5518,4 +5515,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__2 as __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default2 as default
 };
-//# sourceMappingURL=bundledWorker-0.45032135518989147.js.map
+//# sourceMappingURL=bundledWorker-0.9483186372042892.js.map

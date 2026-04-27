@@ -17,18 +17,10 @@ async function hashPassword(password: string): Promise<string> {
     .join('')
 }
 
-// Helper to ensure tables exist
-async function ensureTables(db: any) {
-  await db.prepare(`CREATE TABLE IF NOT EXISTS players (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, username text NOT NULL, password_hash text NOT NULL, hp integer DEFAULT 100 NOT NULL, max_hp integer DEFAULT 100 NOT NULL, mp integer DEFAULT 50 NOT NULL, max_mp integer DEFAULT 50 NOT NULL, magic_skill integer DEFAULT 0 NOT NULL, sword_skill integer DEFAULT 0 NOT NULL, location text DEFAULT 'roanoa' NOT NULL, gold integer DEFAULT 100 NOT NULL, level integer DEFAULT 1 NOT NULL, experience integer DEFAULT 0 NOT NULL)`).run();
-  await db.prepare(`CREATE TABLE IF NOT EXISTS items (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, name text NOT NULL, type text NOT NULL, description text NOT NULL, price integer NOT NULL, power integer DEFAULT 0 NOT NULL)`).run();
-  await db.prepare(`CREATE TABLE IF NOT EXISTS inventory (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, player_id integer NOT NULL, item_id integer NOT NULL, quantity integer DEFAULT 1 NOT NULL)`).run();
-}
+
 
 auth.post('/register', async (c) => {
   const { username, password } = await c.req.json()
-  
-  // Ensure tables exist before doing anything
-  await ensureTables(c.env.DB);
   
   const db = drizzle(c.env.DB)
   const jwtSecret = c.env.JWT_SECRET || 'super-secret-mushoku-key'
@@ -41,13 +33,19 @@ auth.post('/register', async (c) => {
 
   const passwordHash = await hashPassword(password)
   
-  const result = await db.insert(players).values({
+  await db.insert(players).values({
     username,
     passwordHash,
     location: 'roanoa',
     hp: 100, maxHp: 100, mp: 50, maxMp: 50,
+    magicSkill: 0, swordSkill: 0,
     gold: 100, level: 1, experience: 0
-  }).returning().get()
+  });
+
+  const result = await db.select().from(players).where(eq(players.username, username)).get();
+  if (!result) {
+    return c.json({ error: 'Failed to retrieve registered user' }, 500);
+  }
 
   const token = await sign({ id: result.id, username, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 }, jwtSecret)
 
@@ -56,9 +54,6 @@ auth.post('/register', async (c) => {
 
 auth.post('/login', async (c) => {
   const { username, password } = await c.req.json()
-  
-  // Ensure tables exist
-  await ensureTables(c.env.DB);
   
   const db = drizzle(c.env.DB)
   const jwtSecret = c.env.JWT_SECRET || 'super-secret-mushoku-key'

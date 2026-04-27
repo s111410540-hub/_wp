@@ -65,11 +65,17 @@ gameInfo.post('/apply-choice', async (c) => {
   const player = await db.select().from(players).where(eq(players.id, payload.id)).get()
   if (!player) return c.json({ error: 'Player not found' }, 404)
 
+  // Safely parse current stats, handling cases where Drizzle might return weird mapped values or missing columns
+  const currentHp = typeof player.hp === 'number' ? player.hp : parseInt(player.hp as any) || 100;
+  const currentMp = typeof player.mp === 'number' ? player.mp : parseInt(player.mp as any) || 50;
+  const currentMagic = typeof player.magicSkill === 'number' ? player.magicSkill : parseInt((player as any).magic_skill) || 0;
+  const currentSword = typeof player.swordSkill === 'number' ? player.swordSkill : parseInt((player as any).sword_skill) || 0;
+
   // Calculate new stats
-  let newHp = player.hp + (hpDiff || 0);
-  let newMp = player.mp + (mpDiff || 0);
-  let newMagic = player.magicSkill + (magicDiff || 0);
-  let newSword = player.swordSkill + (swordDiff || 0);
+  let newHp = currentHp + (Number(hpDiff) || 0);
+  let newMp = currentMp + (Number(mpDiff) || 0);
+  let newMagic = currentMagic + (Number(magicDiff) || 0);
+  let newSword = currentSword + (Number(swordDiff) || 0);
   let isDead = false;
 
   // Apply Limits
@@ -84,12 +90,14 @@ gameInfo.post('/apply-choice', async (c) => {
   }
 
   // Update Database
-  const updatedPlayer = await db.update(players).set({
+  await db.update(players).set({
     hp: newHp,
     mp: newMp,
     magicSkill: newMagic,
     swordSkill: newSword
-  }).where(eq(players.id, payload.id)).returning().get()
+  }).where(eq(players.id, payload.id));
+
+  const updatedPlayer = await db.select().from(players).where(eq(players.id, payload.id)).get();
 
   return c.json({ 
     player: updatedPlayer,
