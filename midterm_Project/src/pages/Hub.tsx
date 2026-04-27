@@ -5,7 +5,7 @@ import { usePlayerStore } from '../store/usePlayerStore';
 
 const Hub: React.FC = () => {
   const navigate = useNavigate();
-  const { user, token, logout } = useAuthStore();
+  const { token, logout } = useAuthStore();
   const { stats, fetchStats, loading } = usePlayerStore();
 
   useEffect(() => {

@@ -22,14 +22,14 @@ const Landing: React.FC = () => {
       <div className={`content ${showUI ? 'fade-in' : 'hidden'}`}>
         <h1 className="title">Mushoku Tensei RPG</h1>
         <div className="button-stack">
-          <button 
-            className="btn-fantasy" 
+          <button
+            className="btn-fantasy"
             onClick={() => navigate('/auth')}
           >
-            這一次，我一定要拿出自己的真本事
+            這一次，一定要拿出真本事
           </button>
-          <button 
-            className="btn-glass-view" 
+          <button
+            className="btn-glass-view"
             onClick={() => setShowUI(false)}
           >
             欣賞背景
@@ -44,7 +44,8 @@ const Landing: React.FC = () => {
         </button>
       )}
 
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .landing-container {
           height: 100vh;
           width: 100vw;
