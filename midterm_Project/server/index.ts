@@ -40,28 +40,20 @@ api.get('/health', (c) => {
   return c.json({ status: 'ok', server: 'Hono + Vite integration' })
 })
 
+// Helper to ensure v2 tables exist
+async function ensureTables(db: any) {
+  await db.prepare(`CREATE TABLE IF NOT EXISTS players_v2 (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, username text NOT NULL UNIQUE, password_hash text NOT NULL, hp integer DEFAULT 100 NOT NULL, max_hp integer DEFAULT 100 NOT NULL, mp integer DEFAULT 50 NOT NULL, max_mp integer DEFAULT 50 NOT NULL, magic_skill integer DEFAULT 0 NOT NULL, sword_skill integer DEFAULT 0 NOT NULL, location text DEFAULT 'roanoa' NOT NULL, gold integer DEFAULT 100 NOT NULL, level integer DEFAULT 1 NOT NULL, experience integer DEFAULT 0 NOT NULL)`).run();
+  await db.prepare(`CREATE TABLE IF NOT EXISTS items_v2 (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, name text NOT NULL, type text NOT NULL, description text NOT NULL, price integer NOT NULL, power integer DEFAULT 0 NOT NULL)`).run();
+  await db.prepare(`CREATE TABLE IF NOT EXISTS inventory_v2 (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, player_id integer NOT NULL, item_id integer NOT NULL, quantity integer DEFAULT 1 NOT NULL)`).run();
+}
+
 // Database Diagnostics
 api.get('/debug-db', async (c) => {
   try {
-    // Check tables
-    const tables = await c.env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table'").all();
-    const hasPlayers = tables.results.some(t => t.name === 'players');
-
-    if (!hasPlayers) {
-      // Direct initialization if missing
-      await c.env.DB.batch([
-        c.env.DB.prepare(`CREATE TABLE IF NOT EXISTS players (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, username text NOT NULL, password_hash text NOT NULL, hp integer DEFAULT 100 NOT NULL, max_hp integer DEFAULT 100 NOT NULL, mp integer DEFAULT 50 NOT NULL, max_mp integer DEFAULT 50 NOT NULL, magic_skill integer DEFAULT 0 NOT NULL, sword_skill integer DEFAULT 0 NOT NULL, location text DEFAULT 'roanoa' NOT NULL, gold integer DEFAULT 100 NOT NULL, level integer DEFAULT 1 NOT NULL, experience integer DEFAULT 0 NOT NULL)`),
-        c.env.DB.prepare(`CREATE TABLE IF NOT EXISTS items (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, name text NOT NULL, type text NOT NULL, description text NOT NULL, price integer NOT NULL, power integer DEFAULT 0 NOT NULL)`),
-        c.env.DB.prepare(`CREATE TABLE IF NOT EXISTS inventory (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, player_id integer NOT NULL, item_id integer NOT NULL, quantity integer DEFAULT 1 NOT NULL)`),
-        c.env.DB.prepare(`CREATE UNIQUE INDEX IF NOT EXISTS players_username_unique ON players (username)`)
-      ]);
-      return c.json({ success: true, message: "Database initialized successfully!", tables_created: true });
-    }
-
+    await ensureTables(c.env.DB);
     return c.json({ 
       success: true, 
-      tables: tables.results,
-      db_initialized: true
+      message: "Database v2 verified successfully!"
     });
   } catch (err: any) {
     return c.json({ success: false, error: err.message });

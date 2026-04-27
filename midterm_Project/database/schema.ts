@@ -1,6 +1,6 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
-export const players = sqliteTable('players', {
+export const players = sqliteTable('players_v2', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   username: text('username').notNull().unique(),
   passwordHash: text('password_hash').notNull(),
@@ -16,7 +16,7 @@ export const players = sqliteTable('players', {
   experience: integer('experience').notNull().default(0),
 });
 
-export const items = sqliteTable('items', {
+export const items = sqliteTable('items_v2', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
   type: text('type').notNull(), // 'weapon', 'potion', 'armor'
@@ -25,7 +25,7 @@ export const items = sqliteTable('items', {
   power: integer('power').notNull().default(0), // Damage for weapons, heal amount for potions
 });
 
-export const inventory = sqliteTable('inventory', {
+export const inventory = sqliteTable('inventory_v2', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   playerId: integer('player_id')
     .notNull()

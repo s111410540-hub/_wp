@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// ../.wrangler/tmp/bundle-wUwcl4/checked-fetch.js
+// .wrangler/tmp/bundle-P8ctZ0/checked-fetch.js
 var urls = /* @__PURE__ */ new Set();
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
@@ -27,8 +27,35 @@ globalThis.fetch = new Proxy(globalThis.fetch, {
   }
 });
 
-// _worker.js
-var e = /* @__PURE__ */ __name((e11, t3, n2) => (r2, i2) => {
+// .wrangler/tmp/pages-dXyRA6/bundledWorker-0.32257595260921834.mjs
+var __defProp2 = Object.defineProperty;
+var __name2 = /* @__PURE__ */ __name((target, value) => __defProp2(target, "name", { value, configurable: true }), "__name");
+var urls2 = /* @__PURE__ */ new Set();
+function checkURL2(request, init) {
+  const url = request instanceof URL ? request : new URL(
+    (typeof request === "string" ? new Request(request, init) : request).url
+  );
+  if (url.port && url.port !== "443" && url.protocol === "https:") {
+    if (!urls2.has(url.toString())) {
+      urls2.add(url.toString());
+      console.warn(
+        `WARNING: known issue with \`fetch()\` requests to custom HTTPS ports in published Workers:
+ - ${url.toString()} - the custom port will be ignored when the Worker is published using the \`wrangler deploy\` command.
+`
+      );
+    }
+  }
+}
+__name(checkURL2, "checkURL");
+__name2(checkURL2, "checkURL");
+globalThis.fetch = new Proxy(globalThis.fetch, {
+  apply(target, thisArg, argArray) {
+    const [request, init] = argArray;
+    checkURL2(request, init);
+    return Reflect.apply(target, thisArg, argArray);
+  }
+});
+var e = /* @__PURE__ */ __name2((e11, t3, n2) => (r2, i2) => {
   let a2 = -1;
   return o2(0);
   async function o2(s2) {
@@ -44,10 +71,11 @@ var e = /* @__PURE__ */ __name((e11, t3, n2) => (r2, i2) => {
     else r2.finalized === false && n2 && (c2 = await n2(r2));
     return c2 && (r2.finalized === false || l2) && (r2.res = c2), r2;
   }
-  __name(o2, "o");
+  __name(o2, "o2");
+  __name2(o2, "o");
 }, "e");
 var t = /* @__PURE__ */ Symbol();
-var n = /* @__PURE__ */ __name(async (e11, t3 = /* @__PURE__ */ Object.create(null)) => {
+var n = /* @__PURE__ */ __name2(async (e11, t3 = /* @__PURE__ */ Object.create(null)) => {
   let { all: n2 = false, dot: i2 = false } = t3, a2 = (e11 instanceof oe ? e11.raw.headers : e11.headers).get("Content-Type");
   return a2?.startsWith("multipart/form-data") || a2?.startsWith("application/x-www-form-urlencoded") ? r(e11, {
     all: n2,
@@ -59,6 +87,7 @@ async function r(e11, t3) {
   return n2 ? i(n2, t3) : {};
 }
 __name(r, "r");
+__name2(r, "r");
 function i(e11, t3) {
   let n2 = /* @__PURE__ */ Object.create(null);
   return e11.forEach((e12, r2) => {
@@ -68,25 +97,26 @@ function i(e11, t3) {
   }), n2;
 }
 __name(i, "i");
-var a = /* @__PURE__ */ __name((e11, t3, n2) => {
+__name2(i, "i");
+var a = /* @__PURE__ */ __name2((e11, t3, n2) => {
   e11[t3] === void 0 ? t3.endsWith("[]") ? e11[t3] = [n2] : e11[t3] = n2 : Array.isArray(e11[t3]) ? e11[t3].push(n2) : e11[t3] = [e11[t3], n2];
 }, "a");
-var o = /* @__PURE__ */ __name((e11, t3, n2) => {
+var o = /* @__PURE__ */ __name2((e11, t3, n2) => {
   if (/(?:^|\.)__proto__\./.test(t3)) return;
   let r2 = e11, i2 = t3.split(".");
   i2.forEach((e12, t4) => {
     t4 === i2.length - 1 ? r2[e12] = n2 : ((!r2[e12] || typeof r2[e12] != "object" || Array.isArray(r2[e12]) || r2[e12] instanceof File) && (r2[e12] = /* @__PURE__ */ Object.create(null)), r2 = r2[e12]);
   });
 }, "o");
-var s = /* @__PURE__ */ __name((e11) => {
+var s = /* @__PURE__ */ __name2((e11) => {
   let t3 = e11.split("/");
   return t3[0] === "" && t3.shift(), t3;
 }, "s");
-var c = /* @__PURE__ */ __name((e11) => {
+var c = /* @__PURE__ */ __name2((e11) => {
   let { groups: t3, path: n2 } = l(e11);
   return u(s(n2), t3);
 }, "c");
-var l = /* @__PURE__ */ __name((e11) => {
+var l = /* @__PURE__ */ __name2((e11) => {
   let t3 = [];
   return e11 = e11.replace(/\{[^}]+\}/g, (e12, n2) => {
     let r2 = `@${n2}`;
@@ -96,7 +126,7 @@ var l = /* @__PURE__ */ __name((e11) => {
     path: e11
   };
 }, "l");
-var u = /* @__PURE__ */ __name((e11, t3) => {
+var u = /* @__PURE__ */ __name2((e11, t3) => {
   for (let n2 = t3.length - 1; n2 >= 0; n2--) {
     let [r2] = t3[n2];
     for (let i2 = e11.length - 1; i2 >= 0; i2--) if (e11[i2].includes(r2)) {
@@ -107,7 +137,7 @@ var u = /* @__PURE__ */ __name((e11, t3) => {
   return e11;
 }, "u");
 var d = {};
-var f = /* @__PURE__ */ __name((e11, t3) => {
+var f = /* @__PURE__ */ __name2((e11, t3) => {
   if (e11 === "*") return "*";
   let n2 = e11.match(/^\:([^\{\}]+)(?:\{(.+)\})?$/);
   if (n2) {
@@ -128,7 +158,7 @@ var f = /* @__PURE__ */ __name((e11, t3) => {
   }
   return null;
 }, "f");
-var p = /* @__PURE__ */ __name((e11, t3) => {
+var p = /* @__PURE__ */ __name2((e11, t3) => {
   try {
     return t3(e11);
   } catch {
@@ -141,8 +171,8 @@ var p = /* @__PURE__ */ __name((e11, t3) => {
     });
   }
 }, "p");
-var m = /* @__PURE__ */ __name((e11) => p(e11, decodeURI), "m");
-var h = /* @__PURE__ */ __name((e11) => {
+var m = /* @__PURE__ */ __name2((e11) => p(e11, decodeURI), "m");
+var h = /* @__PURE__ */ __name2((e11) => {
   let t3 = e11.url, n2 = t3.indexOf("/", t3.indexOf(":") + 4), r2 = n2;
   for (; r2 < t3.length; r2++) {
     let e12 = t3.charCodeAt(r2);
@@ -153,12 +183,12 @@ var h = /* @__PURE__ */ __name((e11) => {
   }
   return t3.slice(n2, r2);
 }, "h");
-var g = /* @__PURE__ */ __name((e11) => {
+var g = /* @__PURE__ */ __name2((e11) => {
   let t3 = h(e11);
   return t3.length > 1 && t3.at(-1) === "/" ? t3.slice(0, -1) : t3;
 }, "g");
-var _ = /* @__PURE__ */ __name((e11, t3, ...n2) => (n2.length && (t3 = _(t3, ...n2)), `${e11?.[0] === "/" ? "" : "/"}${e11}${t3 === "/" ? "" : `${e11?.at(-1) === "/" ? "" : "/"}${t3?.[0] === "/" ? t3.slice(1) : t3}`}`), "_");
-var v = /* @__PURE__ */ __name((e11) => {
+var _ = /* @__PURE__ */ __name2((e11, t3, ...n2) => (n2.length && (t3 = _(t3, ...n2)), `${e11?.[0] === "/" ? "" : "/"}${e11}${t3 === "/" ? "" : `${e11?.at(-1) === "/" ? "" : "/"}${t3?.[0] === "/" ? t3.slice(1) : t3}`}`), "_");
+var v = /* @__PURE__ */ __name2((e11) => {
   if (e11.charCodeAt(e11.length - 1) !== 63 || !e11.includes(":")) return null;
   let t3 = e11.split("/"), n2 = [], r2 = "";
   return t3.forEach((e12) => {
@@ -170,8 +200,8 @@ var v = /* @__PURE__ */ __name((e11) => {
     } else r2 += "/" + e12;
   }), n2.filter((e12, t4, n3) => n3.indexOf(e12) === t4);
 }, "v");
-var ee = /* @__PURE__ */ __name((e11) => /[%+]/.test(e11) ? (e11.indexOf("+") !== -1 && (e11 = e11.replace(/\+/g, " ")), e11.indexOf("%") === -1 ? e11 : p(e11, ie)) : e11, "ee");
-var te = /* @__PURE__ */ __name((e11, t3, n2) => {
+var ee = /* @__PURE__ */ __name2((e11) => /[%+]/.test(e11) ? (e11.indexOf("+") !== -1 && (e11 = e11.replace(/\+/g, " ")), e11.indexOf("%") === -1 ? e11 : p(e11, ie)) : e11, "ee");
+var te = /* @__PURE__ */ __name2((e11, t3, n2) => {
   let r2;
   if (!n2 && t3 && !/[%+]/.test(t3)) {
     let n3 = e11.indexOf("?", 8);
@@ -200,12 +230,15 @@ var te = /* @__PURE__ */ __name((e11, t3, n2) => {
   return t3 ? i2[t3] : i2;
 }, "te");
 var ne = te;
-var re = /* @__PURE__ */ __name((e11, t3) => te(e11, t3, true), "re");
+var re = /* @__PURE__ */ __name2((e11, t3) => te(e11, t3, true), "re");
 var ie = decodeURIComponent;
-var ae = /* @__PURE__ */ __name((e11) => p(e11, ie), "ae");
+var ae = /* @__PURE__ */ __name2((e11) => p(e11, ie), "ae");
 var oe = class {
   static {
     __name(this, "oe");
+  }
+  static {
+    __name2(this, "oe");
   }
   raw;
   #e;
@@ -250,7 +283,7 @@ var oe = class {
   async parseBody(e11) {
     return n(this, e11);
   }
-  #a = /* @__PURE__ */ __name((e11) => {
+  #a = /* @__PURE__ */ __name2((e11) => {
     let { bodyCache: t3, raw: n2 } = this, r2 = t3[e11];
     if (r2) return r2;
     let i2 = Object.keys(t3)[0];
@@ -298,11 +331,11 @@ var se = {
   BeforeStream: 2,
   Stream: 3
 };
-var ce = /* @__PURE__ */ __name((e11, t3) => {
+var ce = /* @__PURE__ */ __name2((e11, t3) => {
   let n2 = new String(e11);
   return n2.isEscaped = true, n2.callbacks = t3, n2;
 }, "ce");
-var le = /* @__PURE__ */ __name(async (e11, t3, n2, r2, i2) => {
+var le = /* @__PURE__ */ __name2(async (e11, t3, n2, r2, i2) => {
   typeof e11 == "object" && !(e11 instanceof String) && (e11 instanceof Promise || (e11 = e11.toString()), e11 instanceof Promise && (e11 = await e11));
   let a2 = e11.callbacks;
   if (!a2?.length) return Promise.resolve(e11);
@@ -315,14 +348,17 @@ var le = /* @__PURE__ */ __name(async (e11, t3, n2, r2, i2) => {
   return n2 ? ce(await o2, a2) : o2;
 }, "le");
 var ue = "text/plain; charset=UTF-8";
-var de = /* @__PURE__ */ __name((e11, t3) => ({
+var de = /* @__PURE__ */ __name2((e11, t3) => ({
   "Content-Type": e11,
   ...t3
 }), "de");
-var fe = /* @__PURE__ */ __name((e11, t3) => new Response(e11, t3), "fe");
+var fe = /* @__PURE__ */ __name2((e11, t3) => new Response(e11, t3), "fe");
 var pe = class {
   static {
     __name(this, "pe");
+  }
+  static {
+    __name2(this, "pe");
   }
   #e;
   #t;
@@ -367,24 +403,24 @@ var pe = class {
     }
     this.#a = e11, this.finalized = true;
   }
-  render = /* @__PURE__ */ __name((...e11) => (this.#s ??= (e12) => this.html(e12), this.#s(...e11)), "render");
-  setLayout = /* @__PURE__ */ __name((e11) => this.#o = e11, "setLayout");
-  getLayout = /* @__PURE__ */ __name(() => this.#o, "getLayout");
-  setRenderer = /* @__PURE__ */ __name((e11) => {
+  render = /* @__PURE__ */ __name2((...e11) => (this.#s ??= (e12) => this.html(e12), this.#s(...e11)), "render");
+  setLayout = /* @__PURE__ */ __name2((e11) => this.#o = e11, "setLayout");
+  getLayout = /* @__PURE__ */ __name2(() => this.#o, "getLayout");
+  setRenderer = /* @__PURE__ */ __name2((e11) => {
     this.#s = e11;
   }, "setRenderer");
-  header = /* @__PURE__ */ __name((e11, t3, n2) => {
+  header = /* @__PURE__ */ __name2((e11, t3, n2) => {
     this.finalized && (this.#a = fe(this.#a.body, this.#a));
     let r2 = this.#a ? this.#a.headers : this.#l ??= new Headers();
     t3 === void 0 ? r2.delete(e11) : n2?.append ? r2.append(e11, t3) : r2.set(e11, t3);
   }, "header");
-  status = /* @__PURE__ */ __name((e11) => {
+  status = /* @__PURE__ */ __name2((e11) => {
     this.#r = e11;
   }, "status");
-  set = /* @__PURE__ */ __name((e11, t3) => {
+  set = /* @__PURE__ */ __name2((e11, t3) => {
     this.#n ??= /* @__PURE__ */ new Map(), this.#n.set(e11, t3);
   }, "set");
-  get = /* @__PURE__ */ __name((e11) => this.#n ? this.#n.get(e11) : void 0, "get");
+  get = /* @__PURE__ */ __name2((e11) => this.#n ? this.#n.get(e11) : void 0, "get");
   get var() {
     return this.#n ? Object.fromEntries(this.#n) : {};
   }
@@ -404,19 +440,19 @@ var pe = class {
       headers: r2
     });
   }
-  newResponse = /* @__PURE__ */ __name((...e11) => this.#f(...e11), "newResponse");
-  body = /* @__PURE__ */ __name((e11, t3, n2) => this.#f(e11, t3, n2), "body");
-  text = /* @__PURE__ */ __name((e11, t3, n2) => !this.#l && !this.#r && !t3 && !n2 && !this.finalized ? new Response(e11) : this.#f(e11, t3, de(ue, n2)), "text");
-  json = /* @__PURE__ */ __name((e11, t3, n2) => this.#f(JSON.stringify(e11), t3, de("application/json", n2)), "json");
-  html = /* @__PURE__ */ __name((e11, t3, n2) => {
-    let r2 = /* @__PURE__ */ __name((e12) => this.#f(e12, t3, de("text/html; charset=UTF-8", n2)), "r");
+  newResponse = /* @__PURE__ */ __name2((...e11) => this.#f(...e11), "newResponse");
+  body = /* @__PURE__ */ __name2((e11, t3, n2) => this.#f(e11, t3, n2), "body");
+  text = /* @__PURE__ */ __name2((e11, t3, n2) => !this.#l && !this.#r && !t3 && !n2 && !this.finalized ? new Response(e11) : this.#f(e11, t3, de(ue, n2)), "text");
+  json = /* @__PURE__ */ __name2((e11, t3, n2) => this.#f(JSON.stringify(e11), t3, de("application/json", n2)), "json");
+  html = /* @__PURE__ */ __name2((e11, t3, n2) => {
+    let r2 = /* @__PURE__ */ __name2((e12) => this.#f(e12, t3, de("text/html; charset=UTF-8", n2)), "r");
     return typeof e11 == "object" ? le(e11, se.Stringify, false, {}).then(r2) : r2(e11);
   }, "html");
-  redirect = /* @__PURE__ */ __name((e11, t3) => {
+  redirect = /* @__PURE__ */ __name2((e11, t3) => {
     let n2 = String(e11);
     return this.header("Location", /[^\x00-\xFF]/.test(n2) ? encodeURI(n2) : n2), this.newResponse(null, t3 ?? 302);
   }, "redirect");
-  notFound = /* @__PURE__ */ __name(() => (this.#c ??= () => fe(), this.#c(this)), "notFound");
+  notFound = /* @__PURE__ */ __name2(() => (this.#c ??= () => fe(), this.#c(this)), "notFound");
 };
 var me = [
   "get",
@@ -431,10 +467,13 @@ var ge = class extends Error {
   static {
     __name(this, "ge");
   }
+  static {
+    __name2(this, "ge");
+  }
 };
 var _e = "__COMPOSED_HANDLER";
-var ve = /* @__PURE__ */ __name((e11) => e11.text("404 Not Found", 404), "ve");
-var ye = /* @__PURE__ */ __name((e11, t3) => {
+var ve = /* @__PURE__ */ __name2((e11) => e11.text("404 Not Found", 404), "ve");
+var ye = /* @__PURE__ */ __name2((e11, t3) => {
   if ("getResponse" in e11) {
     let n2 = e11.getResponse();
     return t3.newResponse(n2.body, n2);
@@ -443,7 +482,10 @@ var ye = /* @__PURE__ */ __name((e11, t3) => {
 }, "ye");
 var be = class t2 {
   static {
-    __name(this, "t");
+    __name(this, "t2");
+  }
+  static {
+    __name2(this, "t");
   }
   get;
   post;
@@ -491,15 +533,15 @@ var be = class t2 {
     let r2 = this.basePath(t3);
     return n2.routes.map((t4) => {
       let i2;
-      n2.errorHandler === ye ? i2 = t4.handler : (i2 = /* @__PURE__ */ __name(async (r3, i3) => (await e([], n2.errorHandler)(r3, () => t4.handler(r3, i3))).res, "i"), i2[_e] = t4.handler), r2.#r(t4.method, t4.path, i2);
+      n2.errorHandler === ye ? i2 = t4.handler : (i2 = /* @__PURE__ */ __name2(async (r3, i3) => (await e([], n2.errorHandler)(r3, () => t4.handler(r3, i3))).res, "i"), i2[_e] = t4.handler), r2.#r(t4.method, t4.path, i2);
     }), this;
   }
   basePath(e11) {
     let t3 = this.#t();
     return t3._basePath = _(this._basePath, e11), t3;
   }
-  onError = /* @__PURE__ */ __name((e11) => (this.errorHandler = e11, this), "onError");
-  notFound = /* @__PURE__ */ __name((e11) => (this.#n = e11, this), "notFound");
+  onError = /* @__PURE__ */ __name2((e11) => (this.errorHandler = e11, this), "onError");
+  notFound = /* @__PURE__ */ __name2((e11) => (this.#n = e11, this), "notFound");
   mount(e11, t3, n2) {
     let r2, i2;
     n2 && (typeof n2 == "function" ? i2 = n2 : (i2 = n2.optionHandler, r2 = n2.replaceRequest === false ? (e12) => e12 : n2.replaceRequest));
@@ -571,9 +613,9 @@ var be = class t2 {
       }
     })();
   }
-  fetch = /* @__PURE__ */ __name((e11, ...t3) => this.#a(e11, t3[1], t3[0], e11.method), "fetch");
-  request = /* @__PURE__ */ __name((e11, t3, n2, r2) => e11 instanceof Request ? this.fetch(t3 ? new Request(e11, t3) : e11, n2, r2) : (e11 = e11.toString(), this.fetch(new Request(/^https?:\/\//.test(e11) ? e11 : `http://localhost${_("/", e11)}`, t3), n2, r2)), "request");
-  fire = /* @__PURE__ */ __name(() => {
+  fetch = /* @__PURE__ */ __name2((e11, ...t3) => this.#a(e11, t3[1], t3[0], e11.method), "fetch");
+  request = /* @__PURE__ */ __name2((e11, t3, n2, r2) => e11 instanceof Request ? this.fetch(t3 ? new Request(e11, t3) : e11, n2, r2) : (e11 = e11.toString(), this.fetch(new Request(/^https?:\/\//.test(e11) ? e11 : `http://localhost${_("/", e11)}`, t3), n2, r2)), "request");
+  fire = /* @__PURE__ */ __name2(() => {
     addEventListener("fetch", (e11) => {
       e11.respondWith(this.#a(e11.request, e11, void 0, e11.request.method));
     });
@@ -581,7 +623,7 @@ var be = class t2 {
 };
 var xe = [];
 function Se(e11, t3) {
-  let n2 = this.buildAllMatchers(), r2 = /* @__PURE__ */ __name(((e12, t4) => {
+  let n2 = this.buildAllMatchers(), r2 = /* @__PURE__ */ __name2(((e12, t4) => {
     let r3 = n2[e12] || n2.ALL, i2 = r3[2][t4];
     if (i2) return i2;
     let a2 = t4.match(r3[0]);
@@ -592,6 +634,7 @@ function Se(e11, t3) {
   return this.match = r2, r2(e11, t3);
 }
 __name(Se, "Se");
+__name2(Se, "Se");
 var Ce = "[^/]+";
 var we = ".*";
 var Te = "(?:|/.*)";
@@ -601,9 +644,13 @@ function De(e11, t3) {
   return e11.length === 1 ? t3.length === 1 ? e11 < t3 ? -1 : 1 : -1 : t3.length === 1 || e11 === we || e11 === Te ? 1 : t3 === we || t3 === Te ? -1 : e11 === Ce ? 1 : t3 === Ce ? -1 : e11.length === t3.length ? e11 < t3 ? -1 : 1 : t3.length - e11.length;
 }
 __name(De, "De");
+__name2(De, "De");
 var Oe = class e2 {
   static {
-    __name(this, "e");
+    __name(this, "e2");
+  }
+  static {
+    __name2(this, "e");
   }
   #e;
   #t;
@@ -656,6 +703,9 @@ var ke = class {
   static {
     __name(this, "ke");
   }
+  static {
+    __name2(this, "ke");
+  }
   #e = { varIndex: 0 };
   #t = new Oe();
   insert(e11, t3, n2) {
@@ -702,10 +752,12 @@ function Me(e11) {
   return je[e11] ??= RegExp(e11 === "*" ? "" : `^${e11.replace(/\/\*$|([.\\+*[^\]$()])/g, (e12, t3) => t3 ? `\\${t3}` : "(?:|/.*)")}$`);
 }
 __name(Me, "Me");
+__name2(Me, "Me");
 function Ne() {
   je = /* @__PURE__ */ Object.create(null);
 }
 __name(Ne, "Ne");
+__name2(Ne, "Ne");
 function Pe(e11) {
   let t3 = new ke(), n2 = [];
   if (e11.length === 0) return Ae;
@@ -744,15 +796,20 @@ function Pe(e11) {
   ];
 }
 __name(Pe, "Pe");
+__name2(Pe, "Pe");
 function b(e11, t3) {
   if (e11) {
     for (let n2 of Object.keys(e11).sort((e12, t4) => t4.length - e12.length)) if (Me(n2).test(t3)) return [...e11[n2]];
   }
 }
 __name(b, "b");
+__name2(b, "b");
 var Fe = class {
   static {
     __name(this, "Fe");
+  }
+  static {
+    __name2(this, "Fe");
   }
   name = "RegExpRouter";
   #e;
@@ -809,6 +866,9 @@ var Ie = class {
   static {
     __name(this, "Ie");
   }
+  static {
+    __name2(this, "Ie");
+  }
   name = "SmartRouter";
   #e = [];
   #t = [];
@@ -847,13 +907,16 @@ var Ie = class {
   }
 };
 var Le = /* @__PURE__ */ Object.create(null);
-var Re = /* @__PURE__ */ __name((e11) => {
+var Re = /* @__PURE__ */ __name2((e11) => {
   for (let t3 in e11) return true;
   return false;
 }, "Re");
 var ze = class e3 {
   static {
-    __name(this, "e");
+    __name(this, "e3");
+  }
+  static {
+    __name2(this, "e");
   }
   #e;
   #t;
@@ -945,6 +1008,9 @@ var Be = class {
   static {
     __name(this, "Be");
   }
+  static {
+    __name2(this, "Be");
+  }
   name = "TrieRouter";
   #e;
   constructor() {
@@ -966,6 +1032,9 @@ var Ve = class extends be {
   static {
     __name(this, "Ve");
   }
+  static {
+    __name2(this, "Ve");
+  }
   constructor(e11 = {}) {
     super(e11), this.router = e11.router ?? new Ie({ routers: [new Fe(), new Be()] });
   }
@@ -975,6 +1044,7 @@ function He() {
   return !(typeof t3?.noColor == "boolean" ? t3.noColor : e11 !== void 0 && "NO_COLOR" in e11?.env);
 }
 __name(He, "He");
+__name2(He, "He");
 async function Ue() {
   let { navigator: e11 } = globalThis;
   return !(e11 !== void 0 && e11.userAgent === "Cloudflare-Workers" ? await (async () => {
@@ -986,15 +1056,16 @@ async function Ue() {
   })() : !He());
 }
 __name(Ue, "Ue");
-var We = /* @__PURE__ */ __name((e11) => {
+__name2(Ue, "Ue");
+var We = /* @__PURE__ */ __name2((e11) => {
   let [t3, n2] = [",", "."];
   return e11.map((e12) => e12.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1" + t3)).join(n2);
 }, "We");
-var Ge = /* @__PURE__ */ __name((e11) => {
+var Ge = /* @__PURE__ */ __name2((e11) => {
   let t3 = Date.now() - e11;
   return We([t3 < 1e3 ? t3 + "ms" : Math.round(t3 / 1e3) + "s"]);
 }, "Ge");
-var Ke = /* @__PURE__ */ __name(async (e11) => {
+var Ke = /* @__PURE__ */ __name2(async (e11) => {
   if (await Ue()) switch (e11 / 100 | 0) {
     case 5:
       return `\x1B[31m${e11}\x1B[0m`;
@@ -1011,26 +1082,27 @@ async function qe(e11, t3, n2, r2, i2 = 0, a2) {
   e11(t3 === "<--" ? `${t3} ${n2} ${r2}` : `${t3} ${n2} ${r2} ${await Ke(i2)} ${a2}`);
 }
 __name(qe, "qe");
-var Je = /* @__PURE__ */ __name((e11 = console.log) => async function(t3, n2) {
+__name2(qe, "qe");
+var Je = /* @__PURE__ */ __name2((e11 = console.log) => async function(t3, n2) {
   let { method: r2, url: i2 } = t3.req, a2 = i2.slice(i2.indexOf("/", 8));
   await qe(e11, "<--", r2, a2);
   let o2 = Date.now();
   await n2(), await qe(e11, "-->", r2, a2, t3.res.status, Ge(o2));
 }, "Je");
-var Ye = /* @__PURE__ */ __name((e11) => Qe(e11.replace(/_|-/g, (e12) => ({
+var Ye = /* @__PURE__ */ __name2((e11) => Qe(e11.replace(/_|-/g, (e12) => ({
   _: "/",
   "-": "+"
 })[e12] ?? e12)), "Ye");
-var Xe = /* @__PURE__ */ __name((e11) => Ze(e11).replace(/\/|\+/g, (e12) => ({
+var Xe = /* @__PURE__ */ __name2((e11) => Ze(e11).replace(/\/|\+/g, (e12) => ({
   "/": "_",
   "+": "-"
 })[e12] ?? e12), "Xe");
-var Ze = /* @__PURE__ */ __name((e11) => {
+var Ze = /* @__PURE__ */ __name2((e11) => {
   let t3 = "", n2 = new Uint8Array(e11);
   for (let e12 = 0, r2 = n2.length; e12 < r2; e12++) t3 += String.fromCharCode(n2[e12]);
   return btoa(t3);
 }, "Ze");
-var Qe = /* @__PURE__ */ __name((e11) => {
+var Qe = /* @__PURE__ */ __name2((e11) => {
   let t3 = atob(e11), n2 = new Uint8Array(new ArrayBuffer(t3.length)), r2 = t3.length / 2;
   for (let e12 = 0, i2 = t3.length - 1; e12 <= r2; e12++, i2--) n2[e12] = t3.charCodeAt(e12), n2[i2] = t3.charCodeAt(i2);
   return n2;
@@ -1042,17 +1114,20 @@ var et = {
   workerd: "Cloudflare-Workers",
   node: "Node.js"
 };
-var tt = /* @__PURE__ */ __name(() => {
+var tt = /* @__PURE__ */ __name2(() => {
   let e11 = globalThis;
   if (typeof navigator < "u" && true) {
     for (let [e12, t3] of Object.entries(et)) if (nt(t3)) return e12;
   }
   return typeof e11?.EdgeRuntime == "string" ? "edge-light" : e11?.fastly === void 0 ? e11?.process?.release?.name === "node" ? "node" : "other" : "fastly";
 }, "tt");
-var nt = /* @__PURE__ */ __name((e11) => "Cloudflare-Workers".startsWith(e11), "nt");
+var nt = /* @__PURE__ */ __name2((e11) => "Cloudflare-Workers".startsWith(e11), "nt");
 var rt = class extends Error {
   static {
     __name(this, "rt");
+  }
+  static {
+    __name2(this, "rt");
   }
   constructor(e11) {
     super(`${e11} is not an implemented algorithm`), this.name = "JwtAlgorithmNotImplemented";
@@ -1062,6 +1137,9 @@ var it = class extends Error {
   static {
     __name(this, "it");
   }
+  static {
+    __name2(this, "it");
+  }
   constructor() {
     super('JWT verification requires "alg" option to be specified'), this.name = "JwtAlgorithmRequired";
   }
@@ -1069,6 +1147,9 @@ var it = class extends Error {
 var at = class extends Error {
   static {
     __name(this, "at");
+  }
+  static {
+    __name2(this, "at");
   }
   constructor(e11, t3) {
     super(`JWT algorithm mismatch: expected "${e11}", got "${t3}"`), this.name = "JwtAlgorithmMismatch";
@@ -1078,6 +1159,9 @@ var x = class extends Error {
   static {
     __name(this, "x");
   }
+  static {
+    __name2(this, "x");
+  }
   constructor(e11) {
     super(`invalid JWT token: ${e11}`), this.name = "JwtTokenInvalid";
   }
@@ -1085,6 +1169,9 @@ var x = class extends Error {
 var ot = class extends Error {
   static {
     __name(this, "ot");
+  }
+  static {
+    __name2(this, "ot");
   }
   constructor(e11) {
     super(`token (${e11}) is being used before it's valid`), this.name = "JwtTokenNotBefore";
@@ -1094,6 +1181,9 @@ var st = class extends Error {
   static {
     __name(this, "st");
   }
+  static {
+    __name2(this, "st");
+  }
   constructor(e11) {
     super(`token (${e11}) expired`), this.name = "JwtTokenExpired";
   }
@@ -1101,6 +1191,9 @@ var st = class extends Error {
 var ct = class extends Error {
   static {
     __name(this, "ct");
+  }
+  static {
+    __name2(this, "ct");
   }
   constructor(e11, t3) {
     super(`Invalid "iat" claim, must be a valid number lower than "${e11}" (iat: "${t3}")`), this.name = "JwtTokenIssuedAt";
@@ -1110,6 +1203,9 @@ var lt = class extends Error {
   static {
     __name(this, "lt");
   }
+  static {
+    __name2(this, "lt");
+  }
   constructor(e11, t3) {
     super(`expected issuer "${e11}", got ${t3 ? `"${t3}"` : "none"} `), this.name = "JwtTokenIssuer";
   }
@@ -1117,6 +1213,9 @@ var lt = class extends Error {
 var ut = class extends Error {
   static {
     __name(this, "ut");
+  }
+  static {
+    __name2(this, "ut");
   }
   constructor(e11) {
     super(`jwt header is invalid: ${JSON.stringify(e11)}`), this.name = "JwtHeaderInvalid";
@@ -1126,6 +1225,9 @@ var dt = class extends Error {
   static {
     __name(this, "dt");
   }
+  static {
+    __name2(this, "dt");
+  }
   constructor(e11) {
     super(`required "kid" in jwt header: ${JSON.stringify(e11)}`), this.name = "JwtHeaderRequiresKid";
   }
@@ -1133,6 +1235,9 @@ var dt = class extends Error {
 var ft = class extends Error {
   static {
     __name(this, "ft");
+  }
+  static {
+    __name2(this, "ft");
   }
   constructor(e11) {
     super(`symmetric algorithm "${e11}" is not allowed for JWK verification`), this.name = "JwtSymmetricAlgorithmNotAllowed";
@@ -1142,6 +1247,9 @@ var pt = class extends Error {
   static {
     __name(this, "pt");
   }
+  static {
+    __name2(this, "pt");
+  }
   constructor(e11, t3) {
     super(`algorithm "${e11}" is not in the allowed list: [${t3.join(", ")}]`), this.name = "JwtAlgorithmNotAllowed";
   }
@@ -1149,6 +1257,9 @@ var pt = class extends Error {
 var mt = class extends Error {
   static {
     __name(this, "mt");
+  }
+  static {
+    __name2(this, "mt");
   }
   constructor(e11) {
     super(`token(${e11}) signature mismatched`), this.name = "JwtTokenSignatureMismatched";
@@ -1158,6 +1269,9 @@ var ht = class extends Error {
   static {
     __name(this, "ht");
   }
+  static {
+    __name2(this, "ht");
+  }
   constructor(e11) {
     super(`required "aud" in jwt payload: ${JSON.stringify(e11)}`), this.name = "JwtPayloadRequiresAud";
   }
@@ -1165,6 +1279,9 @@ var ht = class extends Error {
 var gt = class extends Error {
   static {
     __name(this, "gt");
+  }
+  static {
+    __name2(this, "gt");
   }
   constructor(e11, t3) {
     super(`expected audience "${Array.isArray(e11) ? e11.join(", ") : e11}", got "${t3}"`), this.name = "JwtTokenAudience";
@@ -1178,15 +1295,18 @@ async function yt(e11, t3, n2) {
   return await crypto.subtle.sign(r2, i2, n2);
 }
 __name(yt, "yt");
+__name2(yt, "yt");
 async function bt(e11, t3, n2, r2) {
   let i2 = Tt(t3), a2 = await Ct(e11, i2);
   return await crypto.subtle.verify(i2, a2, n2, r2);
 }
 __name(bt, "bt");
+__name2(bt, "bt");
 function xt(e11) {
   return Qe(e11.replace(/-+(BEGIN|END).*/g, "").replace(/\s/g, ""));
 }
 __name(xt, "xt");
+__name2(xt, "xt");
 async function St(e11, t3) {
   if (!crypto.subtle || !crypto.subtle.importKey) throw Error("`crypto.subtle.importKey` is undefined. JWT auth middleware requires it.");
   if (Et(e11)) {
@@ -1197,6 +1317,7 @@ async function St(e11, t3) {
   return typeof e11 == "object" ? await crypto.subtle.importKey("jwk", e11, t3, false, n2) : e11.includes("PRIVATE") ? await crypto.subtle.importKey("pkcs8", xt(e11), t3, false, n2) : await crypto.subtle.importKey("raw", _t.encode(e11), t3, false, n2);
 }
 __name(St, "St");
+__name2(St, "St");
 async function Ct(e11, t3) {
   if (!crypto.subtle || !crypto.subtle.importKey) throw Error("`crypto.subtle.importKey` is undefined. JWT auth middleware requires it.");
   if (Et(e11)) {
@@ -1208,6 +1329,7 @@ async function Ct(e11, t3) {
   return typeof e11 == "object" ? await crypto.subtle.importKey("jwk", e11, t3, false, n2) : e11.includes("PUBLIC") ? await crypto.subtle.importKey("spki", xt(e11), t3, false, n2) : await crypto.subtle.importKey("raw", _t.encode(e11), t3, false, n2);
 }
 __name(Ct, "Ct");
+__name2(Ct, "Ct");
 async function wt(e11) {
   if (e11.type !== "private") throw Error(`unexpected key type: ${e11.type}`);
   if (!e11.extractable) throw Error("unexpected private key is unextractable");
@@ -1224,6 +1346,7 @@ async function wt(e11) {
   };
 }
 __name(wt, "wt");
+__name2(wt, "wt");
 function Tt(e11) {
   switch (e11) {
     case "HS256":
@@ -1302,13 +1425,15 @@ function Tt(e11) {
   }
 }
 __name(Tt, "Tt");
+__name2(Tt, "Tt");
 function Et(e11) {
   return tt() === "node" && crypto.webcrypto ? e11 instanceof crypto.webcrypto.CryptoKey : e11 instanceof CryptoKey;
 }
 __name(Et, "Et");
-var Dt = /* @__PURE__ */ __name((e11) => Xe(_t.encode(JSON.stringify(e11)).buffer).replace(/=/g, ""), "Dt");
-var Ot = /* @__PURE__ */ __name((e11) => Xe(e11).replace(/=/g, ""), "Ot");
-var kt = /* @__PURE__ */ __name((e11) => JSON.parse(vt.decode(Ye(e11))), "kt");
+__name2(Et, "Et");
+var Dt = /* @__PURE__ */ __name2((e11) => Xe(_t.encode(JSON.stringify(e11)).buffer).replace(/=/g, ""), "Dt");
+var Ot = /* @__PURE__ */ __name2((e11) => Xe(e11).replace(/=/g, ""), "Ot");
+var kt = /* @__PURE__ */ __name2((e11) => JSON.parse(vt.decode(Ye(e11))), "kt");
 function At(e11) {
   if (typeof e11 == "object" && e11) {
     let t3 = e11;
@@ -1317,7 +1442,8 @@ function At(e11) {
   return false;
 }
 __name(At, "At");
-var jt = /* @__PURE__ */ __name(async (e11, t3, n2 = "HS256") => {
+__name2(At, "At");
+var jt = /* @__PURE__ */ __name2(async (e11, t3, n2 = "HS256") => {
   let r2 = Dt(e11), i2;
   typeof t3 == "object" && "alg" in t3 ? (n2 = t3.alg, i2 = Dt({
     alg: n2,
@@ -1330,7 +1456,7 @@ var jt = /* @__PURE__ */ __name(async (e11, t3, n2 = "HS256") => {
   let a2 = `${i2}.${r2}`;
   return `${a2}.${Ot(await yt(t3, n2, _t.encode(a2)))}`;
 }, "jt");
-var Mt = /* @__PURE__ */ __name(async (e11, t3, n2) => {
+var Mt = /* @__PURE__ */ __name2(async (e11, t3, n2) => {
   if (!n2) throw new it();
   let { alg: r2, iss: i2, nbf: a2 = true, exp: o2 = true, iat: s2 = true, aud: c2 } = typeof n2 == "string" ? { alg: n2 } : n2;
   if (!r2) throw new it();
@@ -1360,7 +1486,7 @@ var Nt = [
   $e.HS384,
   $e.HS512
 ];
-var Pt = /* @__PURE__ */ __name(async (e11, t3, n2) => {
+var Pt = /* @__PURE__ */ __name2(async (e11, t3, n2) => {
   let r2 = t3.verification || {}, i2 = It(e11);
   if (!At(i2)) throw new ut(i2);
   if (!i2.kid) throw new dt(i2);
@@ -1383,7 +1509,7 @@ var Pt = /* @__PURE__ */ __name(async (e11, t3, n2) => {
     ...r2
   });
 }, "Pt");
-var Ft = /* @__PURE__ */ __name((e11) => {
+var Ft = /* @__PURE__ */ __name2((e11) => {
   let t3 = e11.split(".");
   if (t3.length !== 3) throw new x(e11);
   try {
@@ -1395,7 +1521,7 @@ var Ft = /* @__PURE__ */ __name((e11) => {
     throw new x(e11);
   }
 }, "Ft");
-var It = /* @__PURE__ */ __name((e11) => {
+var It = /* @__PURE__ */ __name2((e11) => {
   let t3 = e11.split(".");
   if (t3.length !== 3) throw new x(e11);
   try {
@@ -1427,9 +1553,13 @@ function w(e11, t3) {
   return false;
 }
 __name(w, "w");
+__name2(w, "w");
 var T = class {
   static {
     __name(this, "T");
+  }
+  static {
+    __name2(this, "T");
   }
   constructor(e11, t3) {
     this.table = e11, this.config = t3, this.name = t3.name, this.keyAsName = t3.keyAsName, this.notNull = t3.notNull, this.default = t3.default, this.defaultFn = t3.defaultFn, this.onUpdateFn = t3.onUpdateFn, this.hasDefault = t3.hasDefault, this.primary = t3.primaryKey, this.isUnique = t3.isUnique, this.uniqueName = t3.uniqueName, this.uniqueType = t3.uniqueType, this.dataType = t3.dataType, this.columnType = t3.columnType, this.generated = t3.generated, this.generatedIdentity = t3.generatedIdentity;
@@ -1465,6 +1595,9 @@ var T = class {
 var Bt = class {
   static {
     __name(this, "Bt");
+  }
+  static {
+    __name2(this, "Bt");
   }
   static [C] = "ColumnBuilder";
   config;
@@ -1514,9 +1647,13 @@ function Ht(e11) {
   return !!e11 && typeof e11 == "function" && Vt in e11 && e11[Vt] === true;
 }
 __name(Ht, "Ht");
+__name2(Ht, "Ht");
 var D = class {
   static {
     __name(this, "D");
+  }
+  static {
+    __name2(this, "D");
   }
   static [C] = "Subquery";
   constructor(e11, t3, n2, r2 = false, i2 = []) {
@@ -1533,6 +1670,9 @@ var D = class {
 var Ut = class extends D {
   static {
     __name(this, "Ut");
+  }
+  static {
+    __name2(this, "Ut");
   }
   static [C] = "WithSubquery";
 };
@@ -1551,6 +1691,9 @@ var Qt = /* @__PURE__ */ Symbol.for("drizzle:IsDrizzleTable");
 var k = class {
   static {
     __name(this, "k");
+  }
+  static {
+    __name2(this, "k");
   }
   static [C] = "Table";
   static Symbol = {
@@ -1580,14 +1723,17 @@ function A(e11) {
   return e11[E];
 }
 __name(A, "A");
+__name2(A, "A");
 function $t(e11) {
   return `${e11[Gt] ?? "public"}.${e11[E]}`;
 }
 __name($t, "$t");
+__name2($t, "$t");
 function en(e11) {
   return e11 != null && typeof e11.getSQL == "function";
 }
 __name(en, "en");
+__name2(en, "en");
 function tn(e11) {
   let t3 = {
     sql: "",
@@ -1597,9 +1743,13 @@ function tn(e11) {
   return t3;
 }
 __name(tn, "tn");
+__name2(tn, "tn");
 var j = class {
   static {
     __name(this, "j");
+  }
+  static {
+    __name2(this, "j");
   }
   static [C] = "StringChunk";
   value;
@@ -1612,7 +1762,10 @@ var j = class {
 };
 var M = class e4 {
   static {
-    __name(this, "e");
+    __name(this, "e4");
+  }
+  static {
+    __name2(this, "e");
   }
   constructor(e11) {
     this.queryChunks = e11;
@@ -1774,6 +1927,9 @@ var nn = class {
   static {
     __name(this, "nn");
   }
+  static {
+    __name2(this, "nn");
+  }
   constructor(e11) {
     this.value = e11;
   }
@@ -1787,8 +1943,9 @@ function rn(e11) {
   return typeof e11 == "object" && !!e11 && "mapToDriverValue" in e11 && typeof e11.mapToDriverValue == "function";
 }
 __name(rn, "rn");
-var an = { mapFromDriverValue: /* @__PURE__ */ __name((e11) => e11, "mapFromDriverValue") };
-var on = { mapToDriverValue: /* @__PURE__ */ __name((e11) => e11, "mapToDriverValue") };
+__name2(rn, "rn");
+var an = { mapFromDriverValue: /* @__PURE__ */ __name2((e11) => e11, "mapFromDriverValue") };
+var on = { mapToDriverValue: /* @__PURE__ */ __name2((e11) => e11, "mapToDriverValue") };
 ({
   ...an,
   ...on
@@ -1796,6 +1953,9 @@ var on = { mapToDriverValue: /* @__PURE__ */ __name((e11) => e11, "mapToDriverVa
 var N = class {
   static {
     __name(this, "N");
+  }
+  static {
+    __name2(this, "N");
   }
   constructor(e11, t3 = on) {
     this.value = e11, this.encoder = t3;
@@ -1813,48 +1973,59 @@ function P(e11, ...t3) {
   return new M(n2);
 }
 __name(P, "P");
+__name2(P, "P");
 ((e11) => {
   function t3() {
     return new M([]);
   }
-  __name(t3, "t");
+  __name(t3, "t3");
+  __name2(t3, "t");
   e11.empty = t3;
   function n2(e12) {
     return new M(e12);
   }
-  __name(n2, "n");
+  __name(n2, "n2");
+  __name2(n2, "n");
   e11.fromList = n2;
   function r2(e12) {
     return new M([new j(e12)]);
   }
-  __name(r2, "r");
+  __name(r2, "r2");
+  __name2(r2, "r");
   e11.raw = r2;
   function i2(e12, t4) {
     let n3 = [];
     for (let [r3, i3] of e12.entries()) r3 > 0 && t4 !== void 0 && n3.push(t4), n3.push(i3);
     return new M(n3);
   }
-  __name(i2, "i");
+  __name(i2, "i2");
+  __name2(i2, "i");
   e11.join = i2;
   function a2(e12) {
     return new nn(e12);
   }
-  __name(a2, "a");
+  __name(a2, "a2");
+  __name2(a2, "a");
   e11.identifier = a2;
   function o2(e12) {
     return new F(e12);
   }
-  __name(o2, "o");
+  __name(o2, "o2");
+  __name2(o2, "o");
   e11.placeholder = o2;
   function s2(e12, t4) {
     return new N(e12, t4);
   }
-  __name(s2, "s");
+  __name(s2, "s2");
+  __name2(s2, "s");
   e11.param = s2;
 })(P ||= {}), ((e11) => {
   class t3 {
     static {
-      __name(this, "t");
+      __name(this, "t3");
+    }
+    static {
+      __name2(this, "t");
     }
     constructor(e12, t4) {
       this.sql = e12, this.fieldAlias = t4;
@@ -1873,6 +2044,9 @@ __name(P, "P");
 var F = class {
   static {
     __name(this, "F");
+  }
+  static {
+    __name2(this, "F");
   }
   constructor(e11) {
     this.name = e11;
@@ -1896,10 +2070,14 @@ function sn(e11, t3) {
   });
 }
 __name(sn, "sn");
+__name2(sn, "sn");
 var cn = /* @__PURE__ */ Symbol.for("drizzle:IsDrizzleView");
 var I = class {
   static {
     __name(this, "I");
+  }
+  static {
+    __name2(this, "I");
   }
   static [C] = "View";
   [O];
@@ -1930,6 +2108,9 @@ var ln = class {
   static {
     __name(this, "ln");
   }
+  static {
+    __name2(this, "ln");
+  }
   constructor(e11) {
     this.table = e11;
   }
@@ -1941,6 +2122,9 @@ var ln = class {
 var un = class {
   static {
     __name(this, "un");
+  }
+  static {
+    __name2(this, "un");
   }
   constructor(e11, t3) {
     this.alias = e11, this.replaceOriginalName = t3;
@@ -1970,21 +2154,28 @@ function dn(e11, t3) {
   return new Proxy(e11, new un(t3, false));
 }
 __name(dn, "dn");
+__name2(dn, "dn");
 function L(e11, t3) {
   return new Proxy(e11, new ln(new Proxy(e11.table, new un(t3, false))));
 }
 __name(L, "L");
+__name2(L, "L");
 function fn(e11, t3) {
   return new M.Aliased(pn(e11.sql, t3), e11.fieldAlias);
 }
 __name(fn, "fn");
+__name2(fn, "fn");
 function pn(e11, t3) {
   return P.join(e11.queryChunks.map((e12) => w(e12, T) ? L(e12, t3) : w(e12, M) ? pn(e12, t3) : w(e12, M.Aliased) ? fn(e12, t3) : e12));
 }
 __name(pn, "pn");
+__name2(pn, "pn");
 var mn = class extends Error {
   static {
     __name(this, "mn");
+  }
+  static {
+    __name2(this, "mn");
   }
   static [C] = "DrizzleError";
   constructor({ message: e11, cause: t3 }) {
@@ -1993,7 +2184,10 @@ var mn = class extends Error {
 };
 var R = class e5 extends Error {
   static {
-    __name(this, "e");
+    __name(this, "e5");
+  }
+  static {
+    __name2(this, "e");
   }
   constructor(t3, n2, r2) {
     super(`Failed query: ${t3}
@@ -2004,6 +2198,9 @@ var hn = class extends mn {
   static {
     __name(this, "hn");
   }
+  static {
+    __name2(this, "hn");
+  }
   static [C] = "TransactionRollbackError";
   constructor() {
     super({ message: "Rollback" });
@@ -2013,6 +2210,9 @@ var gn = class {
   static {
     __name(this, "gn");
   }
+  static {
+    __name2(this, "gn");
+  }
   static [C] = "ConsoleLogWriter";
   write(e11) {
     console.log(e11);
@@ -2021,6 +2221,9 @@ var gn = class {
 var _n = class {
   static {
     __name(this, "_n");
+  }
+  static {
+    __name2(this, "_n");
   }
   static [C] = "DefaultLogger";
   writer;
@@ -2042,6 +2245,9 @@ var vn = class {
   static {
     __name(this, "vn");
   }
+  static {
+    __name2(this, "vn");
+  }
   static [C] = "NoopLogger";
   logQuery() {
   }
@@ -2049,6 +2255,9 @@ var vn = class {
 var z = class {
   static {
     __name(this, "z");
+  }
+  static {
+    __name2(this, "z");
   }
   static [C] = "QueryPromise";
   [Symbol.toStringTag] = "QueryPromise";
@@ -2083,6 +2292,7 @@ function yn(e11, t3, n2) {
   return i2;
 }
 __name(yn, "yn");
+__name2(yn, "yn");
 function B(e11, t3) {
   return Object.entries(e11).reduce((e12, [n2, r2]) => {
     if (typeof n2 != "string") return e12;
@@ -2094,6 +2304,7 @@ function B(e11, t3) {
   }, []);
 }
 __name(B, "B");
+__name2(B, "B");
 function bn(e11, t3) {
   let n2 = Object.keys(e11), r2 = Object.keys(t3);
   if (n2.length !== r2.length) return false;
@@ -2101,24 +2312,29 @@ function bn(e11, t3) {
   return true;
 }
 __name(bn, "bn");
+__name2(bn, "bn");
 function xn(e11, t3) {
   let n2 = Object.entries(t3).filter(([, e12]) => e12 !== void 0).map(([t4, n3]) => w(n3, M) || w(n3, T) ? [t4, n3] : [t4, new N(n3, e11[k.Symbol.Columns][t4])]);
   if (n2.length === 0) throw Error("No values to set");
   return Object.fromEntries(n2);
 }
 __name(xn, "xn");
+__name2(xn, "xn");
 function Sn(e11, t3) {
   for (let n2 of t3) for (let t4 of Object.getOwnPropertyNames(n2.prototype)) t4 !== "constructor" && Object.defineProperty(e11.prototype, t4, Object.getOwnPropertyDescriptor(n2.prototype, t4) || /* @__PURE__ */ Object.create(null));
 }
 __name(Sn, "Sn");
+__name2(Sn, "Sn");
 function Cn(e11) {
   return e11[k.Symbol.Columns];
 }
 __name(Cn, "Cn");
+__name2(Cn, "Cn");
 function wn(e11) {
   return w(e11, D) ? e11._.alias : w(e11, I) ? e11[O].name : w(e11, M) ? void 0 : e11[k.Symbol.IsAlias] ? e11[k.Symbol.Name] : e11[k.Symbol.BaseName];
 }
 __name(wn, "wn");
+__name2(wn, "wn");
 function Tn(e11, t3) {
   return {
     name: typeof e11 == "string" && e11.length > 0 ? e11 : "",
@@ -2126,12 +2342,16 @@ function Tn(e11, t3) {
   };
 }
 __name(Tn, "Tn");
+__name2(Tn, "Tn");
 var En = typeof TextDecoder > "u" ? null : new TextDecoder();
 var Dn = /* @__PURE__ */ Symbol.for("drizzle:PgInlineForeignKeys");
 var On = /* @__PURE__ */ Symbol.for("drizzle:EnableRLS");
 var kn = class extends k {
   static {
     __name(this, "kn");
+  }
+  static {
+    __name2(this, "kn");
   }
   static [C] = "PgTable";
   static Symbol = Object.assign({}, k.Symbol, {
@@ -2147,6 +2367,9 @@ var An = class {
   static {
     __name(this, "An");
   }
+  static {
+    __name2(this, "An");
+  }
   static [C] = "PgPrimaryKeyBuilder";
   columns;
   name;
@@ -2160,6 +2383,9 @@ var An = class {
 var jn = class {
   static {
     __name(this, "jn");
+  }
+  static {
+    __name2(this, "jn");
   }
   constructor(e11, t3, n2) {
     this.table = e11, this.columns = t3, this.name = n2;
@@ -2175,8 +2401,9 @@ function V(e11, t3) {
   return rn(t3) && !en(e11) && !w(e11, N) && !w(e11, F) && !w(e11, T) && !w(e11, k) && !w(e11, I) ? new N(e11, t3) : e11;
 }
 __name(V, "V");
-var H = /* @__PURE__ */ __name((e11, t3) => P`${e11} = ${V(t3, e11)}`, "H");
-var Mn = /* @__PURE__ */ __name((e11, t3) => P`${e11} <> ${V(t3, e11)}`, "Mn");
+__name2(V, "V");
+var H = /* @__PURE__ */ __name2((e11, t3) => P`${e11} = ${V(t3, e11)}`, "H");
+var Mn = /* @__PURE__ */ __name2((e11, t3) => P`${e11} <> ${V(t3, e11)}`, "Mn");
 function Nn(...e11) {
   let t3 = e11.filter((e12) => e12 !== void 0);
   if (t3.length !== 0) return t3.length === 1 ? new M(t3) : new M([
@@ -2186,6 +2413,7 @@ function Nn(...e11) {
   ]);
 }
 __name(Nn, "Nn");
+__name2(Nn, "Nn");
 function Pn(...e11) {
   let t3 = e11.filter((e12) => e12 !== void 0);
   if (t3.length !== 0) return t3.length === 1 ? new M(t3) : new M([
@@ -2195,73 +2423,92 @@ function Pn(...e11) {
   ]);
 }
 __name(Pn, "Pn");
+__name2(Pn, "Pn");
 function Fn(e11) {
   return P`not ${e11}`;
 }
 __name(Fn, "Fn");
-var In = /* @__PURE__ */ __name((e11, t3) => P`${e11} > ${V(t3, e11)}`, "In");
-var Ln = /* @__PURE__ */ __name((e11, t3) => P`${e11} >= ${V(t3, e11)}`, "Ln");
-var Rn = /* @__PURE__ */ __name((e11, t3) => P`${e11} < ${V(t3, e11)}`, "Rn");
-var zn = /* @__PURE__ */ __name((e11, t3) => P`${e11} <= ${V(t3, e11)}`, "zn");
+__name2(Fn, "Fn");
+var In = /* @__PURE__ */ __name2((e11, t3) => P`${e11} > ${V(t3, e11)}`, "In");
+var Ln = /* @__PURE__ */ __name2((e11, t3) => P`${e11} >= ${V(t3, e11)}`, "Ln");
+var Rn = /* @__PURE__ */ __name2((e11, t3) => P`${e11} < ${V(t3, e11)}`, "Rn");
+var zn = /* @__PURE__ */ __name2((e11, t3) => P`${e11} <= ${V(t3, e11)}`, "zn");
 function Bn(e11, t3) {
   return Array.isArray(t3) ? t3.length === 0 ? P`false` : P`${e11} in ${t3.map((t4) => V(t4, e11))}` : P`${e11} in ${V(t3, e11)}`;
 }
 __name(Bn, "Bn");
+__name2(Bn, "Bn");
 function Vn(e11, t3) {
   return Array.isArray(t3) ? t3.length === 0 ? P`true` : P`${e11} not in ${t3.map((t4) => V(t4, e11))}` : P`${e11} not in ${V(t3, e11)}`;
 }
 __name(Vn, "Vn");
+__name2(Vn, "Vn");
 function Hn(e11) {
   return P`${e11} is null`;
 }
 __name(Hn, "Hn");
+__name2(Hn, "Hn");
 function Un(e11) {
   return P`${e11} is not null`;
 }
 __name(Un, "Un");
+__name2(Un, "Un");
 function Wn(e11) {
   return P`exists ${e11}`;
 }
 __name(Wn, "Wn");
+__name2(Wn, "Wn");
 function Gn(e11) {
   return P`not exists ${e11}`;
 }
 __name(Gn, "Gn");
+__name2(Gn, "Gn");
 function Kn(e11, t3, n2) {
   return P`${e11} between ${V(t3, e11)} and ${V(n2, e11)}`;
 }
 __name(Kn, "Kn");
+__name2(Kn, "Kn");
 function qn(e11, t3, n2) {
   return P`${e11} not between ${V(t3, e11)} and ${V(n2, e11)}`;
 }
 __name(qn, "qn");
+__name2(qn, "qn");
 function Jn(e11, t3) {
   return P`${e11} like ${t3}`;
 }
 __name(Jn, "Jn");
+__name2(Jn, "Jn");
 function Yn(e11, t3) {
   return P`${e11} not like ${t3}`;
 }
 __name(Yn, "Yn");
+__name2(Yn, "Yn");
 function Xn(e11, t3) {
   return P`${e11} ilike ${t3}`;
 }
 __name(Xn, "Xn");
+__name2(Xn, "Xn");
 function Zn(e11, t3) {
   return P`${e11} not ilike ${t3}`;
 }
 __name(Zn, "Zn");
+__name2(Zn, "Zn");
 function Qn(e11) {
   return P`${e11} asc`;
 }
 __name(Qn, "Qn");
+__name2(Qn, "Qn");
 function $n(e11) {
   return P`${e11} desc`;
 }
 __name($n, "$n");
+__name2($n, "$n");
 var er = class {
   static {
     __name(this, "er");
+  }
+  static {
+    __name2(this, "er");
   }
   constructor(e11, t3, n2) {
     this.sourceTable = e11, this.referencedTable = t3, this.relationName = n2, this.referencedTableName = t3[k.Symbol.Name];
@@ -2274,6 +2521,9 @@ var tr = class {
   static {
     __name(this, "tr");
   }
+  static {
+    __name2(this, "tr");
+  }
   constructor(e11, t3) {
     this.table = e11, this.config = t3;
   }
@@ -2281,7 +2531,10 @@ var tr = class {
 };
 var nr = class e6 extends er {
   static {
-    __name(this, "e");
+    __name(this, "e6");
+  }
+  static {
+    __name2(this, "e");
   }
   constructor(e11, t3, n2, r2) {
     super(e11, t3, n2?.relationName), this.config = n2, this.isNullable = r2;
@@ -2294,7 +2547,10 @@ var nr = class e6 extends er {
 };
 var rr = class e7 extends er {
   static {
-    __name(this, "e");
+    __name(this, "e7");
+  }
+  static {
+    __name2(this, "e");
   }
   constructor(e11, t3, n2) {
     super(e11, t3, n2?.relationName), this.config = n2;
@@ -2332,6 +2588,7 @@ function ir() {
   };
 }
 __name(ir, "ir");
+__name2(ir, "ir");
 function ar() {
   return {
     sql: P,
@@ -2340,6 +2597,7 @@ function ar() {
   };
 }
 __name(ar, "ar");
+__name2(ar, "ar");
 function or(e11, t3) {
   Object.keys(e11).length === 1 && "default" in e11 && !w(e11.default, k) && (e11 = e11.default);
   let n2 = {}, r2 = {}, i2 = {};
@@ -2372,18 +2630,21 @@ function or(e11, t3) {
   };
 }
 __name(or, "or");
+__name2(or, "or");
 function sr(e11) {
   return function(t3, n2) {
     return new nr(e11, t3, n2, n2?.fields.reduce((e12, t4) => e12 && t4.notNull, true) ?? false);
   };
 }
 __name(sr, "sr");
+__name2(sr, "sr");
 function cr(e11) {
   return function(t3, n2) {
     return new rr(e11, t3, n2);
   };
 }
 __name(cr, "cr");
+__name2(cr, "cr");
 function lr(e11, t3, n2) {
   if (w(n2, nr) && n2.config) return {
     fields: n2.config.fields,
@@ -2405,6 +2666,7 @@ function lr(e11, t3, n2) {
   throw Error(`There is not enough information to infer relation "${o2}.${n2.fieldName}"`);
 }
 __name(lr, "lr");
+__name2(lr, "lr");
 function ur(e11) {
   return {
     one: sr(e11),
@@ -2412,6 +2674,7 @@ function ur(e11) {
   };
 }
 __name(ur, "ur");
+__name2(ur, "ur");
 function dr(e11, t3, n2, r2, i2 = (e12) => e12) {
   let a2 = {};
   for (let [o2, s2] of r2.entries()) if (s2.isJson) {
@@ -2424,9 +2687,13 @@ function dr(e11, t3, n2, r2, i2 = (e12) => e12) {
   return a2;
 }
 __name(dr, "dr");
+__name2(dr, "dr");
 var U = class e8 {
   static {
-    __name(this, "e");
+    __name(this, "e8");
+  }
+  static {
+    __name2(this, "e");
   }
   static [C] = "SelectionProxyHandler";
   config;
@@ -2460,6 +2727,9 @@ var fr = class {
   static {
     __name(this, "fr");
   }
+  static {
+    __name2(this, "fr");
+  }
   static [C] = "SQLiteForeignKeyBuilder";
   reference;
   _onUpdate;
@@ -2489,6 +2759,9 @@ var pr = class {
   static {
     __name(this, "pr");
   }
+  static {
+    __name2(this, "pr");
+  }
   constructor(e11, t3) {
     this.table = e11, this.reference = t3.reference, this.onUpdate = t3._onUpdate, this.onDelete = t3._onDelete;
   }
@@ -2510,9 +2783,13 @@ function mr(e11, t3) {
   return `${e11[E]}_${t3.join("_")}_unique`;
 }
 __name(mr, "mr");
+__name2(mr, "mr");
 var W = class extends Bt {
   static {
     __name(this, "W");
+  }
+  static {
+    __name2(this, "W");
   }
   static [C] = "SQLiteColumnBuilder";
   foreignKeyConfigs = [];
@@ -2549,6 +2826,9 @@ var G = class extends T {
   static {
     __name(this, "G");
   }
+  static {
+    __name2(this, "G");
+  }
   constructor(e11, t3) {
     t3.uniqueName ||= mr(e11, [t3.name]), super(e11, t3), this.table = e11;
   }
@@ -2557,6 +2837,9 @@ var G = class extends T {
 var hr = class extends W {
   static {
     __name(this, "hr");
+  }
+  static {
+    __name2(this, "hr");
   }
   static [C] = "SQLiteBigIntBuilder";
   constructor(e11) {
@@ -2569,6 +2852,9 @@ var hr = class extends W {
 var gr = class extends G {
   static {
     __name(this, "gr");
+  }
+  static {
+    __name2(this, "gr");
   }
   static [C] = "SQLiteBigInt";
   getSQLType() {
@@ -2589,6 +2875,9 @@ var _r = class extends W {
   static {
     __name(this, "_r");
   }
+  static {
+    __name2(this, "_r");
+  }
   static [C] = "SQLiteBlobJsonBuilder";
   constructor(e11) {
     super(e11, "json", "SQLiteBlobJson");
@@ -2600,6 +2889,9 @@ var _r = class extends W {
 var vr = class extends G {
   static {
     __name(this, "vr");
+  }
+  static {
+    __name2(this, "vr");
   }
   static [C] = "SQLiteBlobJson";
   getSQLType() {
@@ -2620,6 +2912,9 @@ var yr = class extends W {
   static {
     __name(this, "yr");
   }
+  static {
+    __name2(this, "yr");
+  }
   static [C] = "SQLiteBlobBufferBuilder";
   constructor(e11) {
     super(e11, "buffer", "SQLiteBlobBuffer");
@@ -2631,6 +2926,9 @@ var yr = class extends W {
 var br = class extends G {
   static {
     __name(this, "br");
+  }
+  static {
+    __name2(this, "br");
   }
   static [C] = "SQLiteBlobBuffer";
   mapFromDriverValue(e11) {
@@ -2645,9 +2943,13 @@ function xr(e11, t3) {
   return r2?.mode === "json" ? new _r(n2) : r2?.mode === "bigint" ? new hr(n2) : new yr(n2);
 }
 __name(xr, "xr");
+__name2(xr, "xr");
 var Sr = class extends W {
   static {
     __name(this, "Sr");
+  }
+  static {
+    __name2(this, "Sr");
   }
   static [C] = "SQLiteCustomColumnBuilder";
   constructor(e11, t3, n2) {
@@ -2660,6 +2962,9 @@ var Sr = class extends W {
 var Cr = class extends G {
   static {
     __name(this, "Cr");
+  }
+  static {
+    __name2(this, "Cr");
   }
   static [C] = "SQLiteCustomColumn";
   sqlName;
@@ -2685,9 +2990,13 @@ function wr(e11) {
   };
 }
 __name(wr, "wr");
+__name2(wr, "wr");
 var Tr = class extends W {
   static {
     __name(this, "Tr");
+  }
+  static {
+    __name2(this, "Tr");
   }
   static [C] = "SQLiteBaseIntegerBuilder";
   constructor(e11, t3, n2) {
@@ -2701,6 +3010,9 @@ var Er = class extends G {
   static {
     __name(this, "Er");
   }
+  static {
+    __name2(this, "Er");
+  }
   static [C] = "SQLiteBaseInteger";
   autoIncrement = this.config.autoIncrement;
   getSQLType() {
@@ -2710,6 +3022,9 @@ var Er = class extends G {
 var Dr = class extends Tr {
   static {
     __name(this, "Dr");
+  }
+  static {
+    __name2(this, "Dr");
   }
   static [C] = "SQLiteIntegerBuilder";
   constructor(e11) {
@@ -2723,11 +3038,17 @@ var Or = class extends Er {
   static {
     __name(this, "Or");
   }
+  static {
+    __name2(this, "Or");
+  }
   static [C] = "SQLiteInteger";
 };
 var kr = class extends Tr {
   static {
     __name(this, "kr");
+  }
+  static {
+    __name2(this, "kr");
   }
   static [C] = "SQLiteTimestampBuilder";
   constructor(e11, t3) {
@@ -2744,6 +3065,9 @@ var Ar = class extends Er {
   static {
     __name(this, "Ar");
   }
+  static {
+    __name2(this, "Ar");
+  }
   static [C] = "SQLiteTimestamp";
   mode = this.config.mode;
   mapFromDriverValue(e11) {
@@ -2758,6 +3082,9 @@ var jr = class extends Tr {
   static {
     __name(this, "jr");
   }
+  static {
+    __name2(this, "jr");
+  }
   static [C] = "SQLiteBooleanBuilder";
   constructor(e11, t3) {
     super(e11, "boolean", "SQLiteBoolean"), this.config.mode = t3;
@@ -2769,6 +3096,9 @@ var jr = class extends Tr {
 var Mr = class extends Er {
   static {
     __name(this, "Mr");
+  }
+  static {
+    __name2(this, "Mr");
   }
   static [C] = "SQLiteBoolean";
   mode = this.config.mode;
@@ -2784,9 +3114,13 @@ function K(e11, t3) {
   return r2?.mode === "timestamp" || r2?.mode === "timestamp_ms" ? new kr(n2, r2.mode) : r2?.mode === "boolean" ? new jr(n2, r2.mode) : new Dr(n2);
 }
 __name(K, "K");
+__name2(K, "K");
 var Nr = class extends W {
   static {
     __name(this, "Nr");
+  }
+  static {
+    __name2(this, "Nr");
   }
   static [C] = "SQLiteNumericBuilder";
   constructor(e11) {
@@ -2800,6 +3134,9 @@ var Pr = class extends G {
   static {
     __name(this, "Pr");
   }
+  static {
+    __name2(this, "Pr");
+  }
   static [C] = "SQLiteNumeric";
   mapFromDriverValue(e11) {
     return typeof e11 == "string" ? e11 : String(e11);
@@ -2812,6 +3149,9 @@ var Fr = class extends W {
   static {
     __name(this, "Fr");
   }
+  static {
+    __name2(this, "Fr");
+  }
   static [C] = "SQLiteNumericNumberBuilder";
   constructor(e11) {
     super(e11, "number", "SQLiteNumericNumber");
@@ -2823,6 +3163,9 @@ var Fr = class extends W {
 var Ir = class extends G {
   static {
     __name(this, "Ir");
+  }
+  static {
+    __name2(this, "Ir");
   }
   static [C] = "SQLiteNumericNumber";
   mapFromDriverValue(e11) {
@@ -2837,6 +3180,9 @@ var Lr = class extends W {
   static {
     __name(this, "Lr");
   }
+  static {
+    __name2(this, "Lr");
+  }
   static [C] = "SQLiteNumericBigIntBuilder";
   constructor(e11) {
     super(e11, "bigint", "SQLiteNumericBigInt");
@@ -2848,6 +3194,9 @@ var Lr = class extends W {
 var Rr = class extends G {
   static {
     __name(this, "Rr");
+  }
+  static {
+    __name2(this, "Rr");
   }
   static [C] = "SQLiteNumericBigInt";
   mapFromDriverValue = BigInt;
@@ -2861,9 +3210,13 @@ function zr(e11, t3) {
   return i2 === "number" ? new Fr(n2) : i2 === "bigint" ? new Lr(n2) : new Nr(n2);
 }
 __name(zr, "zr");
+__name2(zr, "zr");
 var Br = class extends W {
   static {
     __name(this, "Br");
+  }
+  static {
+    __name2(this, "Br");
   }
   static [C] = "SQLiteRealBuilder";
   constructor(e11) {
@@ -2877,6 +3230,9 @@ var Vr = class extends G {
   static {
     __name(this, "Vr");
   }
+  static {
+    __name2(this, "Vr");
+  }
   static [C] = "SQLiteReal";
   getSQLType() {
     return "real";
@@ -2886,9 +3242,13 @@ function Hr(e11) {
   return new Br(e11 ?? "");
 }
 __name(Hr, "Hr");
+__name2(Hr, "Hr");
 var Ur = class extends W {
   static {
     __name(this, "Ur");
+  }
+  static {
+    __name2(this, "Ur");
   }
   static [C] = "SQLiteTextBuilder";
   constructor(e11, t3) {
@@ -2901,6 +3261,9 @@ var Ur = class extends W {
 var Wr = class extends G {
   static {
     __name(this, "Wr");
+  }
+  static {
+    __name2(this, "Wr");
   }
   static [C] = "SQLiteText";
   enumValues = this.config.enumValues;
@@ -2916,6 +3279,9 @@ var Gr = class extends W {
   static {
     __name(this, "Gr");
   }
+  static {
+    __name2(this, "Gr");
+  }
   static [C] = "SQLiteTextJsonBuilder";
   constructor(e11) {
     super(e11, "json", "SQLiteTextJson");
@@ -2927,6 +3293,9 @@ var Gr = class extends W {
 var Kr = class extends G {
   static {
     __name(this, "Kr");
+  }
+  static {
+    __name2(this, "Kr");
   }
   static [C] = "SQLiteTextJson";
   getSQLType() {
@@ -2944,6 +3313,7 @@ function q(e11, t3 = {}) {
   return r2.mode === "json" ? new Gr(n2) : new Ur(n2, r2);
 }
 __name(q, "q");
+__name2(q, "q");
 function qr() {
   return {
     blob: xr,
@@ -2955,10 +3325,14 @@ function qr() {
   };
 }
 __name(qr, "qr");
+__name2(qr, "qr");
 var Jr = /* @__PURE__ */ Symbol.for("drizzle:SQLiteInlineForeignKeys");
 var J = class extends k {
   static {
     __name(this, "J");
+  }
+  static {
+    __name2(this, "J");
   }
   static [C] = "SQLiteTable";
   static Symbol = Object.assign({}, k.Symbol, { InlineForeignKeys: Jr });
@@ -2976,14 +3350,19 @@ function Yr(e11, t3, n2, r2, i2 = e11) {
   return c2[k.Symbol.Columns] = s2, c2[k.Symbol.ExtraConfigColumns] = s2, n2 && (c2[J.Symbol.ExtraConfigBuilder] = n2), c2;
 }
 __name(Yr, "Yr");
-var Xr = /* @__PURE__ */ __name((e11, t3, n2) => Yr(e11, t3, n2), "Xr");
+__name2(Yr, "Yr");
+var Xr = /* @__PURE__ */ __name2((e11, t3, n2) => Yr(e11, t3, n2), "Xr");
 function Y(e11) {
   return w(e11, J) ? [`${e11[k.Symbol.BaseName]}`] : w(e11, D) ? e11._.usedTables ?? [] : w(e11, M) ? e11.usedTables ?? [] : [];
 }
 __name(Y, "Y");
+__name2(Y, "Y");
 var Zr = class extends z {
   static {
     __name(this, "Zr");
+  }
+  static {
+    __name2(this, "Zr");
   }
   constructor(e11, t3, n2, r2) {
     super(), this.table = e11, this.session = t3, this.dialect = n2, this.config = {
@@ -3031,10 +3410,10 @@ var Zr = class extends z {
   prepare() {
     return this._prepare(false);
   }
-  run = /* @__PURE__ */ __name((e11) => this._prepare().run(e11), "run");
-  all = /* @__PURE__ */ __name((e11) => this._prepare().all(e11), "all");
-  get = /* @__PURE__ */ __name((e11) => this._prepare().get(e11), "get");
-  values = /* @__PURE__ */ __name((e11) => this._prepare().values(e11), "values");
+  run = /* @__PURE__ */ __name2((e11) => this._prepare().run(e11), "run");
+  all = /* @__PURE__ */ __name2((e11) => this._prepare().all(e11), "all");
+  get = /* @__PURE__ */ __name2((e11) => this._prepare().get(e11), "get");
+  values = /* @__PURE__ */ __name2((e11) => this._prepare().values(e11), "values");
   async execute(e11) {
     return this._prepare().execute(e11);
   }
@@ -3046,17 +3425,23 @@ function Qr(e11) {
   return (e11.replace(/['\u2019]/g, "").match(/[\da-z]+|[A-Z]+(?![a-z])|[A-Z][\da-z]+/g) ?? []).map((e12) => e12.toLowerCase()).join("_");
 }
 __name(Qr, "Qr");
+__name2(Qr, "Qr");
 function $r(e11) {
   return (e11.replace(/['\u2019]/g, "").match(/[\da-z]+|[A-Z]+(?![a-z])|[A-Z][\da-z]+/g) ?? []).reduce((e12, t3, n2) => e12 + (n2 === 0 ? t3.toLowerCase() : `${t3[0].toUpperCase()}${t3.slice(1)}`), "");
 }
 __name($r, "$r");
+__name2($r, "$r");
 function ei(e11) {
   return e11;
 }
 __name(ei, "ei");
+__name2(ei, "ei");
 var ti = class {
   static {
     __name(this, "ti");
+  }
+  static {
+    __name2(this, "ti");
   }
   static [C] = "CasingCache";
   cache = {};
@@ -3088,11 +3473,17 @@ var ni = class extends I {
   static {
     __name(this, "ni");
   }
+  static {
+    __name2(this, "ni");
+  }
   static [C] = "SQLiteViewBase";
 };
 var ri = class {
   static {
     __name(this, "ri");
+  }
+  static {
+    __name2(this, "ri");
   }
   static [C] = "SQLiteDialect";
   casing;
@@ -3142,7 +3533,7 @@ var ri = class {
       } else if (w(e12, D)) {
         let t4 = Object.entries(e12._.selectedFields);
         if (t4.length === 1) {
-          let n3 = t4[0][1], r4 = w(n3, M) ? n3.decoder : w(n3, T) ? { mapFromDriverValue: /* @__PURE__ */ __name((e13) => n3.mapFromDriverValue(e13), "mapFromDriverValue") } : n3.sql.decoder;
+          let n3 = t4[0][1], r4 = w(n3, M) ? n3.decoder : w(n3, T) ? { mapFromDriverValue: /* @__PURE__ */ __name2((e13) => n3.mapFromDriverValue(e13), "mapFromDriverValue") } : n3.sql.decoder;
           r4 && (e12._.sql.decoder = r4);
         }
         i2.push(e12);
@@ -3397,6 +3788,9 @@ var ii = class extends ri {
   static {
     __name(this, "ii");
   }
+  static {
+    __name2(this, "ii");
+  }
   static [C] = "SQLiteSyncDialect";
   migrate(e11, t3, n2) {
     let r2 = n2 === void 0 || typeof n2 == "string" ? "__drizzle_migrations" : n2.migrationsTable ?? "__drizzle_migrations", i2 = P`
@@ -3424,6 +3818,9 @@ var ai = class extends ri {
   static {
     __name(this, "ai");
   }
+  static {
+    __name2(this, "ai");
+  }
   static [C] = "SQLiteAsyncDialect";
   async migrate(e11, t3, n2) {
     let r2 = n2 === void 0 || typeof n2 == "string" ? "__drizzle_migrations" : n2.migrationsTable ?? "__drizzle_migrations", i2 = P`
@@ -3447,6 +3844,9 @@ var oi = class {
   static {
     __name(this, "oi");
   }
+  static {
+    __name2(this, "oi");
+  }
   static [C] = "TypedQueryBuilder";
   getSelectedFields() {
     return this._.selectedFields;
@@ -3455,6 +3855,9 @@ var oi = class {
 var X = class {
   static {
     __name(this, "X");
+  }
+  static {
+    __name2(this, "X");
   }
   static [C] = "SQLiteSelectBuilder";
   fields;
@@ -3481,6 +3884,9 @@ var X = class {
 var si = class extends oi {
   static {
     __name(this, "si");
+  }
+  static {
+    __name2(this, "si");
   }
   static [C] = "SQLiteSelectQueryBuilder";
   _;
@@ -3638,6 +4044,9 @@ var ci = class extends si {
   static {
     __name(this, "ci");
   }
+  static {
+    __name2(this, "ci");
+  }
   static [C] = "SQLiteSelect";
   _prepare(e11 = true) {
     if (!this.session) throw Error("Cannot execute a query on a query builder. Please use a database instance instead.");
@@ -3661,10 +4070,10 @@ var ci = class extends si {
   prepare() {
     return this._prepare(false);
   }
-  run = /* @__PURE__ */ __name((e11) => this._prepare().run(e11), "run");
-  all = /* @__PURE__ */ __name((e11) => this._prepare().all(e11), "all");
-  get = /* @__PURE__ */ __name((e11) => this._prepare().get(e11), "get");
-  values = /* @__PURE__ */ __name((e11) => this._prepare().values(e11), "values");
+  run = /* @__PURE__ */ __name2((e11) => this._prepare().run(e11), "run");
+  all = /* @__PURE__ */ __name2((e11) => this._prepare().all(e11), "all");
+  get = /* @__PURE__ */ __name2((e11) => this._prepare().get(e11), "get");
+  values = /* @__PURE__ */ __name2((e11) => this._prepare().values(e11), "values");
   async execute() {
     return this.all();
   }
@@ -3682,7 +4091,8 @@ function li(e11, t3) {
   };
 }
 __name(li, "li");
-var ui = /* @__PURE__ */ __name(() => ({
+__name2(li, "li");
+var ui = /* @__PURE__ */ __name2(() => ({
   union: di,
   unionAll: fi,
   intersect: pi,
@@ -3696,15 +4106,18 @@ var hi = class {
   static {
     __name(this, "hi");
   }
+  static {
+    __name2(this, "hi");
+  }
   static [C] = "SQLiteQueryBuilder";
   dialect;
   dialectConfig;
   constructor(e11) {
     this.dialect = w(e11, ri) ? e11 : void 0, this.dialectConfig = w(e11, ri) ? void 0 : e11;
   }
-  $with = /* @__PURE__ */ __name((e11, t3) => {
+  $with = /* @__PURE__ */ __name2((e11, t3) => {
     let n2 = this;
-    return { as: /* @__PURE__ */ __name((r2) => (typeof r2 == "function" && (r2 = r2(n2)), new Proxy(new Ut(r2.getSQL(), t3 ?? ("getSelectedFields" in r2 ? r2.getSelectedFields() ?? {} : {}), e11, true), new U({
+    return { as: /* @__PURE__ */ __name2((r2) => (typeof r2 == "function" && (r2 = r2(n2)), new Proxy(new Ut(r2.getSQL(), t3 ?? ("getSelectedFields" in r2 ? r2.getSelectedFields() ?? {} : {}), e11, true), new U({
       alias: e11,
       sqlAliasedBehavior: "alias",
       sqlBehavior: "error"
@@ -3720,7 +4133,8 @@ var hi = class {
         withList: e11
       });
     }
-    __name(n2, "n");
+    __name(n2, "n2");
+    __name2(n2, "n");
     function r2(n3) {
       return new X({
         fields: n3 ?? void 0,
@@ -3730,7 +4144,8 @@ var hi = class {
         distinct: true
       });
     }
-    __name(r2, "r");
+    __name(r2, "r2");
+    __name2(r2, "r");
     return {
       select: n2,
       selectDistinct: r2
@@ -3759,6 +4174,9 @@ var gi = class {
   static {
     __name(this, "gi");
   }
+  static {
+    __name2(this, "gi");
+  }
   constructor(e11, t3, n2, r2) {
     this.table = e11, this.session = t3, this.dialect = n2, this.withList = r2;
   }
@@ -3784,6 +4202,9 @@ var gi = class {
 var _i = class extends z {
   static {
     __name(this, "_i");
+  }
+  static {
+    __name2(this, "_i");
   }
   constructor(e11, t3, n2, r2, i2, a2) {
     super(), this.session = n2, this.dialect = r2, this.config = {
@@ -3828,10 +4249,10 @@ var _i = class extends z {
   prepare() {
     return this._prepare(false);
   }
-  run = /* @__PURE__ */ __name((e11) => this._prepare().run(e11), "run");
-  all = /* @__PURE__ */ __name((e11) => this._prepare().all(e11), "all");
-  get = /* @__PURE__ */ __name((e11) => this._prepare().get(e11), "get");
-  values = /* @__PURE__ */ __name((e11) => this._prepare().values(e11), "values");
+  run = /* @__PURE__ */ __name2((e11) => this._prepare().run(e11), "run");
+  all = /* @__PURE__ */ __name2((e11) => this._prepare().all(e11), "all");
+  get = /* @__PURE__ */ __name2((e11) => this._prepare().get(e11), "get");
+  values = /* @__PURE__ */ __name2((e11) => this._prepare().values(e11), "values");
   async execute() {
     return this.config.returning ? this.all() : this.run();
   }
@@ -3842,6 +4263,9 @@ var _i = class extends z {
 var vi = class {
   static {
     __name(this, "vi");
+  }
+  static {
+    __name2(this, "vi");
   }
   constructor(e11, t3, n2, r2) {
     this.table = e11, this.session = t3, this.dialect = n2, this.withList = r2;
@@ -3854,6 +4278,9 @@ var vi = class {
 var yi = class extends z {
   static {
     __name(this, "yi");
+  }
+  static {
+    __name2(this, "yi");
   }
   constructor(e11, t3, n2, r2, i2) {
     super(), this.session = n2, this.dialect = r2, this.config = {
@@ -3932,10 +4359,10 @@ var yi = class extends z {
   prepare() {
     return this._prepare(false);
   }
-  run = /* @__PURE__ */ __name((e11) => this._prepare().run(e11), "run");
-  all = /* @__PURE__ */ __name((e11) => this._prepare().all(e11), "all");
-  get = /* @__PURE__ */ __name((e11) => this._prepare().get(e11), "get");
-  values = /* @__PURE__ */ __name((e11) => this._prepare().values(e11), "values");
+  run = /* @__PURE__ */ __name2((e11) => this._prepare().run(e11), "run");
+  all = /* @__PURE__ */ __name2((e11) => this._prepare().all(e11), "all");
+  get = /* @__PURE__ */ __name2((e11) => this._prepare().get(e11), "get");
+  values = /* @__PURE__ */ __name2((e11) => this._prepare().values(e11), "values");
   async execute() {
     return this.config.returning ? this.all() : this.run();
   }
@@ -3945,7 +4372,10 @@ var yi = class extends z {
 };
 var bi = class e9 extends M {
   static {
-    __name(this, "e");
+    __name(this, "e9");
+  }
+  static {
+    __name2(this, "e");
   }
   constructor(t3) {
     super(e9.buildEmbeddedCount(t3.source, t3.filters).queryChunks), this.params = t3, this.session = t3.session, this.sql = e9.buildCount(t3.source, t3.filters);
@@ -3976,6 +4406,9 @@ var xi = class {
   static {
     __name(this, "xi");
   }
+  static {
+    __name2(this, "xi");
+  }
   constructor(e11, t3, n2, r2, i2, a2, o2, s2) {
     this.mode = e11, this.fullSchema = t3, this.schema = n2, this.tableNamesMap = r2, this.table = i2, this.tableConfig = a2, this.dialect = o2, this.session = s2;
   }
@@ -3996,6 +4429,9 @@ var xi = class {
 var Si = class extends z {
   static {
     __name(this, "Si");
+  }
+  static {
+    __name2(this, "Si");
   }
   constructor(e11, t3, n2, r2, i2, a2, o2, s2, c2) {
     super(), this.fullSchema = e11, this.schema = t3, this.tableNamesMap = n2, this.table = r2, this.tableConfig = i2, this.dialect = a2, this.session = o2, this.config = s2, this.mode = c2;
@@ -4052,6 +4488,9 @@ var Ci = class extends Si {
   static {
     __name(this, "Ci");
   }
+  static {
+    __name2(this, "Ci");
+  }
   static [C] = "SQLiteSyncRelationalQuery";
   sync() {
     return this.executeRaw();
@@ -4060,6 +4499,9 @@ var Ci = class extends Si {
 var wi = class extends z {
   static {
     __name(this, "wi");
+  }
+  static {
+    __name2(this, "wi");
   }
   constructor(e11, t3, n2, r2, i2) {
     super(), this.execute = e11, this.getSQL = t3, this.dialect = r2, this.mapBatchResult = i2, this.config = { action: n2 };
@@ -4086,6 +4528,9 @@ var Ti = class {
   static {
     __name(this, "Ti");
   }
+  static {
+    __name2(this, "Ti");
+  }
   constructor(e11, t3, n2, r2) {
     this.resultKind = e11, this.dialect = t3, this.session = n2, this._ = r2 ? {
       schema: r2.schema,
@@ -4098,14 +4543,14 @@ var Ti = class {
     }, this.query = {};
     let i2 = this.query;
     if (this._.schema) for (let [a2, o2] of Object.entries(this._.schema)) i2[a2] = new xi(e11, r2.fullSchema, this._.schema, this._.tableNamesMap, r2.fullSchema[a2], o2, t3, n2);
-    this.$cache = { invalidate: /* @__PURE__ */ __name(async (e12) => {
+    this.$cache = { invalidate: /* @__PURE__ */ __name2(async (e12) => {
     }, "invalidate") };
   }
   static [C] = "BaseSQLiteDatabase";
   query;
-  $with = /* @__PURE__ */ __name((e11, t3) => {
+  $with = /* @__PURE__ */ __name2((e11, t3) => {
     let n2 = this;
-    return { as: /* @__PURE__ */ __name((r2) => (typeof r2 == "function" && (r2 = r2(new hi(n2.dialect))), new Proxy(new Ut(r2.getSQL(), t3 ?? ("getSelectedFields" in r2 ? r2.getSelectedFields() ?? {} : {}), e11, true), new U({
+    return { as: /* @__PURE__ */ __name2((r2) => (typeof r2 == "function" && (r2 = r2(new hi(n2.dialect))), new Proxy(new Ut(r2.getSQL(), t3 ?? ("getSelectedFields" in r2 ? r2.getSelectedFields() ?? {} : {}), e11, true), new U({
       alias: e11,
       sqlAliasedBehavior: "alias",
       sqlBehavior: "error"
@@ -4128,7 +4573,8 @@ var Ti = class {
         withList: e11
       });
     }
-    __name(n2, "n");
+    __name(n2, "n2");
+    __name2(n2, "n");
     function r2(n3) {
       return new X({
         fields: n3 ?? void 0,
@@ -4138,19 +4584,23 @@ var Ti = class {
         distinct: true
       });
     }
-    __name(r2, "r");
+    __name(r2, "r2");
+    __name2(r2, "r");
     function i2(n3) {
       return new vi(n3, t3.session, t3.dialect, e11);
     }
-    __name(i2, "i");
+    __name(i2, "i2");
+    __name2(i2, "i");
     function a2(n3) {
       return new gi(n3, t3.session, t3.dialect, e11);
     }
-    __name(a2, "a");
+    __name(a2, "a2");
+    __name2(a2, "a");
     function o2(n3) {
       return new Zr(n3, t3.session, t3.dialect, e11);
     }
-    __name(o2, "o");
+    __name(o2, "o2");
+    __name2(o2, "o");
     return {
       select: n2,
       selectDistinct: r2,
@@ -4208,11 +4658,17 @@ var Ei = class {
   static {
     __name(this, "Ei");
   }
+  static {
+    __name2(this, "Ei");
+  }
   static [C] = "Cache";
 };
 var Di = class extends Ei {
   static {
     __name(this, "Di");
+  }
+  static {
+    __name2(this, "Di");
   }
   strategy() {
     return "all";
@@ -4230,9 +4686,13 @@ async function Oi(e11, t3) {
   return [...new Uint8Array(i2)].map((e12) => e12.toString(16).padStart(2, "0")).join("");
 }
 __name(Oi, "Oi");
+__name2(Oi, "Oi");
 var ki = class extends z {
   static {
     __name(this, "ki");
+  }
+  static {
+    __name2(this, "ki");
   }
   constructor(e11) {
     super(), this.resultCb = e11;
@@ -4248,6 +4708,9 @@ var ki = class extends z {
 var Ai = class {
   static {
     __name(this, "Ai");
+  }
+  static {
+    __name2(this, "Ai");
   }
   constructor(e11, t3, n2, r2, i2, a2) {
     this.mode = e11, this.executeMethod = t3, this.query = n2, this.cache = r2, this.queryMetadata = i2, this.cacheConfig = a2, r2 && r2.strategy() === "all" && a2 === void 0 && (this.cacheConfig = {
@@ -4328,6 +4791,9 @@ var ji = class {
   static {
     __name(this, "ji");
   }
+  static {
+    __name2(this, "ji");
+  }
   constructor(e11) {
     this.dialect = e11;
   }
@@ -4375,6 +4841,9 @@ var Mi = class extends Ti {
   static {
     __name(this, "Mi");
   }
+  static {
+    __name2(this, "Mi");
+  }
   constructor(e11, t3, n2, r2, i2 = 0) {
     super(e11, t3, n2, r2), this.schema = r2, this.nestedIndex = i2;
   }
@@ -4386,6 +4855,9 @@ var Mi = class extends Ti {
 var Ni = class extends ji {
   static {
     __name(this, "Ni");
+  }
+  static {
+    __name2(this, "Ni");
   }
   constructor(e11, t3, n2, r2 = {}) {
     super(t3), this.client = e11, this.schema = n2, this.options = r2, this.logger = r2.logger ?? new vn(), this.cache = r2.cache ?? new Di();
@@ -4430,7 +4902,10 @@ var Ni = class extends ji {
 };
 var Pi = class e10 extends Mi {
   static {
-    __name(this, "e");
+    __name(this, "e10");
+  }
+  static {
+    __name2(this, "e");
   }
   static [C] = "D1Transaction";
   async transaction(t3) {
@@ -4453,9 +4928,13 @@ function Fi(e11) {
   return t3;
 }
 __name(Fi, "Fi");
+__name2(Fi, "Fi");
 var Ii = class extends Ai {
   static {
     __name(this, "Ii");
+  }
+  static {
+    __name2(this, "Ii");
   }
   constructor(e11, t3, n2, r2, i2, a2, o2, s2, c2, l2) {
     super("async", s2, t3, r2, i2, a2), this.logger = n2, this._isResponseInArrayMode = c2, this.customResultMapper = l2, this.fields = o2, this.stmt = e11;
@@ -4504,6 +4983,9 @@ var Li = class extends Ti {
   static {
     __name(this, "Li");
   }
+  static {
+    __name2(this, "Li");
+  }
   static [C] = "D1Database";
   async batch(e11) {
     return this.session.batch(e11);
@@ -4528,7 +5010,8 @@ function Ri(e11, t3 = {}) {
   return a2.$client = e11, a2.$cache = t3.cache, a2.$cache && (a2.$cache.invalidate = t3.cache?.onMutate), a2;
 }
 __name(Ri, "Ri");
-var Z = Xr("players", {
+__name2(Ri, "Ri");
+var Z = Xr("players_v2", {
   id: K("id").primaryKey({ autoIncrement: true }),
   username: q("username").notNull().unique(),
   passwordHash: q("password_hash").notNull(),
@@ -4543,7 +5026,7 @@ var Z = Xr("players", {
   level: K("level").notNull().default(1),
   experience: K("experience").notNull().default(0)
 });
-var Q = Xr("items", {
+var Q = Xr("items_v2", {
   id: K("id").primaryKey({ autoIncrement: true }),
   name: q("name").notNull(),
   type: q("type").notNull(),
@@ -4551,7 +5034,7 @@ var Q = Xr("items", {
   price: K("price").notNull(),
   power: K("power").notNull().default(0)
 });
-var $ = Xr("inventory", {
+var $ = Xr("inventory_v2", {
   id: K("id").primaryKey({ autoIncrement: true }),
   playerId: K("player_id").notNull().references(() => Z.id),
   itemId: K("item_id").notNull().references(() => Q.id),
@@ -4563,8 +5046,11 @@ async function Bi(e11) {
   return Array.from(new Uint8Array(n2)).map((e12) => e12.toString(16).padStart(2, "0")).join("");
 }
 __name(Bi, "Bi");
+__name2(Bi, "Bi");
 zi.post("/register", async (e11) => {
-  let { username: t3, password: n2 } = await e11.req.json(), r2 = Ri(e11.env.DB), i2 = e11.env.JWT_SECRET || "super-secret-mushoku-key";
+  let { username: t3, password: n2 } = await e11.req.json();
+  await e11.env.DB.prepare("CREATE TABLE IF NOT EXISTS players_v2 (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, username text NOT NULL UNIQUE, password_hash text NOT NULL, hp integer DEFAULT 100 NOT NULL, max_hp integer DEFAULT 100 NOT NULL, mp integer DEFAULT 50 NOT NULL, max_mp integer DEFAULT 50 NOT NULL, magic_skill integer DEFAULT 0 NOT NULL, sword_skill integer DEFAULT 0 NOT NULL, location text DEFAULT 'roanoa' NOT NULL, gold integer DEFAULT 100 NOT NULL, level integer DEFAULT 1 NOT NULL, experience integer DEFAULT 0 NOT NULL)").run(), await e11.env.DB.prepare("CREATE TABLE IF NOT EXISTS items_v2 (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, name text NOT NULL, type text NOT NULL, description text NOT NULL, price integer NOT NULL, power integer DEFAULT 0 NOT NULL)").run(), await e11.env.DB.prepare("CREATE TABLE IF NOT EXISTS inventory_v2 (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, player_id integer NOT NULL, item_id integer NOT NULL, quantity integer DEFAULT 1 NOT NULL)").run();
+  let r2 = Ri(e11.env.DB), i2 = e11.env.JWT_SECRET || "super-secret-mushoku-key";
   if (await r2.select().from(Z).where(H(Z.username, t3)).get()) return e11.json({ error: "Username already exists" }, 400);
   let a2 = await Bi(n2);
   await r2.insert(Z).values({
@@ -4664,23 +5150,18 @@ var Ui = Hi.basePath("/api");
 Ui.get("/health", (e11) => e11.json({
   status: "ok",
   server: "Hono + Vite integration"
-})), Ui.get("/debug-db", async (e11) => {
+}));
+async function Wi(e11) {
+  await e11.prepare("CREATE TABLE IF NOT EXISTS players_v2 (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, username text NOT NULL UNIQUE, password_hash text NOT NULL, hp integer DEFAULT 100 NOT NULL, max_hp integer DEFAULT 100 NOT NULL, mp integer DEFAULT 50 NOT NULL, max_mp integer DEFAULT 50 NOT NULL, magic_skill integer DEFAULT 0 NOT NULL, sword_skill integer DEFAULT 0 NOT NULL, location text DEFAULT 'roanoa' NOT NULL, gold integer DEFAULT 100 NOT NULL, level integer DEFAULT 1 NOT NULL, experience integer DEFAULT 0 NOT NULL)").run(), await e11.prepare("CREATE TABLE IF NOT EXISTS items_v2 (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, name text NOT NULL, type text NOT NULL, description text NOT NULL, price integer NOT NULL, power integer DEFAULT 0 NOT NULL)").run(), await e11.prepare("CREATE TABLE IF NOT EXISTS inventory_v2 (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, player_id integer NOT NULL, item_id integer NOT NULL, quantity integer DEFAULT 1 NOT NULL)").run();
+}
+__name(Wi, "Wi");
+__name2(Wi, "Wi");
+Ui.get("/debug-db", async (e11) => {
   try {
-    let t3 = await e11.env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table'").all();
-    return t3.results.some((e12) => e12.name === "players") ? e11.json({
+    return await Wi(e11.env.DB), e11.json({
       success: true,
-      tables: t3.results,
-      db_initialized: true
-    }) : (await e11.env.DB.batch([
-      e11.env.DB.prepare("CREATE TABLE IF NOT EXISTS players (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, username text NOT NULL, password_hash text NOT NULL, hp integer DEFAULT 100 NOT NULL, max_hp integer DEFAULT 100 NOT NULL, mp integer DEFAULT 50 NOT NULL, max_mp integer DEFAULT 50 NOT NULL, magic_skill integer DEFAULT 0 NOT NULL, sword_skill integer DEFAULT 0 NOT NULL, location text DEFAULT 'roanoa' NOT NULL, gold integer DEFAULT 100 NOT NULL, level integer DEFAULT 1 NOT NULL, experience integer DEFAULT 0 NOT NULL)"),
-      e11.env.DB.prepare("CREATE TABLE IF NOT EXISTS items (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, name text NOT NULL, type text NOT NULL, description text NOT NULL, price integer NOT NULL, power integer DEFAULT 0 NOT NULL)"),
-      e11.env.DB.prepare("CREATE TABLE IF NOT EXISTS inventory (id integer PRIMARY KEY AUTOINCREMENT NOT NULL, player_id integer NOT NULL, item_id integer NOT NULL, quantity integer DEFAULT 1 NOT NULL)"),
-      e11.env.DB.prepare("CREATE UNIQUE INDEX IF NOT EXISTS players_username_unique ON players (username)")
-    ]), e11.json({
-      success: true,
-      message: "Database initialized successfully!",
-      tables_created: true
-    }));
+      message: "Database v2 verified successfully!"
+    });
   } catch (t3) {
     return e11.json({
       success: false,
@@ -4688,9 +5169,7 @@ Ui.get("/health", (e11) => e11.json({
     });
   }
 }), Ui.route("/auth", zi), Ui.route("/game", Vi), Hi.get("*", async (e11) => e11.env.ASSETS ? await e11.env.ASSETS.fetch(e11.req.raw) : e11.notFound());
-
-// ../node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
-var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+var drainBody = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
   } finally {
@@ -4706,8 +5185,6 @@ var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
   }
 }, "drainBody");
 var middleware_ensure_req_body_drained_default = drainBody;
-
-// ../node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
 function reduceError(e11) {
   return {
     name: e11?.name,
@@ -4717,7 +5194,8 @@ function reduceError(e11) {
   };
 }
 __name(reduceError, "reduceError");
-var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+__name2(reduceError, "reduceError");
+var jsonError = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
   } catch (e11) {
@@ -4729,20 +5207,17 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
   }
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
-
-// ../.wrangler/tmp/bundle-wUwcl4/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
 ];
 var middleware_insertion_facade_default = Hi;
-
-// ../node_modules/wrangler/templates/middleware/common.ts
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
   __facade_middleware__.push(...args.flat());
 }
 __name(__facade_register__, "__facade_register__");
+__name2(__facade_register__, "__facade_register__");
 function __facade_invokeChain__(request, env, ctx, dispatch, middlewareChain) {
   const [head, ...tail] = middlewareChain;
   const middlewareCtx = {
@@ -4754,6 +5229,7 @@ function __facade_invokeChain__(request, env, ctx, dispatch, middlewareChain) {
   return head(request, env, ctx, middlewareCtx);
 }
 __name(__facade_invokeChain__, "__facade_invokeChain__");
+__name2(__facade_invokeChain__, "__facade_invokeChain__");
 function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
   return __facade_invokeChain__(request, env, ctx, dispatch, [
     ...__facade_middleware__,
@@ -4761,16 +5237,18 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
   ]);
 }
 __name(__facade_invoke__, "__facade_invoke__");
-
-// ../.wrangler/tmp/bundle-wUwcl4/middleware-loader.entry.ts
+__name2(__facade_invoke__, "__facade_invoke__");
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
+  static {
+    __name(this, "___Facade_ScheduledController__");
+  }
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
     this.cron = cron;
     this.#noRetry = noRetry;
   }
   static {
-    __name(this, "__Facade_ScheduledController__");
+    __name2(this, "__Facade_ScheduledController__");
   }
   #noRetry;
   noRetry() {
@@ -4787,7 +5265,7 @@ function wrapExportedHandler(worker) {
   for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
     __facade_register__(middleware);
   }
-  const fetchDispatcher = /* @__PURE__ */ __name(function(request, env, ctx) {
+  const fetchDispatcher = /* @__PURE__ */ __name2(function(request, env, ctx) {
     if (worker.fetch === void 0) {
       throw new Error("Handler does not export a fetch() function.");
     }
@@ -4796,7 +5274,7 @@ function wrapExportedHandler(worker) {
   return {
     ...worker,
     fetch(request, env, ctx) {
-      const dispatcher = /* @__PURE__ */ __name(function(type, init) {
+      const dispatcher = /* @__PURE__ */ __name2(function(type, init) {
         if (type === "scheduled" && worker.scheduled !== void 0) {
           const controller = new __Facade_ScheduledController__(
             Date.now(),
@@ -4812,6 +5290,7 @@ function wrapExportedHandler(worker) {
   };
 }
 __name(wrapExportedHandler, "wrapExportedHandler");
+__name2(wrapExportedHandler, "wrapExportedHandler");
 function wrapWorkerEntrypoint(klass) {
   if (__INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0) {
     return klass;
@@ -4820,7 +5299,7 @@ function wrapWorkerEntrypoint(klass) {
     __facade_register__(middleware);
   }
   return class extends klass {
-    #fetchDispatcher = /* @__PURE__ */ __name((request, env, ctx) => {
+    #fetchDispatcher = /* @__PURE__ */ __name2((request, env, ctx) => {
       this.env = env;
       this.ctx = ctx;
       if (super.fetch === void 0) {
@@ -4828,7 +5307,7 @@ function wrapWorkerEntrypoint(klass) {
       }
       return super.fetch(request);
     }, "#fetchDispatcher");
-    #dispatcher = /* @__PURE__ */ __name((type, init) => {
+    #dispatcher = /* @__PURE__ */ __name2((type, init) => {
       if (type === "scheduled" && super.scheduled !== void 0) {
         const controller = new __Facade_ScheduledController__(
           Date.now(),
@@ -4851,6 +5330,7 @@ function wrapWorkerEntrypoint(klass) {
   };
 }
 __name(wrapWorkerEntrypoint, "wrapWorkerEntrypoint");
+__name2(wrapWorkerEntrypoint, "wrapWorkerEntrypoint");
 var WRAPPED_ENTRY;
 if (typeof middleware_insertion_facade_default === "object") {
   WRAPPED_ENTRY = wrapExportedHandler(middleware_insertion_facade_default);
@@ -4858,8 +5338,178 @@ if (typeof middleware_insertion_facade_default === "object") {
   WRAPPED_ENTRY = wrapWorkerEntrypoint(middleware_insertion_facade_default);
 }
 var middleware_loader_entry_default = WRAPPED_ENTRY;
-export {
-  __INTERNAL_WRANGLER_MIDDLEWARE__,
-  middleware_loader_entry_default as default
+
+// node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
+var drainBody2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+  try {
+    return await middlewareCtx.next(request, env);
+  } finally {
+    try {
+      if (request.body !== null && !request.bodyUsed) {
+        const reader = request.body.getReader();
+        while (!(await reader.read()).done) {
+        }
+      }
+    } catch (e11) {
+      console.error("Failed to drain the unused request body.", e11);
+    }
+  }
+}, "drainBody");
+var middleware_ensure_req_body_drained_default2 = drainBody2;
+
+// node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
+function reduceError2(e11) {
+  return {
+    name: e11?.name,
+    message: e11?.message ?? String(e11),
+    stack: e11?.stack,
+    cause: e11?.cause === void 0 ? void 0 : reduceError2(e11.cause)
+  };
+}
+__name(reduceError2, "reduceError");
+var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+  try {
+    return await middlewareCtx.next(request, env);
+  } catch (e11) {
+    const error = reduceError2(e11);
+    return Response.json(error, {
+      status: 500,
+      headers: { "MF-Experimental-Error-Stack": "true" }
+    });
+  }
+}, "jsonError");
+var middleware_miniflare3_json_error_default2 = jsonError2;
+
+// .wrangler/tmp/bundle-P8ctZ0/middleware-insertion-facade.js
+var __INTERNAL_WRANGLER_MIDDLEWARE__2 = [
+  middleware_ensure_req_body_drained_default2,
+  middleware_miniflare3_json_error_default2
+];
+var middleware_insertion_facade_default2 = middleware_loader_entry_default;
+
+// node_modules/wrangler/templates/middleware/common.ts
+var __facade_middleware__2 = [];
+function __facade_register__2(...args) {
+  __facade_middleware__2.push(...args.flat());
+}
+__name(__facade_register__2, "__facade_register__");
+function __facade_invokeChain__2(request, env, ctx, dispatch, middlewareChain) {
+  const [head, ...tail] = middlewareChain;
+  const middlewareCtx = {
+    dispatch,
+    next(newRequest, newEnv) {
+      return __facade_invokeChain__2(newRequest, newEnv, ctx, dispatch, tail);
+    }
+  };
+  return head(request, env, ctx, middlewareCtx);
+}
+__name(__facade_invokeChain__2, "__facade_invokeChain__");
+function __facade_invoke__2(request, env, ctx, dispatch, finalMiddleware) {
+  return __facade_invokeChain__2(request, env, ctx, dispatch, [
+    ...__facade_middleware__2,
+    finalMiddleware
+  ]);
+}
+__name(__facade_invoke__2, "__facade_invoke__");
+
+// .wrangler/tmp/bundle-P8ctZ0/middleware-loader.entry.ts
+var __Facade_ScheduledController__2 = class ___Facade_ScheduledController__2 {
+  constructor(scheduledTime, cron, noRetry) {
+    this.scheduledTime = scheduledTime;
+    this.cron = cron;
+    this.#noRetry = noRetry;
+  }
+  static {
+    __name(this, "__Facade_ScheduledController__");
+  }
+  #noRetry;
+  noRetry() {
+    if (!(this instanceof ___Facade_ScheduledController__2)) {
+      throw new TypeError("Illegal invocation");
+    }
+    this.#noRetry();
+  }
 };
-//# sourceMappingURL=bundledWorker-0.9483186372042892.mjs.map
+function wrapExportedHandler2(worker) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__2 === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__2.length === 0) {
+    return worker;
+  }
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__2) {
+    __facade_register__2(middleware);
+  }
+  const fetchDispatcher = /* @__PURE__ */ __name(function(request, env, ctx) {
+    if (worker.fetch === void 0) {
+      throw new Error("Handler does not export a fetch() function.");
+    }
+    return worker.fetch(request, env, ctx);
+  }, "fetchDispatcher");
+  return {
+    ...worker,
+    fetch(request, env, ctx) {
+      const dispatcher = /* @__PURE__ */ __name(function(type, init) {
+        if (type === "scheduled" && worker.scheduled !== void 0) {
+          const controller = new __Facade_ScheduledController__2(
+            Date.now(),
+            init.cron ?? "",
+            () => {
+            }
+          );
+          return worker.scheduled(controller, env, ctx);
+        }
+      }, "dispatcher");
+      return __facade_invoke__2(request, env, ctx, dispatcher, fetchDispatcher);
+    }
+  };
+}
+__name(wrapExportedHandler2, "wrapExportedHandler");
+function wrapWorkerEntrypoint2(klass) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__2 === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__2.length === 0) {
+    return klass;
+  }
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__2) {
+    __facade_register__2(middleware);
+  }
+  return class extends klass {
+    #fetchDispatcher = /* @__PURE__ */ __name((request, env, ctx) => {
+      this.env = env;
+      this.ctx = ctx;
+      if (super.fetch === void 0) {
+        throw new Error("Entrypoint class does not define a fetch() function.");
+      }
+      return super.fetch(request);
+    }, "#fetchDispatcher");
+    #dispatcher = /* @__PURE__ */ __name((type, init) => {
+      if (type === "scheduled" && super.scheduled !== void 0) {
+        const controller = new __Facade_ScheduledController__2(
+          Date.now(),
+          init.cron ?? "",
+          () => {
+          }
+        );
+        return super.scheduled(controller);
+      }
+    }, "#dispatcher");
+    fetch(request) {
+      return __facade_invoke__2(
+        request,
+        this.env,
+        this.ctx,
+        this.#dispatcher,
+        this.#fetchDispatcher
+      );
+    }
+  };
+}
+__name(wrapWorkerEntrypoint2, "wrapWorkerEntrypoint");
+var WRAPPED_ENTRY2;
+if (typeof middleware_insertion_facade_default2 === "object") {
+  WRAPPED_ENTRY2 = wrapExportedHandler2(middleware_insertion_facade_default2);
+} else if (typeof middleware_insertion_facade_default2 === "function") {
+  WRAPPED_ENTRY2 = wrapWorkerEntrypoint2(middleware_insertion_facade_default2);
+}
+var middleware_loader_entry_default2 = WRAPPED_ENTRY2;
+export {
+  __INTERNAL_WRANGLER_MIDDLEWARE__2 as __INTERNAL_WRANGLER_MIDDLEWARE__,
+  middleware_loader_entry_default2 as default
+};
+//# sourceMappingURL=bundledWorker-0.32257595260921834.js.map
