@@ -8,16 +8,18 @@ const STROIES: Record<string, any[]> = {
   '菲托亞領-布耶納村': [
     { speaker: '旁白', text: '你在布耶納村的平靜生活開始了，這裡的微風總是帶著麥田的香氣。' },
     { speaker: '旁白', text: '今天天氣很好，洛琪希老師在庭院裡等你。' },
-    { speaker: '洛琪希', text: '魯迪烏斯，今天我們要進行特訓。你準備好練習水王級魔術了嗎？還是你想專心精進劍術？', 
+    {
+      speaker: '洛琪希', text: '魯迪烏斯，今天我們要進行特訓。你準備好練習水王級魔術了嗎？還是你想專心精進劍術？',
       options: [
-        { text: '專心練習水王級魔術！ (消耗 20 魔力，提升 5 魔法技巧)', magicDiff: 5, mpDiff: -20 },
+        { text: '專心練習水魔術！ (消耗 20 魔力，提升 5 魔法技巧)', magicDiff: 5, mpDiff: -20 },
         { text: '和保羅練習劍術 (消耗 20 生命值，提升 5 劍術技巧)', swordDiff: 5, hpDiff: -20 }
       ]
     },
     { speaker: '旁白', text: '特訓結束後，你感覺自己變強了。' },
-    { speaker: '保羅', text: '嘿，臭小鬼！你的腳步還太浮誇了，想要被我扁一頓嗎？', 
+    {
+      speaker: '保羅', text: '嘿，臭小鬼！你的腳步還太浮誇了，想要被我扁一頓嗎？',
       options: [
-        { text: '挑釁老爸 (遭痛扁，損失 90 HP，提升 10 劍術技巧)', swordDiff: 10, hpDiff: -90 },
+        { text: '挑釁老爸 (遭痛扁，損失 30 HP，提升 10 劍術技巧)', swordDiff: 10, hpDiff: -30 },
         { text: '乖乖聽話 (安全下莊)', hpDiff: 0 }
       ]
     },
@@ -36,11 +38,11 @@ const StoryEvent: React.FC = () => {
   const navigate = useNavigate();
   const { token } = useAuthStore();
   const { stats, applyChoice, fetchStats } = usePlayerStore();
-  
+
   const [script, setScript] = useState<any[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [floatingLogs, setFloatingLogs] = useState<{id: number, text: string}[]>([]);
+  const [floatingLogs, setFloatingLogs] = useState<{ id: number, text: string }[]>([]);
 
   const [isFinished, setIsFinished] = useState(false);
 
@@ -56,7 +58,7 @@ const StoryEvent: React.FC = () => {
   const handleNextLine = () => {
     if (isProcessing || isFinished) return;
     if (hasOptions) return; // 有選項時不能點擊背景跳過
-    
+
     if (currentIdx < script.length - 1) {
       setCurrentIdx(currentIdx + 1);
     } else {
@@ -76,7 +78,7 @@ const StoryEvent: React.FC = () => {
   const handleChoice = async (option: any) => {
     if (!token) return;
     setIsProcessing(true);
-    
+
     const { died } = await applyChoice(token, {
       hpDiff: option.hpDiff,
       mpDiff: option.mpDiff,
@@ -98,7 +100,7 @@ const StoryEvent: React.FC = () => {
       navigate('/adventure');
     } else {
       setIsProcessing(false);
-      
+
       // 檢查選項之後是否直接結束
       if (currentIdx >= script.length - 1) {
         finishStoryArc();
@@ -147,12 +149,12 @@ const StoryEvent: React.FC = () => {
         <div className="dialog-box fade-in" onClick={(e) => e.stopPropagation()}>
           <div className="dialog-speaker">{currentLine.speaker}</div>
           <div className="dialog-text">{currentLine.text}</div>
-          
+
           {hasOptions && (
             <div className="dialog-options">
               {currentLine.options.map((opt: any, idx: number) => (
-                <button 
-                  key={idx} 
+                <button
+                  key={idx}
                   className="option-btn"
                   onClick={() => handleChoice(opt)}
                   disabled={isProcessing}
@@ -174,7 +176,8 @@ const StoryEvent: React.FC = () => {
         </div>
       )}
 
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .story-container {
           position: relative;
           height: 100vh;
