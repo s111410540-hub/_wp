@@ -15,16 +15,16 @@ function App() {
       <Routes>
         {/* Landing/Home only seen if not logged in, or as entry */}
         <Route path="/" element={isAuthenticated ? <Hub /> : <Landing />} />
-        
+
         {/* Auth routes */}
         <Route path="/auth" element={!isAuthenticated ? <Auth /> : <Navigate to="/" />} />
 
         {/* Protected game routes will go here */}
-        <Route 
-          path="/adventure" 
-          element={isAuthenticated ? <Adventure /> : <Navigate to="/" />} 
+        <Route
+          path="/adventure"
+          element={isAuthenticated ? <Adventure /> : <Navigate to="/" />}
         />
-        
+
       </Routes>
     </BrowserRouter>
   )
