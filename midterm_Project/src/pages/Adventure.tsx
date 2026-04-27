@@ -62,8 +62,8 @@ const Adventure: React.FC = () => {
   const [selectedArc, setSelectedArc] = useState(STORY_ARCS[0]);
 
   const handleLocationSelect = (locationName: string) => {
-    // 這裡未來會發送 API 到後端進行戰鬥或事件結算
-    alert(`你選擇了前往：${locationName}。戰鬥系統建置中！\n需要從後端獲取隨機遇敵資料...`);
+    // 導向劇情頁面 (將地點名稱轉為 URL 安全字串)
+    navigate(`/story/${encodeURIComponent(locationName)}`);
   };
 
   return (

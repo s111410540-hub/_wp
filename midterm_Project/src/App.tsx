@@ -1,9 +1,9 @@
-import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Landing from './pages/Landing'
 import Auth from './pages/Auth'
 import Hub from './pages/Hub'
 import Adventure from './pages/Adventure'
+import StoryEvent from './pages/StoryEvent'
 import { useAuthStore } from './store/useAuthStore'
 import './index.css'
 
@@ -23,6 +23,10 @@ function App() {
         <Route
           path="/adventure"
           element={isAuthenticated ? <Adventure /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/story/:locationId"
+          element={isAuthenticated ? <StoryEvent /> : <Navigate to="/" />}
         />
 
       </Routes>

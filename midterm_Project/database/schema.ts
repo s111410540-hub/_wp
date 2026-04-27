@@ -8,6 +8,8 @@ export const players = sqliteTable('players', {
   maxHp: integer('max_hp').notNull().default(100),
   mp: integer('mp').notNull().default(50),
   maxMp: integer('max_mp').notNull().default(50),
+  magicSkill: integer('magic_skill').notNull().default(0),
+  swordSkill: integer('sword_skill').notNull().default(0),
   location: text('location').notNull().default('roanoa'), // Default starting city
   gold: integer('gold').notNull().default(100),
   level: integer('level').notNull().default(1),

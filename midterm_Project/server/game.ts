@@ -56,4 +56,45 @@ gameInfo.get('/inventory', async (c) => {
   return c.json({ items: userItems })
 })
 
+// Process Story Choice
+gameInfo.post('/apply-choice', async (c) => {
+  const payload = c.get('jwtPayload')
+  const db = drizzle(c.env.DB)
+  const { hpDiff, mpDiff, magicDiff, swordDiff } = await c.req.json()
+
+  const player = await db.select().from(players).where(eq(players.id, payload.id)).get()
+  if (!player) return c.json({ error: 'Player not found' }, 404)
+
+  // Calculate new stats
+  let newHp = player.hp + (hpDiff || 0);
+  let newMp = player.mp + (mpDiff || 0);
+  let newMagic = player.magicSkill + (magicDiff || 0);
+  let newSword = player.swordSkill + (swordDiff || 0);
+  let isDead = false;
+
+  // Apply Limits
+  if (newHp > player.maxHp) newHp = player.maxHp;
+  if (newMp > player.maxMp) newMp = player.maxMp;
+  if (newMp < 0) newMp = 0;
+  
+  if (newHp <= 0) {
+    isDead = true;
+    newHp = player.maxHp; // Return from death full HP
+    newMp = player.maxMp; // Return from death full MP
+  }
+
+  // Update Database
+  const updatedPlayer = await db.update(players).set({
+    hp: newHp,
+    mp: newMp,
+    magicSkill: newMagic,
+    swordSkill: newSword
+  }).where(eq(players.id, payload.id)).returning().get()
+
+  return c.json({ 
+    player: updatedPlayer,
+    event: isDead ? 'died' : 'survived'
+  })
+})
+
 export default gameInfo

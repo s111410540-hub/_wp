@@ -67,6 +67,10 @@ const Hub: React.FC = () => {
               </div>
 
               <div className="stat-footer">
+                <div className="skill-count">🪄 魔法技巧：{stats?.magicSkill}</div>
+                <div className="skill-count">⚔️ 劍術技巧：{stats?.swordSkill}</div>
+              </div>
+              <div className="stat-footer" style={{marginTop: '5px', paddingTop: '5px', borderTop: 'none'}}>
                 <div className="gold-count">💰 金幣：{stats?.gold}</div>
                 <div className="exp-count">XP：{stats?.experience}</div>
               </div>
