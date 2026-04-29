@@ -64,11 +64,11 @@ api.route('/auth', auth)
 api.route('/game', gameInfo)
 
 // Handle static assets in Cloudflare Pages
-app.get('*', async (c) => {
-  if (c.env.ASSETS) {
-    return await c.env.ASSETS.fetch(c.req.raw)
+app.get('*', async (c, next) => {
+  if (c.env && (c.env as any).ASSETS) {
+    return await (c.env as any).ASSETS.fetch(c.req.raw)
   }
-  return c.notFound()
+  await next()
 })
 
 export default app
