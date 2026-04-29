@@ -37,7 +37,7 @@ const StoryEvent: React.FC = () => {
   const { locationId } = useParams();
   const navigate = useNavigate();
   const { token } = useAuthStore();
-  const { stats, applyChoice, fetchStats } = usePlayerStore();
+  const { stats, applyChoice } = usePlayerStore();
 
   const [script, setScript] = useState<any[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
