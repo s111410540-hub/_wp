@@ -2,10 +2,10 @@ import { hashPassword } from '../../utils.js';
 
 export async function onRequestPost(context) {
   const { request, env } = context;
-  
+
   try {
     const { username, email, password } = await request.json();
-    
+
     if (!username || !email || !password) {
       return new Response(JSON.stringify({ error: '請提供完整的註冊資訊' }), { status: 400 });
     }
@@ -17,7 +17,7 @@ export async function onRequestPost(context) {
       await env.DB.prepare(
         "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)"
       ).bind(username, email, hashedPassword).run();
-      
+
       return new Response(JSON.stringify({ message: '註冊成功' }), { status: 201 });
     } catch (e) {
       if (e.message.includes('UNIQUE constraint failed')) {
@@ -26,6 +26,7 @@ export async function onRequestPost(context) {
       throw e;
     }
   } catch (e) {
+    console.error('Register error:', e);
     return new Response(JSON.stringify({ error: '伺服器錯誤' }), { status: 500 });
   }
 }

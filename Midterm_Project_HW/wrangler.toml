@@ -5,7 +5,7 @@ pages_build_output_dir = "public"
 [[d1_databases]]
 binding = "DB"
 database_name = "forum-db"
-database_id = "REPLACE_AFTER_wrangler_d1_create"
+database_id = "150cc66a-aec8-490f-901c-aeaa0399bc2c"
 
 [vars]
 JWT_SECRET = "super_secret_jwt_key_for_game_forum_12345"
