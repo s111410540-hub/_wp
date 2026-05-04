@@ -159,3 +159,5 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+.wrangler/
+node_modules/
