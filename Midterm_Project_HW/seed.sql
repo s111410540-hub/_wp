@@ -4,11 +4,12 @@ INSERT INTO users (id, username, email, password_hash) VALUES
 (2, 'ZeldaFan', 'zelda@test.com', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f');
 
 INSERT INTO questions (id, title, content, user_id, game_tag, vote_count, answer_count) VALUES 
-(1, '薩爾達傳說王國之淚，人馬怎麼打？', '每次遇到白銀人馬都被秒殺，請問有什麼推薦的裝備或打法嗎？', 2, '薩爾達傳說', 5, 1),
-(2, '柏德之門3 新手職業推薦', '剛買這款遊戲，請問第一輪推薦玩什麼職業比較好上手？', 1, '柏德之門3', 3, 0);
+(1, '這週的災厄之龍周本boss怎麼打？', '每次進到P2階段全場AOE都被秒殺，請問奶媽應該什麼時候開大？', 2, '周本boss', 5, 1),
+(2, '死亡沙漠野圖boss重生時間', '請問有人知道死亡沙漠那隻沙蟲王多久重生一次嗎？', 1, '野圖boss', 3, 0),
+(3, '週末公會戰防守陣容推薦', '我們公會目前排名第10，想請問防守據點應該放什麼職業組合比較好？', 2, '公會戰', 8, 0);
 
 INSERT INTO answers (id, content, question_id, user_id, vote_count, is_accepted) VALUES 
-(1, '建議先去收集蠻族套裝升級，然後練習盾反和林克時間。另外可以使用獸肉料理撐血量。', 1, 1, 10, 1);
+(1, 'P2階段王飛上去的時候，奶媽就要開始預備群補了。建議全員都要撐一點暗抗，否則就算補滿也很容易被秒。', 1, 1, 10, 1);
 
 -- Updates question 1 as solved
 UPDATE questions SET is_solved = 1 WHERE id = 1;

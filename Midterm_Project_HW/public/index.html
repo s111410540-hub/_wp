@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>遊戲攻略問答社群</title>
+  <title>Honor 攻略討論版</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <header class="header">
     <nav class="nav">
-      <a href="/index.html" class="nav-brand">GameQA</a>
+      <a href="/index.html" class="nav-brand">Honor 討論版</a>
       <div class="nav-links" id="nav-links"></div>
     </nav>
   </header>
@@ -26,10 +26,17 @@
       <button class="btn btn-outline" onclick="loadQuestions()">搜尋</button>
     </div>
 
+    <div class="flex mb-1" style="gap: 0.5rem; flex-wrap: wrap;">
+      <button class="btn btn-outline" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;" onclick="loadQuestionsByTag('')">全部</button>
+      <button class="btn btn-outline" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;" onclick="loadQuestionsByTag('周本boss')">周本boss</button>
+      <button class="btn btn-outline" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;" onclick="loadQuestionsByTag('野圖boss')">野圖boss</button>
+      <button class="btn btn-outline" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;" onclick="loadQuestionsByTag('公會戰')">公會戰</button>
+    </div>
+
     <div id="ask-form" class="card hidden mb-1">
       <h2>發布新問題</h2>
-      <input type="text" id="q-title" placeholder="問題標題 (例如: 薩爾達傳說王國之淚如何打人馬?)">
-      <input type="text" id="q-tag" placeholder="遊戲標籤 (例如: 薩爾達傳說)">
+      <input type="text" id="q-title" placeholder="問題標題 (例如: 請問這週的周本boss怎麼打?)">
+      <input type="text" id="q-tag" placeholder="分類標籤 (例如: 周本boss, 野圖boss, 公會戰)">
       <textarea id="q-content" rows="4" placeholder="詳細描述你的問題..."></textarea>
       <button class="btn" onclick="submitQuestion()">送出問題</button>
       <button class="btn btn-outline" onclick="toggleAskForm()">取消</button>
@@ -54,10 +61,18 @@
       document.getElementById('ask-form').classList.toggle('hidden');
     }
 
+    function loadQuestionsByTag(tag) {
+      currentTag = tag;
+      document.getElementById('search-input').value = '';
+      loadQuestions();
+    }
+
+    let currentTag = '';
+
     async function loadQuestions() {
       const search = document.getElementById('search-input').value;
       try {
-        const data = await window.api.getQuestions('', search);
+        const data = await window.api.getQuestions(currentTag, search);
         const list = document.getElementById('questions-list');
         
         if (data.results.length === 0) {
