@@ -1,0 +1,39 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  reputation INTEGER DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS questions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL, 
+  content TEXT NOT NULL,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  game_tag TEXT, 
+  vote_count INTEGER DEFAULT 0,
+  answer_count INTEGER DEFAULT 0, 
+  is_solved INTEGER DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS answers (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  content TEXT NOT NULL,
+  question_id INTEGER NOT NULL REFERENCES questions(id),
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  is_accepted INTEGER DEFAULT 0, 
+  vote_count INTEGER DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS votes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  target_type TEXT NOT NULL CHECK(target_type IN ('question','answer')),
+  target_id INTEGER NOT NULL,
+  value INTEGER NOT NULL CHECK(value IN (1,-1)),
+  UNIQUE(user_id, target_type, target_id)
+);

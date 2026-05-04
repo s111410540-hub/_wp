@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登入 - 遊戲攻略問答社群</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <nav class="nav">
+      <a href="/index.html" class="nav-brand">GameQA</a>
+      <div class="nav-links" id="nav-links"></div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="form-card">
+      <h2 class="text-center">登入帳號</h2>
+      <input type="email" id="email" placeholder="信箱" required>
+      <input type="password" id="password" placeholder="密碼" required>
+      <button class="btn" style="width: 100%" onclick="login()">登入</button>
+      <p class="text-center mt-2">
+        <span class="text-muted">還沒有帳號嗎？</span> 
+        <a href="/register.html">立即註冊</a>
+      </p>
+    </div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    async function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      try {
+        const data = await window.api.login(email, password);
+        window.api.setToken(data.token, { id: data.id, username: data.username });
+        window.location.href = '/index.html';
+      } catch (err) {
+        alert('登入失敗: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>

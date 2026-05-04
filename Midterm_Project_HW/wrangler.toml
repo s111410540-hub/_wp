@@ -1,0 +1,11 @@
+name = "game-forum"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "public"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "forum-db"
+database_id = "REPLACE_AFTER_wrangler_d1_create"
+
+[vars]
+JWT_SECRET = "super_secret_jwt_key_for_game_forum_12345"
