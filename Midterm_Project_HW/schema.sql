@@ -37,3 +37,27 @@ CREATE TABLE IF NOT EXISTS votes (
   value INTEGER NOT NULL CHECK(value IN (1,-1)),
   UNIQUE(user_id, target_type, target_id)
 );
+
+-- 素材資料表
+CREATE TABLE IF NOT EXISTS materials (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL CHECK(category IN ('野外boss素材','周本稀有材料','地圖探索素材','特殊資源點素材')),
+  description TEXT,
+  rarity TEXT NOT NULL CHECK(rarity IN ('普通','稀有','史詩','傳說')),
+  drop_source TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 交易列表
+CREATE TABLE IF NOT EXISTS listings (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  material_id INTEGER NOT NULL REFERENCES materials(id),
+  seller_id INTEGER NOT NULL REFERENCES users(id),
+  price INTEGER NOT NULL,
+  quantity INTEGER NOT NULL DEFAULT 1,
+  type TEXT NOT NULL CHECK(type IN ('出售','收購')),
+  status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active','sold','cancelled')),
+  description TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

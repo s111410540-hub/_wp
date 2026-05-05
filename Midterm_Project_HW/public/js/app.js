@@ -93,6 +93,10 @@ function navigateTag(tag) {
     window.location.href = '/leaderboard.html';
     return;
   }
+  if (tag === '材料交易區') {
+    window.location.href = '/market.html';
+    return;
+  }
   
   if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
     if (typeof loadQuestionsByTag === 'function') {

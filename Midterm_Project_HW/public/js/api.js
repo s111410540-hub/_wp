@@ -73,6 +73,41 @@ class Api {
 
   // Votes
   vote(target_type, target_id, value) { return this.request('/votes', { method: 'POST', body: JSON.stringify({ target_type, target_id, value }) }); }
+
+  // Market & Materials
+  async getMaterials(category = '') {
+    const url = category ? `/materials?category=${encodeURIComponent(category)}` : '/materials';
+    return await this.request(url);
+  }
+
+  async getListings(material_id = '', type = '') {
+    let params = new URLSearchParams();
+    if (material_id) params.append('material_id', material_id);
+    if (type) params.append('type', type);
+    const qs = params.toString();
+    const url = qs ? `/listings?${qs}` : '/listings';
+    return await this.request(url);
+  }
+
+  async postListing(data) {
+    return await this.request('/listings', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async editListing(id, data) {
+    return await this.request(`/listings/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async deleteListing(id) {
+    return await this.request(`/listings/${id}`, {
+      method: 'DELETE'
+    });
+  }
 }
 
 window.api = new Api();

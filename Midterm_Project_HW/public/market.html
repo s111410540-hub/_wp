@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>材料交易區 - Glory 攻略討論版</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Apple Store Style Overrides */
+    body {
+      background-color: #f5f5f7;
+    }
+    .market-header {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+    }
+    .market-header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #1d1d1f;
+      letter-spacing: -0.015em;
+      margin-bottom: 0.5rem;
+    }
+    .market-header p {
+      font-size: 1.2rem;
+      color: #86868b;
+      font-weight: 500;
+    }
+    
+    .category-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+    .cat-tab {
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #1d1d1f;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .cat-tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(139, 90, 43, 0.2);
+    }
+    .cat-tab:hover:not(.active) {
+      background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .material-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding-bottom: 4rem;
+    }
+
+    .material-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.02);
+    }
+    .material-card:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .rarity-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .rarity-普通 { background: #e0e0e0; color: #616161; }
+    .rarity-稀有 { background: #e3f2fd; color: #1565c0; }
+    .rarity-史詩 { background: #f3e5f5; color: #7b1fa2; }
+    .rarity-傳說 { background: #fff8e1; color: #f57f17; box-shadow: 0 0 10px rgba(245, 127, 23, 0.2); }
+
+    .material-icon {
+      width: 48px;
+      height: 48px;
+      background: #f5f5f7;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .material-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin-bottom: 0.25rem;
+    }
+    .material-cat {
+      font-size: 0.85rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .material-desc {
+      font-size: 0.9rem;
+      color: #86868b;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+    
+    .view-btn {
+      align-self: flex-start;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .material-card:hover .view-btn {
+      background: var(--primary);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout" id="app-root">
+    <main class="main-content">
+      <div class="market-header slide-up">
+        <h1>素材交易市集</h1>
+        <p>全服最齊全的稀有素材集散地</p>
+      </div>
+
+      <div class="category-tabs slide-up" style="animation-delay: 0.1s" id="category-tabs">
+        <div class="cat-tab active" onclick="loadMaterials('')">全部</div>
+        <div class="cat-tab" onclick="loadMaterials('野外boss素材')">野外boss素材</div>
+        <div class="cat-tab" onclick="loadMaterials('周本稀有材料')">周本稀有材料</div>
+        <div class="cat-tab" onclick="loadMaterials('地圖探索素材')">地圖探索素材</div>
+        <div class="cat-tab" onclick="loadMaterials('特殊資源點素材')">特殊資源點素材</div>
+      </div>
+
+      <div id="material-list" class="material-grid">
+        <!-- JS rendered -->
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    let currentCategory = '';
+
+    function getIconForCategory(cat) {
+      if (cat.includes('boss')) return '🐺';
+      if (cat.includes('周本')) return '⚔️';
+      if (cat.includes('探索')) return '🗺️';
+      return '💎';
+    }
+
+    async function loadMaterials(category) {
+      currentCategory = category;
+      
+      // Update tabs
+      document.querySelectorAll('.cat-tab').forEach(tab => {
+        if (tab.innerText === (category || '全部')) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+
+      const container = document.getElementById('material-list');
+      container.innerHTML = '<div style="text-align:center; grid-column: 1/-1; padding: 2rem;">載入中...</div>';
+
+      try {
+        const data = await window.api.getMaterials(category);
+        if (data.results && data.results.length > 0) {
+          container.innerHTML = data.results.map((item, index) => `
+            <div class="material-card slide-up" style="animation-delay: ${index * 0.05}s" onclick="window.location.href='/material.html?id=${item.id}'">
+              <div class="rarity-badge rarity-${item.rarity}">${item.rarity}</div>
+              <div class="material-icon">${getIconForCategory(item.category)}</div>
+              <div class="material-name">${escapeHtml(item.name)}</div>
+              <div class="material-cat">${escapeHtml(item.category)}</div>
+              <div class="material-desc">${escapeHtml(item.description)}</div>
+              <div class="view-btn">查看市場行情</div>
+            </div>
+          `).join('');
+        } else {
+          container.innerHTML = '<div style="text-align:center; grid-column: 1/-1; padding: 3rem; color: #86868b;">該分類目前沒有素材資料</div>';
+        }
+      } catch (e) {
+        container.innerHTML = `<div style="text-align:center; grid-column: 1/-1; padding: 2rem; color: var(--danger);">載入失敗: ${e.message}</div>`;
+      }
+    }
+
+    window.addEventListener('load', () => {
+      loadMaterials('');
+    });
+  </script>
+</body>
+</html>

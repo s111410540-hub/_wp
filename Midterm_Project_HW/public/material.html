@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>素材詳情 - Glory 攻略討論版</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { background-color: #f5f5f7; }
+    
+    .detail-hero {
+      background: white;
+      border-radius: 24px;
+      padding: 3rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+    }
+
+    .r-badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .r-普通 { background: #e0e0e0; color: #616161; }
+    .r-稀有 { background: #e3f2fd; color: #1565c0; }
+    .r-史詩 { background: #f3e5f5; color: #7b1fa2; }
+    .r-傳說 { background: #fff8e1; color: #f57f17; }
+
+    .mat-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.015em;
+    }
+    .mat-meta {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 1rem;
+    }
+    .mat-desc {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #515154;
+      margin-bottom: 2rem;
+    }
+    .drop-source {
+      background: #f5f5f7;
+      padding: 1rem;
+      border-radius: 12px;
+      display: inline-block;
+      font-size: 0.9rem;
+      color: #1d1d1f;
+      font-weight: 500;
+    }
+
+    .market-board {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+
+    .board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #f5f5f7;
+      padding-bottom: 1rem;
+    }
+    
+    .board-header h2 { margin: 0; font-size: 1.5rem; }
+
+    .listing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    @media(max-width: 900px) { .listing-grid { grid-template-columns: 1fr; } }
+
+    .listing-col h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #1d1d1f;
+    }
+
+    .trade-card {
+      background: #fdf8f5;
+      border: 1px solid rgba(139, 90, 43, 0.1);
+      border-radius: 16px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .trade-card.buy-card {
+      background: #f0f7f4;
+      border-color: rgba(46, 125, 50, 0.1);
+    }
+
+    .trade-price {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    .buy-card .trade-price {
+      color: var(--success);
+    }
+
+    .trade-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #86868b;
+    }
+
+    .trade-desc {
+      font-size: 0.9rem;
+      color: #1d1d1f;
+      background: white;
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      background: white; padding: 2rem; border-radius: 24px;
+      width: 100%; max-width: 500px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout" id="app-root">
+    <main class="main-content">
+      <button class="btn btn-outline btn-small mb-2" onclick="window.history.back()">← 返回市集</button>
+      
+      <div id="material-detail" class="slide-up">
+        <div style="text-align:center; padding: 3rem;">載入中...</div>
+      </div>
+
+      <div class="market-board slide-up" style="animation-delay: 0.1s; margin-top: 2rem;">
+        <div class="board-header">
+          <h2>交易掛單</h2>
+          <button class="btn" id="btn-create-listing" onclick="openListingModal()">發布交易</button>
+        </div>
+        
+        <div class="listing-grid">
+          <div class="listing-col">
+            <h3 style="color:var(--primary)">💰 出售列表</h3>
+            <div id="sell-list">載入中...</div>
+          </div>
+          <div class="listing-col">
+            <h3 style="color:var(--success)">🛒 收購列表</h3>
+            <div id="buy-list">載入中...</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Create Listing Modal -->
+  <div id="listingModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h2 style="margin-bottom: 1.5rem;">發布交易掛單</h2>
+      <select id="listing-type" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+        <option value="出售">出售</option>
+        <option value="收購">收購</option>
+      </select>
+      <input type="number" id="listing-price" placeholder="單價 (金幣)" required>
+      <input type="number" id="listing-qty" placeholder="數量" value="1" required>
+      <textarea id="listing-desc" placeholder="交易備註 (可選)" rows="3"></textarea>
+      
+      <div class="flex" style="justify-content: flex-end; margin-top: 1rem;">
+        <button class="btn btn-outline" onclick="closeListingModal()">取消</button>
+        <button class="btn" onclick="submitListing()">確認發布</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    let currentMaterial = null;
+    const urlParams = new URLSearchParams(window.location.search);
+    const materialId = urlParams.get('id');
+
+    async function loadData() {
+      if (!materialId) {
+        document.getElementById('material-detail').innerHTML = '錯誤：未指定素材';
+        return;
+      }
+
+      try {
+        // Find material info
+        const matsData = await window.api.getMaterials();
+        currentMaterial = matsData.results.find(m => m.id == materialId);
+        
+        if (!currentMaterial) {
+          document.getElementById('material-detail').innerHTML = '找不到該素材資料';
+          return;
+        }
+
+        renderMaterial();
+        await loadListings();
+        
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderMaterial() {
+      const m = currentMaterial;
+      document.getElementById('material-detail').innerHTML = `
+        <div class="detail-hero">
+          <div class="hero-content">
+            <div class="r-badge r-${m.rarity}">${m.rarity}</div>
+            <h1 class="mat-title">${escapeHtml(m.name)}</h1>
+            <div class="mat-meta">
+              <span>📂 ${escapeHtml(m.category)}</span>
+            </div>
+            <div class="mat-desc">${escapeHtml(m.description)}</div>
+            <div class="drop-source">⚔️ 掉落來源：${escapeHtml(m.drop_source)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadListings() {
+      try {
+        const data = await window.api.getListings(materialId);
+        const user = window.api.getUser();
+        
+        const sells = data.results.filter(l => l.type === '出售');
+        const buys = data.results.filter(l => l.type === '收購');
+
+        const renderCard = (l, isBuy) => {
+          const isOwner = user && user.id === l.seller_id;
+          const actionHtml = isOwner ? `
+            <div style="margin-top: 0.5rem; text-align: right;">
+              <button class="btn btn-outline btn-small" style="color:var(--danger); border-color:var(--danger)" onclick="deleteListing(${l.id})">下架</button>
+            </div>
+          ` : '';
+
+          return `
+            <div class="trade-card ${isBuy ? 'buy-card' : ''}">
+              <div class="flex-between">
+                <span style="font-weight: bold;">👤 ${escapeHtml(l.seller_name)}</span>
+                <span class="text-muted">${formatDate(l.created_at)}</span>
+              </div>
+              <div class="flex-between" style="align-items: baseline;">
+                <span class="trade-price">${l.price.toLocaleString()} G</span>
+                <span style="font-weight:600;">數量: ${l.quantity}</span>
+              </div>
+              ${l.description ? `<div class="trade-desc">${escapeHtml(l.description)}</div>` : ''}
+              ${actionHtml}
+            </div>
+          `;
+        };
+
+        document.getElementById('sell-list').innerHTML = sells.length ? sells.map(l => renderCard(l, false)).join('') : '<div class="text-muted">目前無出售掛單</div>';
+        document.getElementById('buy-list').innerHTML = buys.length ? buys.map(l => renderCard(l, true)).join('') : '<div class="text-muted">目前無收購掛單</div>';
+        
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function openListingModal() {
+      if (!window.api.getUser()) {
+        alert('請先登入才能發布交易！');
+        window.location.href = '/login.html';
+        return;
+      }
+      document.getElementById('listingModal').classList.remove('hidden');
+    }
+
+    function closeListingModal() {
+      document.getElementById('listingModal').classList.add('hidden');
+      document.getElementById('listing-price').value = '';
+      document.getElementById('listing-qty').value = '1';
+      document.getElementById('listing-desc').value = '';
+    }
+
+    async function submitListing() {
+      const type = document.getElementById('listing-type').value;
+      const price = parseInt(document.getElementById('listing-price').value);
+      const quantity = parseInt(document.getElementById('listing-qty').value);
+      const description = document.getElementById('listing-desc').value.trim();
+
+      if (!price || price <= 0 || !quantity || quantity <= 0) {
+        alert('請填寫正確的價格與數量');
+        return;
+      }
+
+      try {
+        await window.api.postListing({
+          material_id: materialId,
+          type,
+          price,
+          quantity,
+          description
+        });
+        closeListingModal();
+        loadListings();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    async function deleteListing(id) {
+      if (!confirm('確定要下架這筆交易嗎？')) return;
+      try {
+        await window.api.deleteListing(id);
+        loadListings();
+      } catch(e) {
+        alert(e.message);
+      }
+    }
+
+    window.addEventListener('load', loadData);
+  </script>
+</body>
+</html>
