@@ -85,6 +85,15 @@ function renderLayout() {
 }
 
 function navigateTag(tag) {
+  if (tag === '公會榜') {
+    window.location.href = '/guilds.html';
+    return;
+  }
+  if (tag === '天榜') {
+    window.location.href = '/leaderboard.html';
+    return;
+  }
+  
   if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
     if (typeof loadQuestionsByTag === 'function') {
       loadQuestionsByTag(tag);
