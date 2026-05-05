@@ -51,17 +51,23 @@ class Api {
   register(username, email, password) { return this.request('/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password }) }); }
 
   // Questions
-  getQuestions(tag = '', search = '') {
+  getQuestions(tag = '', search = '', page = 1, sort = 'newest') {
     const params = new URLSearchParams();
     if (tag) params.append('tag', tag);
     if (search) params.append('search', search);
+    params.append('page', page);
+    params.append('sort', sort);
     return this.request(`/questions?${params.toString()}`);
   }
   getQuestion(id) { return this.request(`/questions/${id}`); }
   postQuestion(title, content, game_tag) { return this.request('/questions', { method: 'POST', body: JSON.stringify({ title, content, game_tag }) }); }
+  editQuestion(id, title, content) { return this.request(`/questions/${id}`, { method: 'PUT', body: JSON.stringify({ title, content }) }); }
+  deleteQuestion(id) { return this.request(`/questions/${id}`, { method: 'DELETE' }); }
 
   // Answers
   postAnswer(question_id, content) { return this.request('/answers', { method: 'POST', body: JSON.stringify({ question_id, content }) }); }
+  editAnswer(id, content) { return this.request(`/answers/${id}`, { method: 'PUT', body: JSON.stringify({ content }) }); }
+  deleteAnswer(id) { return this.request(`/answers/${id}`, { method: 'DELETE' }); }
   acceptAnswer(id) { return this.request(`/answers/${id}/accept`, { method: 'POST' }); }
 
   // Votes

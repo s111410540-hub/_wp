@@ -15,9 +15,14 @@
       <button class="btn" id="ask-btn">發布問題</button>
     </div>
 
-    <div class="flex mb-1">
+    <div class="flex mb-1" style="align-items: center;">
       <input type="text" id="search-input" placeholder="搜尋問題..." style="flex: 1; margin-bottom: 0;">
-      <button class="btn btn-outline" onclick="loadQuestions()">搜尋</button>
+      <select id="sort-select" class="btn btn-outline" style="margin-bottom: 0;" onchange="changeSort(this.value)">
+        <option value="newest">最新發布</option>
+        <option value="votes">最多得票</option>
+        <option value="unsolved">尚未解決</option>
+      </select>
+      <button class="btn btn-outline" onclick="resetPageAndLoad()">搜尋</button>
     </div>
 
     <div class="text-center mb-1">
@@ -41,6 +46,8 @@
     </div>
 
     <div id="questions-list"></div>
+    
+    <div id="pagination-controls" class="flex mt-2 mb-2" style="justify-content: center; align-items: center; gap: 1rem;"></div>
     </div>
   </main>
   </div>
@@ -64,26 +71,40 @@
     function loadQuestionsByTag(tag) {
       currentTag = tag;
       document.getElementById('search-input').value = '';
+      resetPageAndLoad();
+    }
+
+    function changeSort(sort) {
+      currentSort = sort;
+      resetPageAndLoad();
+    }
+
+    function resetPageAndLoad() {
+      currentPage = 1;
       loadQuestions();
     }
 
     let currentTag = '';
+    let currentSort = 'newest';
+    let currentPage = 1;
 
     async function loadQuestions() {
       const search = document.getElementById('search-input').value;
       try {
-        const data = await window.api.getQuestions(currentTag, search);
+        const data = await window.api.getQuestions(currentTag, search, currentPage, currentSort);
         const list = document.getElementById('questions-list');
+        const pagination = document.getElementById('pagination-controls');
         
-        if (data.results.length === 0) {
+        if (!data.results || data.results.length === 0) {
           list.innerHTML = '<p class="text-center text-muted mt-2">目前沒有問題，成為第一個發問的人吧！</p>';
+          pagination.innerHTML = '';
           return;
         }
 
         list.innerHTML = `<div class="bento-grid">` + data.results.map((q, index) => {
-          // 讓第一張卡片變大，或者內容較多時拉高
-          let bentoClass = (index === 0) ? 'bento-large' : '';
-          if (index !== 0 && q.content && q.content.length > 50) {
+          // 第一頁的第一張卡片才變大
+          let bentoClass = (index === 0 && currentPage === 1) ? 'bento-large' : '';
+          if (!(index === 0 && currentPage === 1) && q.content && q.content.length > 50) {
             bentoClass += ' bento-tall';
           }
           
@@ -114,6 +135,8 @@
             </div>
           `;
         }).join('') + `</div>`;
+        
+        renderPagination(data.pagination);
       } catch (err) {
         alert('載入失敗: ' + err.message);
       }
@@ -149,6 +172,36 @@
       } catch (err) {
         alert('投票失敗: ' + err.message);
       }
+    }
+
+    function renderPagination(pageData) {
+      const container = document.getElementById('pagination-controls');
+      if (pageData.total_pages <= 1) {
+        container.innerHTML = '';
+        return;
+      }
+      
+      let html = '';
+      if (pageData.page > 1) {
+        html += `<button class="btn btn-outline btn-small" onclick="goToPage(${pageData.page - 1})">上一頁</button>`;
+      } else {
+        html += `<button class="btn btn-outline btn-small" disabled style="opacity: 0.5">上一頁</button>`;
+      }
+      
+      html += `<span class="text-muted">第 ${pageData.page} / ${pageData.total_pages} 頁</span>`;
+      
+      if (pageData.page < pageData.total_pages) {
+        html += `<button class="btn btn-outline btn-small" onclick="goToPage(${pageData.page + 1})">下一頁</button>`;
+      } else {
+        html += `<button class="btn btn-outline btn-small" disabled style="opacity: 0.5">下一頁</button>`;
+      }
+      container.innerHTML = html;
+    }
+    
+    function goToPage(page) {
+      currentPage = page;
+      loadQuestions();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     loadQuestions();

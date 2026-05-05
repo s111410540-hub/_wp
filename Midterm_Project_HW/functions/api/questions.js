@@ -3,8 +3,11 @@ export async function onRequestGet(context) {
   const url = new URL(request.url);
   const tag = url.searchParams.get('tag');
   const search = url.searchParams.get('search');
+  const sort = url.searchParams.get('sort') || 'newest';
+  const page = parseInt(url.searchParams.get('page')) || 1;
+  const limit = parseInt(url.searchParams.get('limit')) || 9;
   
-  let query = "SELECT q.*, u.username FROM questions q JOIN users u ON q.user_id = u.id";
+  let baseQuery = "FROM questions q JOIN users u ON q.user_id = u.id";
   let params = [];
   let conditions = [];
   
@@ -16,25 +19,46 @@ export async function onRequestGet(context) {
     conditions.push("(q.title LIKE ? OR q.content LIKE ?)");
     params.push(`%${search}%`, `%${search}%`);
   }
-  
-  if (conditions.length > 0) {
-    query += " WHERE " + conditions.join(" AND ");
+  if (sort === 'unsolved') {
+    conditions.push("q.is_solved = 0");
   }
   
-  query += " ORDER BY q.created_at DESC";
+  if (conditions.length > 0) {
+    baseQuery += " WHERE " + conditions.join(" AND ");
+  }
+  
+  // Get total count for pagination
+  let countQuery = "SELECT COUNT(*) as total " + baseQuery;
+  
+  let orderClause = " ORDER BY q.created_at DESC";
+  if (sort === 'votes') {
+    orderClause = " ORDER BY q.vote_count DESC, q.created_at DESC";
+  }
+  
+  const offset = (page - 1) * limit;
+  let dataQuery = "SELECT q.*, u.username " + baseQuery + orderClause + " LIMIT ? OFFSET ?";
+  let dataParams = [...params, limit, offset];
   
   try {
-    let stmt = env.DB.prepare(query);
-    for (let i = 0; i < params.length; i++) {
-      stmt = stmt.bind(params[i]);
-    }
-    // D1 API currently only accepts multiple bindings in a single bind call if spread
-    if (params.length > 0) {
-      stmt = env.DB.prepare(query).bind(...params);
-    }
+    let countStmt = env.DB.prepare(countQuery);
+    if (params.length > 0) countStmt = countStmt.bind(...params);
+    const countResult = await countStmt.first();
+    const total = countResult ? countResult.total : 0;
     
-    const { results } = await stmt.all();
-    return new Response(JSON.stringify({ results }), { status: 200 });
+    let dataStmt = env.DB.prepare(dataQuery);
+    if (dataParams.length > 0) dataStmt = dataStmt.bind(...dataParams);
+    
+    const { results } = await dataStmt.all();
+    
+    return new Response(JSON.stringify({ 
+      results,
+      pagination: {
+        total,
+        page,
+        limit,
+        total_pages: Math.ceil(total / limit)
+      }
+    }), { status: 200 });
   } catch (e) {
     return new Response(JSON.stringify({ error: '伺服器錯誤' }), { status: 500 });
   }

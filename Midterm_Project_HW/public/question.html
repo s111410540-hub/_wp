@@ -38,6 +38,19 @@
         
         saveToHistory(q.id, q.title);
         
+        const user = window.api.getUser();
+        const isQuestionOwner = user && user.id === q.user_id;
+        
+        let qActionHtml = '';
+        if (isQuestionOwner) {
+          qActionHtml = `
+            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+              <button class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;" onclick="startEditQuestion(${q.id})">編輯</button>
+              <button class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem; color: var(--danger); border-color: var(--danger);" onclick="deleteQuestion(${q.id})">刪除</button>
+            </div>
+          `;
+        }
+
         document.getElementById('question-container').innerHTML = `
           <div class="card flex question-layout">
             <div class="vote-section">
@@ -45,54 +58,90 @@
               <span class="vote-count">${q.vote_count}</span>
               <button class="vote-btn" onclick="vote('question', ${q.id}, -1)">▼</button>
             </div>
-            <div class="content-section">
-              <h1>${escapeHtml(q.title)}</h1>
-              <p style="white-space: pre-wrap; font-size: 1.1rem; margin-bottom: 1rem;">${escapeHtml(q.content)}</p>
-              <div class="meta">
-                <span>作者: ${escapeHtml(q.username)}</span>
-                <span>時間: ${formatDate(q.created_at)}</span>
-                ${q.game_tag ? `<span class="tag">${escapeHtml(q.game_tag)}</span>` : ''}
+            <div class="content-section" id="question-display">
+              <h1 id="q-display-title">${escapeHtml(q.title)}</h1>
+              <p id="q-display-content" style="white-space: pre-wrap; font-size: 1.1rem; margin-bottom: 1rem;">${escapeHtml(q.content)}</p>
+              <div class="meta flex-between">
+                <div>
+                  <span>作者: ${escapeHtml(q.username)}</span>
+                  <span>時間: ${formatDate(q.created_at)}</span>
+                  ${q.game_tag ? `<span class="tag">${escapeHtml(q.game_tag)}</span>` : ''}
+                </div>
+              </div>
+              ${qActionHtml}
+            </div>
+            
+            <div class="content-section hidden" id="question-edit-form">
+              <input type="text" id="edit-q-title" value="${escapeHtml(q.title)}" style="margin-bottom: 0.5rem;">
+              <textarea id="edit-q-content" rows="6" style="margin-bottom: 0.5rem;">${escapeHtml(q.content)}</textarea>
+              <div class="flex">
+                <button class="btn btn-small" onclick="saveQuestionEdit(${q.id})">儲存</button>
+                <button class="btn btn-outline btn-small" onclick="cancelEditQuestion()">取消</button>
               </div>
             </div>
           </div>
         `;
 
-        renderAnswers(data.answers);
+        renderAnswers(data.answers, user);
       } catch (err) {
         alert('載入失敗: ' + err.message);
       }
     }
 
-    function renderAnswers(answers) {
+    function renderAnswers(answers, user) {
       const list = document.getElementById('answers-container');
-      const user = window.api.getUser();
-      const isOwner = user && user.id === currentQuestionOwnerId;
+      const isQuestionOwner = user && user.id === currentQuestionOwnerId;
 
       if (answers.length === 0) {
         list.innerHTML = '<p class="text-muted">還沒有回答，來幫幫他吧！</p>';
         return;
       }
 
-      list.innerHTML = answers.map(a => `
-        <div class="card flex question-layout ${a.is_accepted ? 'accepted-answer' : ''}" style="${a.is_accepted ? 'border-color: var(--success)' : ''}">
-          <div class="vote-section">
-            <button class="vote-btn" onclick="vote('answer', ${a.id}, 1)">▲</button>
-            <span class="vote-count">${a.vote_count}</span>
-            <button class="vote-btn" onclick="vote('answer', ${a.id}, -1)">▼</button>
-          </div>
-          <div class="content-section">
-            <p style="white-space: pre-wrap; margin-bottom: 1rem;">${escapeHtml(a.content)}</p>
-            <div class="meta flex-between">
-              <div>
-                <span>作者: ${escapeHtml(a.username)}</span>
-                <span>時間: ${formatDate(a.created_at)}</span>
-                ${a.is_accepted ? '<span class="accepted-badge">最佳解答 ✓</span>' : ''}
-              </div>
-              ${isOwner && !a.is_accepted ? `<button class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;" onclick="acceptAnswer(${a.id})">採納此回答</button>` : ''}
+      list.innerHTML = answers.map(a => {
+        const isAnswerOwner = user && user.id === a.user_id;
+        let ansActionHtml = '';
+        if (isAnswerOwner) {
+          ansActionHtml = `
+            <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+              <button class="btn btn-outline" style="padding: 0.1rem 0.4rem; font-size: 0.75rem;" onclick="startEditAnswer(${a.id})">編輯</button>
+              <button class="btn btn-outline" style="padding: 0.1rem 0.4rem; font-size: 0.75rem; color: var(--danger); border-color: var(--danger);" onclick="deleteAnswer(${a.id})">刪除</button>
             </div>
+          `;
+        }
+
+        return `
+          <div class="card flex question-layout ${a.is_accepted ? 'accepted-answer' : ''}" style="${a.is_accepted ? 'border-color: var(--success)' : ''}">
+            <div class="vote-section">
+              <button class="vote-btn" onclick="vote('answer', ${a.id}, 1)">▲</button>
+              <span class="vote-count">${a.vote_count}</span>
+              <button class="vote-btn" onclick="vote('answer', ${a.id}, -1)">▼</button>
+            </div>
+            
+            <div class="content-section" id="ans-display-${a.id}">
+              <p id="ans-content-raw-${a.id}" class="hidden">${escapeHtml(a.content)}</p>
+              <p style="white-space: pre-wrap; margin-bottom: 1rem;">${escapeHtml(a.content)}</p>
+              <div class="meta flex-between">
+                <div>
+                  <span>作者: ${escapeHtml(a.username)}</span>
+                  <span>時間: ${formatDate(a.created_at)}</span>
+                  ${a.is_accepted ? '<span class="accepted-badge">最佳解答 ✓</span>' : ''}
+                </div>
+                ${isQuestionOwner && !a.is_accepted ? `<button class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;" onclick="acceptAnswer(${a.id})">採納此回答</button>` : ''}
+              </div>
+              ${ansActionHtml}
+            </div>
+            
+            <div class="content-section hidden" id="ans-edit-form-${a.id}">
+              <textarea id="edit-a-content-${a.id}" rows="4" style="margin-bottom: 0.5rem;">${escapeHtml(a.content)}</textarea>
+              <div class="flex">
+                <button class="btn btn-small" onclick="saveAnswerEdit(${a.id})">儲存</button>
+                <button class="btn btn-outline btn-small" onclick="cancelEditAnswer(${a.id})">取消</button>
+              </div>
+            </div>
+            
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     async function submitAnswer() {
@@ -132,6 +181,69 @@
         loadQuestion();
       } catch (err) {
         alert('採納失敗: ' + err.message);
+      }
+    }
+
+    // --- Question Edit/Delete ---
+    function startEditQuestion() {
+      document.getElementById('question-display').classList.add('hidden');
+      document.getElementById('question-edit-form').classList.remove('hidden');
+    }
+    
+    function cancelEditQuestion() {
+      document.getElementById('question-display').classList.remove('hidden');
+      document.getElementById('question-edit-form').classList.add('hidden');
+    }
+    
+    async function saveQuestionEdit(id) {
+      const title = document.getElementById('edit-q-title').value;
+      const content = document.getElementById('edit-q-content').value;
+      try {
+        await window.api.editQuestion(id, title, content);
+        loadQuestion();
+      } catch (err) {
+        alert('更新失敗: ' + err.message);
+      }
+    }
+    
+    async function deleteQuestion(id) {
+      if (!confirm('確定要刪除這個問題嗎？這會連同所有回答一起刪除喔！')) return;
+      try {
+        await window.api.deleteQuestion(id);
+        window.location.href = '/index.html';
+      } catch (err) {
+        alert('刪除失敗: ' + err.message);
+      }
+    }
+
+    // --- Answer Edit/Delete ---
+    function startEditAnswer(id) {
+      document.getElementById(`ans-display-${id}`).classList.add('hidden');
+      document.getElementById(`ans-edit-form-${id}`).classList.remove('hidden');
+    }
+    
+    function cancelEditAnswer(id) {
+      document.getElementById(`ans-display-${id}`).classList.remove('hidden');
+      document.getElementById(`ans-edit-form-${id}`).classList.add('hidden');
+    }
+    
+    async function saveAnswerEdit(id) {
+      const content = document.getElementById(`edit-a-content-${id}`).value;
+      try {
+        await window.api.editAnswer(id, content);
+        loadQuestion();
+      } catch (err) {
+        alert('更新失敗: ' + err.message);
+      }
+    }
+    
+    async function deleteAnswer(id) {
+      if (!confirm('確定要刪除這個回答嗎？')) return;
+      try {
+        await window.api.deleteAnswer(id);
+        loadQuestion();
+      } catch (err) {
+        alert('刪除失敗: ' + err.message);
       }
     }
 
