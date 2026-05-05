@@ -80,24 +80,35 @@
           return;
         }
 
-        list.innerHTML = data.results.map(q => `
-          <div class="card flex question-layout">
-            <div class="vote-section">
-              <span class="vote-count">${q.vote_count}</span>
-              <span class="text-muted" style="font-size: 0.8rem">得票</span>
-            </div>
-            <div class="content-section">
-              <h3><a href="/question.html?id=${q.id}">${escapeHtml(q.title)}</a></h3>
-              <div class="meta">
-                <span>作者: ${escapeHtml(q.username)}</span>
-                <span>回答數: ${q.answer_count}</span>
-                <span>時間: ${formatDate(q.created_at)}</span>
-                ${q.is_solved ? '<span class="accepted-badge">已解決 ✓</span>' : ''}
+        list.innerHTML = `<div class="bento-grid">` + data.results.map((q, index) => {
+          // 讓第一張卡片或者每隔幾張卡片變大
+          const isLarge = (index === 0) ? 'bento-large' : '';
+          
+          return `
+            <div class="bento-card ${isLarge}">
+              <div>
+                ${q.game_tag ? `<div class="mb-1"><span class="tag">${escapeHtml(q.game_tag)}</span></div>` : ''}
+                <div class="card-title"><a href="/question.html?id=${q.id}">${escapeHtml(q.title)}</a></div>
+                <div class="card-excerpt">${escapeHtml(q.content)}</div>
               </div>
-              ${q.game_tag ? `<div class="mt-2"><span class="tag">${escapeHtml(q.game_tag)}</span></div>` : ''}
+              
+              <div class="flex-between mt-2" style="border-top: 1px solid var(--border); padding-top: 1rem;">
+                <div class="meta">
+                  <span style="font-weight: 500; color: var(--text-main)">${escapeHtml(q.username)}</span>
+                  <span>• ${formatDate(q.created_at)}</span>
+                  ${q.is_solved ? '<span class="accepted-badge">已解決 ✓</span>' : ''}
+                </div>
+                
+                <div class="flex" style="gap: 0.5rem; align-items: center;">
+                  <span class="text-muted" style="font-size: 0.85rem">💬 ${q.answer_count}</span>
+                  <div class="vote-section">
+                    <span class="vote-count">▲ ${q.vote_count}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        `).join('');
+          `;
+        }).join('') + `</div>`;
       } catch (err) {
         alert('載入失敗: ' + err.message);
       }

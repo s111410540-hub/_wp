@@ -198,37 +198,89 @@ input:focus, textarea:focus {
   border: 1px solid var(--border);
 }
 
-/* Lists & Cards */
+/* Lists & Bento Cards */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  grid-auto-flow: dense;
+}
+
+.bento-card {
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 20px 40px -10px rgba(139, 90, 43, 0.08); /* 柔和且擴散度高的浮空陰影 */
+  border: 1px solid rgba(230, 213, 195, 0.3); /* 極淡的邊框 */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bento-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px -15px rgba(139, 90, 43, 0.15);
+}
+
+/* Bento Sizing (錯落有致的版面) */
+/* 使部分卡片變大，製造視覺層次 */
+.bento-card.bento-large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+@media (max-width: 900px) {
+  .bento-card.bento-large { grid-column: span 1; grid-row: span 1; }
+}
+
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 30px -5px rgba(139, 90, 43, 0.05);
 }
 
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(139, 90, 43, 0.1);
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text-main);
+  line-height: 1.3;
+}
+
+.card-excerpt {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .meta {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
   display: flex;
   gap: 1rem;
-  margin-top: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .tag {
   background: var(--surface-hover);
   color: var(--primary);
-  padding: 0.25rem 0.75rem;
+  padding: 0.4rem 1rem;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  border: 1px solid var(--border);
+  display: inline-block;
+  border: 1px solid rgba(139, 90, 43, 0.15);
 }
 
 /* Utilities */
@@ -236,16 +288,18 @@ input:focus, textarea:focus {
 .text-center { text-align: center; }
 .mt-2 { margin-top: 2rem; }
 .mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 1.5rem; }
 .flex { display: flex; gap: 1rem; }
 .flex-between { display: flex; justify-content: space-between; align-items: center; }
 
 /* Voting System */
 .vote-section {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  margin-right: 1rem;
+  gap: 0.25rem;
+  background: rgba(139, 90, 43, 0.05);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
 }
 
 .vote-btn {
@@ -253,13 +307,14 @@ input:focus, textarea:focus {
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  transition: color 0.2s;
 }
 
 .vote-btn:hover { color: var(--primary); }
-.vote-count { font-size: 1.25rem; font-weight: bold; color: var(--text-main); }
+.vote-count { font-size: 1rem; font-weight: bold; color: var(--primary); }
 
-.question-layout { display: flex; align-items: flex-start; }
+.question-layout { display: flex; align-items: flex-start; gap: 1rem; }
 .content-section { flex: 1; }
 
 .accepted-badge {
@@ -268,6 +323,5 @@ input:focus, textarea:focus {
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-size: 0.8rem;
-  margin-left: 1rem;
   background-color: rgba(46, 125, 50, 0.1);
 }
