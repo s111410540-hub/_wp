@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>個人主頁 - Glory 攻略討論版</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .profile-header {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      font-weight: bold;
+    }
+    .profile-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      width: 100%;
+    }
+    .stat-box {
+      background: rgba(139, 90, 43, 0.05);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid rgba(139, 90, 43, 0.1);
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      color: var(--primary);
+      background: rgba(139, 90, 43, 0.1);
+    }
+    .tab-btn:hover:not(.active) {
+      color: var(--text-main);
+      background: var(--surface-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout" id="app-root">
+    <main class="main-content">
+      <div id="profile-container" class="card" style="padding: 3rem;">
+        <!-- Loaded via JS -->
+      </div>
+      
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-questions" onclick="switchTab('questions')">我的問題</button>
+        <button class="tab-btn" id="tab-answers" onclick="switchTab('answers')">我的回答</button>
+        <button class="tab-btn" id="tab-votes" onclick="switchTab('votes')">投票紀錄</button>
+      </div>
+      
+      <div id="list-container">
+        <p class="text-center text-muted mt-2">載入中...</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    if (!window.api.getUser()) {
+      alert('請先登入');
+      window.location.href = '/login.html';
+    }
+
+    let currentTab = 'questions';
+
+    async function loadProfile() {
+      try {
+        const data = await window.api.getUserProfile(currentTab);
+        renderHeader(data.user, data.stats);
+        renderList(data.list);
+      } catch (err) {
+        alert('載入失敗: ' + err.message);
+      }
+    }
+
+    function renderHeader(user, stats) {
+      const initial = user.username.charAt(0).toUpperCase();
+      document.getElementById('profile-container').innerHTML = `
+        <div class="profile-header">
+          <div class="profile-avatar">${initial}</div>
+          <div>
+            <h1 style="margin-bottom: 0.5rem;">${escapeHtml(user.username)}</h1>
+            <div class="text-muted" style="margin-bottom: 0.5rem;">註冊於 ${formatDate(user.created_at)}</div>
+            <div style="font-weight: 600; color: var(--primary)">⭐ 聲望分數: ${user.reputation}</div>
+          </div>
+        </div>
+        <div class="profile-stats-grid">
+          <div class="stat-box">
+            <div class="stat-value">${stats.question_count}</div>
+            <div class="stat-label">發佈問題</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">${stats.answer_count}</div>
+            <div class="stat-label">總回答數</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">${stats.accepted_count}</div>
+            <div class="stat-label">獲得採納</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value">${stats.total_votes}</div>
+            <div class="stat-label">獲得總票數</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      document.getElementById('list-container').innerHTML = '<p class="text-center text-muted mt-2">載入中...</p>';
+      loadProfile();
+    }
+
+    function renderList(list) {
+      const container = document.getElementById('list-container');
+      if (list.length === 0) {
+        container.innerHTML = '<p class="text-center text-muted mt-2">目前沒有相關紀錄</p>';
+        return;
+      }
+
+      if (currentTab === 'questions') {
+        container.innerHTML = `<div class="bento-grid">` + list.map(q => `
+          <div class="bento-card" onclick="window.location.href='/question.html?id=${q.id}'" style="padding: 1.5rem;">
+            <div class="card-title"><a>${escapeHtml(q.title)}</a></div>
+            <div class="flex-between mt-2">
+              <span class="text-muted" style="font-size: 0.85rem">${formatDate(q.created_at)}</span>
+              <div class="flex" style="gap: 1rem;">
+                <span class="text-muted" style="font-size: 0.85rem">▲ ${q.vote_count}</span>
+                ${q.is_solved ? '<span class="accepted-badge" style="margin:0">已解決 ✓</span>' : '<span class="tag" style="margin:0; padding: 0.1rem 0.5rem; font-size: 0.75rem;">未解決</span>'}
+              </div>
+            </div>
+          </div>
+        `).join('') + `</div>`;
+      } else if (currentTab === 'answers') {
+        container.innerHTML = `<div class="bento-grid">` + list.map(a => `
+          <div class="bento-card" onclick="window.location.href='/question.html?id=${a.question_id}'" style="padding: 1.5rem;">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">回答了問題：${escapeHtml(a.question_title)}</div>
+            <div class="card-excerpt">${escapeHtml(a.content)}</div>
+            <div class="flex-between mt-2">
+              <span class="text-muted" style="font-size: 0.85rem">${formatDate(a.created_at)}</span>
+              <div class="flex" style="gap: 1rem;">
+                <span class="text-muted" style="font-size: 0.85rem">▲ ${a.vote_count}</span>
+                ${a.is_accepted ? '<span class="accepted-badge" style="margin:0">被採納 ✓</span>' : ''}
+              </div>
+            </div>
+          </div>
+        `).join('') + `</div>`;
+      } else if (currentTab === 'votes') {
+        container.innerHTML = `<div class="bento-grid">` + list.map(v => {
+          const isQ = v.target_type === 'question';
+          const linkId = isQ ? v.target_id : v.a_q_id;
+          const contextTitle = isQ ? v.q_title : v.a_q_title;
+          const voteIcon = v.value === 1 ? '<span style="color:var(--primary)">▲ 讚</span>' : '<span style="color:var(--danger)">▼ 倒讚</span>';
+          
+          return `
+            <div class="bento-card" onclick="window.location.href='/question.html?id=${linkId}'" style="padding: 1.5rem;">
+              <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                對${isQ ? '問題' : '回答'}投了 ${voteIcon}
+              </div>
+              <div class="card-title" style="font-size: 1.1rem;">
+                <a>${escapeHtml(contextTitle)}</a>
+              </div>
+            </div>
+          `;
+        }).join('') + `</div>`;
+      }
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>

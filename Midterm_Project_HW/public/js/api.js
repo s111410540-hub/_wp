@@ -49,6 +49,7 @@ class Api {
   // Auth
   login(email, password) { return this.request('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }); }
   register(username, email, password) { return this.request('/auth/register', { method: 'POST', body: JSON.stringify({ username, email, password }) }); }
+  getUserProfile(tab = 'questions') { return this.request(`/users/profile?tab=${tab}`); }
 
   // Questions
   getQuestions(tag = '', search = '', page = 1, sort = 'newest') {

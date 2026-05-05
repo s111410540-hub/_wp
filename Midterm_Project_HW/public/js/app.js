@@ -15,7 +15,8 @@ function renderLayout() {
   
   let authHtml = user ? `
     <div class="text-muted" style="font-size:0.85rem; word-break:break-all; font-weight:bold; color:var(--primary); text-align:center;">${user.username}</div>
-    <button onclick="logout()" class="btn btn-outline btn-small mt-2" style="width:100%">登出</button>
+    <button onclick="window.location.href='/profile.html'" class="btn btn-small mt-2" style="width:100%">個人主頁</button>
+    <button onclick="logout()" class="btn btn-outline btn-small mt-1" style="width:100%">登出</button>
   ` : `
     <a href="/login.html" class="btn btn-outline btn-small" style="display:block; text-align:center; width:100%">登入</a>
     <a href="/register.html" class="btn btn-small" style="display:block; text-align:center; margin-top:0.5rem; width:100%">註冊</a>
