@@ -8,14 +8,8 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <header class="header">
-    <nav class="nav">
-      <a href="/index.html" class="nav-brand">Honor 討論版</a>
-      <div class="nav-links" id="nav-links"></div>
-    </nav>
-  </header>
-
-  <main class="container">
+  <div class="app-layout" id="app-root">
+    <main class="main-content">
     <div id="question-container" class="mb-2"></div>
     
     <h3>回答</h3>
@@ -27,6 +21,7 @@
       <button class="btn" onclick="submitAnswer()">送出回答</button>
     </div>
   </main>
+  </div>
 
   <script src="/js/api.js"></script>
   <script src="/js/app.js"></script>
@@ -40,6 +35,8 @@
         const data = await window.api.getQuestion(questionId);
         const q = data.question;
         currentQuestionOwnerId = q.user_id;
+        
+        saveToHistory(q.id, q.title);
         
         document.getElementById('question-container').innerHTML = `
           <div class="card flex question-layout">
