@@ -109,7 +109,7 @@
           }
           
           return `
-            <div class="bento-card ${bentoClass}" onclick="window.location.href='/question.html?id=${q.id}'">
+            <div class="bento-card ${bentoClass}" style="animation-delay: ${index * 0.05}s" onclick="window.location.href='/question.html?id=${q.id}'">
               <div>
                 ${q.game_tag ? `<div class="mb-1"><span class="tag">${escapeHtml(q.game_tag)}</span></div>` : ''}
                 <div class="card-title"><a>${escapeHtml(q.title)}</a></div>

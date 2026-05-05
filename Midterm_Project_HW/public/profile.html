@@ -127,24 +127,31 @@
           </div>
         </div>
         <div class="profile-stats-grid">
-          <div class="stat-box">
-            <div class="stat-value">${stats.question_count}</div>
+          <div class="stat-box slide-up" style="animation-delay: 0.1s">
+            <div class="stat-value" id="stat-q">${stats.question_count}</div>
             <div class="stat-label">發佈問題</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-value">${stats.answer_count}</div>
+          <div class="stat-box slide-up" style="animation-delay: 0.2s">
+            <div class="stat-value" id="stat-a">${stats.answer_count}</div>
             <div class="stat-label">總回答數</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-value">${stats.accepted_count}</div>
+          <div class="stat-box slide-up" style="animation-delay: 0.3s">
+            <div class="stat-value" id="stat-acc">${stats.accepted_count}</div>
             <div class="stat-label">獲得採納</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-value">${stats.total_votes}</div>
+          <div class="stat-box slide-up" style="animation-delay: 0.4s">
+            <div class="stat-value" id="stat-v">${stats.total_votes}</div>
             <div class="stat-label">獲得總票數</div>
           </div>
         </div>
       `;
+      // Animate numbers
+      setTimeout(() => {
+        animateNumber(document.getElementById('stat-q'), 0, stats.question_count, 1500);
+        animateNumber(document.getElementById('stat-a'), 0, stats.answer_count, 1500);
+        animateNumber(document.getElementById('stat-acc'), 0, stats.accepted_count, 1500);
+        animateNumber(document.getElementById('stat-v'), 0, stats.total_votes, 1500);
+      }, 100);
     }
 
     function switchTab(tab) {
@@ -163,8 +170,8 @@
       }
 
       if (currentTab === 'questions') {
-        container.innerHTML = `<div class="bento-grid">` + list.map(q => `
-          <div class="bento-card" onclick="window.location.href='/question.html?id=${q.id}'" style="padding: 1.5rem;">
+        container.innerHTML = `<div class="bento-grid">` + list.map((q, index) => `
+          <div class="bento-card" onclick="window.location.href='/question.html?id=${q.id}'" style="padding: 1.5rem; animation-delay: ${index * 0.05}s">
             <div class="card-title"><a>${escapeHtml(q.title)}</a></div>
             <div class="flex-between mt-2">
               <span class="text-muted" style="font-size: 0.85rem">${formatDate(q.created_at)}</span>
@@ -176,8 +183,8 @@
           </div>
         `).join('') + `</div>`;
       } else if (currentTab === 'answers') {
-        container.innerHTML = `<div class="bento-grid">` + list.map(a => `
-          <div class="bento-card" onclick="window.location.href='/question.html?id=${a.question_id}'" style="padding: 1.5rem;">
+        container.innerHTML = `<div class="bento-grid">` + list.map((a, index) => `
+          <div class="bento-card" onclick="window.location.href='/question.html?id=${a.question_id}'" style="padding: 1.5rem; animation-delay: ${index * 0.05}s">
             <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">回答了問題：${escapeHtml(a.question_title)}</div>
             <div class="card-excerpt">${escapeHtml(a.content)}</div>
             <div class="flex-between mt-2">
@@ -190,14 +197,14 @@
           </div>
         `).join('') + `</div>`;
       } else if (currentTab === 'votes') {
-        container.innerHTML = `<div class="bento-grid">` + list.map(v => {
+        container.innerHTML = `<div class="bento-grid">` + list.map((v, index) => {
           const isQ = v.target_type === 'question';
           const linkId = isQ ? v.target_id : v.a_q_id;
           const contextTitle = isQ ? v.q_title : v.a_q_title;
           const voteIcon = v.value === 1 ? '<span style="color:var(--primary)">▲ 讚</span>' : '<span style="color:var(--danger)">▼ 倒讚</span>';
           
           return `
-            <div class="bento-card" onclick="window.location.href='/question.html?id=${linkId}'" style="padding: 1.5rem;">
+            <div class="bento-card" onclick="window.location.href='/question.html?id=${linkId}'" style="padding: 1.5rem; animation-delay: ${index * 0.05}s">
               <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">
                 對${isQ ? '問題' : '回答'}投了 ${voteIcon}
               </div>

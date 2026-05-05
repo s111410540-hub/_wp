@@ -156,3 +156,40 @@ function renderHistory() {
     </a>
   `).join('');
 }
+
+// Visual Animations
+function animateNumber(element, start, end, duration) {
+  if (!element) return;
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    const easeProgress = 1 - Math.pow(1 - progress, 4);
+    element.innerHTML = Math.floor(easeProgress * (end - start) + start);
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      element.innerHTML = end;
+    }
+  };
+  window.requestAnimationFrame(step);
+}
+
+// Visual Animations
+function animateNumber(element, start, end, duration) {
+  if (!element) return;
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    // easeOutQuart
+    const easeProgress = 1 - Math.pow(1 - progress, 4);
+    element.innerHTML = Math.floor(easeProgress * (end - start) + start);
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      element.innerHTML = end;
+    }
+  };
+  window.requestAnimationFrame(step);
+}
