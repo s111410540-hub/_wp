@@ -95,13 +95,59 @@
         const list = document.getElementById('questions-list');
         const pagination = document.getElementById('pagination-controls');
         
+        let htmlContent = '';
+
+        if (currentTag === '神之領域情報') {
+          htmlContent += `
+            <div class="card slide-up mb-2" style="background: linear-gradient(135deg, rgba(139, 90, 43, 0.05), rgba(139, 90, 43, 0.1)); border: 1px solid var(--primary); padding: 2rem;">
+              <div class="flex-between" style="border-bottom: 1px solid rgba(139, 90, 43, 0.2); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                <h2 style="color: var(--primary); margin-bottom: 0;">👑 官方情報：神之領域</h2>
+                <button class="btn btn-outline btn-small" onclick="document.getElementById('god-domain-info').classList.toggle('hidden')">詳細資訊 ▼</button>
+              </div>
+              
+              <div id="god-domain-info" class="hidden">
+                <p style="margin-bottom: 1rem; line-height: 1.8; color: var(--text-main);">
+                  神之領域是榮耀中等級最高的地圖，只有角色達到滿等 50 級、並完成指定任務的玩家才能進入。<br>
+                  這裡聚集了全服最頂尖的玩家，包括各大職業戰隊的選手帳號，以及無數身經百戰的高手。能踏入神之領域，本身就是實力的象徵。
+                </p>
+                
+                <h3 style="color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.2rem;">🌍 世界地圖</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-main);">神之領域幅員遼闊，主要分為以下幾大區域：</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                  <div class="bento-card" style="padding: 1.2rem; box-shadow: none; border-color: rgba(139, 90, 43, 0.15);">
+                    <h4 style="margin-bottom: 0.5rem; color: #1565c0;">⚓ 碧藍港</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">位於神之領域西側的沿海城市，藍溪閣公會的根據地。港口貿易繁榮，是新玩家進入神之領域後最常停留的起點城市。</p>
+                  </div>
+                  <div class="bento-card" style="padding: 1.2rem; box-shadow: none; border-color: rgba(139, 90, 43, 0.15);">
+                    <h4 style="margin-bottom: 0.5rem; color: #2e7d32;">🌲 翡翠谷</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">茂密森林覆蓋的秘境，微草堂公會長年駐守。盛產高階藥材與煉金材料，是補給黨的必訪之地。</p>
+                  </div>
+                  <div class="bento-card" style="padding: 1.2rem; box-shadow: none; border-color: rgba(139, 90, 43, 0.15);">
+                    <h4 style="margin-bottom: 0.5rem; color: #c62828;">🏰 鐵血要塞</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">位於神之領域北方的軍事要塞，霸圖旗下的天命公會以此為據點。地形險峻，野外 BOSS 密度極高，是硬核玩家的修練場。</p>
+                  </div>
+                  <div class="bento-card" style="padding: 1.2rem; box-shadow: none; border-color: rgba(139, 90, 43, 0.15);">
+                    <h4 style="margin-bottom: 0.5rem; color: #f57f17;">⭐ 星辰廣場</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">神之領域的中心地帶，各大公會與散人玩家的交流樞紐。競技場、交易所、公會報名處均設於此。</p>
+                  </div>
+                  <div class="bento-card" style="padding: 1.2rem; box-shadow: none; border-color: rgba(139, 90, 43, 0.15); grid-column: 1 / -1;">
+                    <h4 style="margin-bottom: 0.5rem; color: #6a1b9a;">🚫 神祇禁地</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">傳說中神之領域最深處的區域，至今鮮少有玩家完整探索。據說禁地深處藏有榮耀史上最強的隱藏 BOSS，尚無任何公會成功首殺。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        
         if (!data.results || data.results.length === 0) {
-          list.innerHTML = '<p class="text-center text-muted mt-2">目前沒有問題，成為第一個發問的人吧！</p>';
+          list.innerHTML = htmlContent + '<p class="text-center text-muted mt-2">目前沒有問題，成為第一個發問的人吧！</p>';
           pagination.innerHTML = '';
           return;
         }
 
-        list.innerHTML = `<div class="bento-grid">` + data.results.map((q, index) => {
+        list.innerHTML = htmlContent + `<div class="bento-grid">` + data.results.map((q, index) => {
           // 第一頁的第一張卡片才變大
           let bentoClass = (index === 0 && currentPage === 1) ? 'bento-large' : '';
           if (!(index === 0 && currentPage === 1) && q.content && q.content.length > 50) {
