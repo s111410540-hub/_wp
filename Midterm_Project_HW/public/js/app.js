@@ -23,18 +23,18 @@ function renderLayout() {
 
   leftSidebar.innerHTML = `
     <div class="sidebar-top">
-      <a href="/index.html" class="nav-brand">Honor 討論版</a>
+      <a href="/index.html" class="nav-brand">Glory 討論版</a>
     </div>
     <div class="sidebar-nav">
-      <a class="nav-item" onclick="navigateTag('')">全部板塊</a>
-      <a class="nav-item" onclick="navigateTag('公會榜')">公會榜</a>
-      <a class="nav-item" onclick="navigateTag('天榜')">天榜(個人排名)</a>
-      <a class="nav-item" onclick="navigateTag('材料交易區')">材料交易區</a>
-      <a class="nav-item" onclick="navigateTag('周本boss')">周本情報區</a>
-      <a class="nav-item" onclick="navigateTag('野圖boss')">野圖boss情報</a>
-      <a class="nav-item" onclick="navigateTag('公會戰')">公會戰情報</a>
-      <a class="nav-item" onclick="navigateTag('主地圖情報')">主地圖情報</a>
-      <a class="nav-item" onclick="navigateTag('神之領域情報')">神之領域情報</a>
+      <a class="nav-item" onclick="navigateTag('')">▤ 全部板塊</a>
+      <a class="nav-item" onclick="navigateTag('公會榜')">♜ 公會榜</a>
+      <a class="nav-item" onclick="navigateTag('天榜')">♚ 天榜(個人排名)</a>
+      <a class="nav-item" onclick="navigateTag('材料交易區')">❖ 材料交易區</a>
+      <a class="nav-item" onclick="navigateTag('周本boss')">☠ 周本情報區</a>
+      <a class="nav-item" onclick="navigateTag('野圖boss')">♞ 野圖boss情報</a>
+      <a class="nav-item" onclick="navigateTag('公會戰')">⚑ 公會戰情報</a>
+      <a class="nav-item" onclick="navigateTag('主地圖情報')">⌂ 主地圖情報</a>
+      <a class="nav-item" onclick="navigateTag('神之領域情報')">✧ 神之領域情報</a>
     </div>
     <div class="sidebar-history">
       <div class="history-title">最近瀏覽</div>
@@ -128,14 +128,14 @@ function escapeHtml(unsafe) {
 
 // History Management
 function saveToHistory(id, title) {
-  let history = JSON.parse(localStorage.getItem('honor_history') || '[]');
+  let history = JSON.parse(localStorage.getItem('glory_history') || '[]');
   // Remove if exists
   history = history.filter(item => item.id !== id);
   // Add to front
   history.unshift({ id, title });
   // Keep last 5
   if (history.length > 5) history = history.slice(0, 5);
-  localStorage.setItem('honor_history', JSON.stringify(history));
+  localStorage.setItem('glory_history', JSON.stringify(history));
   renderHistory();
 }
 
@@ -143,7 +143,7 @@ function renderHistory() {
   const list = document.getElementById('history-list');
   if (!list) return;
   
-  const history = JSON.parse(localStorage.getItem('honor_history') || '[]');
+  const history = JSON.parse(localStorage.getItem('glory_history') || '[]');
   if (history.length === 0) {
     list.innerHTML = '<div class="text-muted" style="font-size:0.8rem">暫無瀏覽紀錄</div>';
     return;
