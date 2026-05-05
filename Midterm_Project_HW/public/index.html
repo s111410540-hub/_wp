@@ -81,14 +81,17 @@
         }
 
         list.innerHTML = `<div class="bento-grid">` + data.results.map((q, index) => {
-          // 讓第一張卡片或者每隔幾張卡片變大
-          const isLarge = (index === 0) ? 'bento-large' : '';
+          // 讓第一張卡片變大，或者內容較多時拉高
+          let bentoClass = (index === 0) ? 'bento-large' : '';
+          if (index !== 0 && q.content && q.content.length > 50) {
+            bentoClass += ' bento-tall';
+          }
           
           return `
-            <div class="bento-card ${isLarge}">
+            <div class="bento-card ${bentoClass}" onclick="window.location.href='/question.html?id=${q.id}'">
               <div>
                 ${q.game_tag ? `<div class="mb-1"><span class="tag">${escapeHtml(q.game_tag)}</span></div>` : ''}
-                <div class="card-title"><a href="/question.html?id=${q.id}">${escapeHtml(q.title)}</a></div>
+                <div class="card-title"><a>${escapeHtml(q.title)}</a></div>
                 <div class="card-excerpt">${escapeHtml(q.content)}</div>
               </div>
               
@@ -102,7 +105,9 @@
                 <div class="flex" style="gap: 0.5rem; align-items: center;">
                   <span class="text-muted" style="font-size: 0.85rem">💬 ${q.answer_count}</span>
                   <div class="vote-section">
-                    <span class="vote-count">▲ ${q.vote_count}</span>
+                    <button class="vote-btn" onclick="voteQuestion(${q.id}, 1, event)">▲</button>
+                    <span class="vote-count">${q.vote_count}</span>
+                    <button class="vote-btn" onclick="voteQuestion(${q.id}, -1, event)">▼</button>
                   </div>
                 </div>
               </div>
@@ -128,6 +133,21 @@
         loadQuestions();
       } catch (err) {
         alert('發布失敗: ' + err.message);
+      }
+    }
+
+    async function voteQuestion(id, value, event) {
+      event.stopPropagation(); // 防止點擊投票時觸發卡片跳轉
+      if (!window.api.getUser()) {
+        alert('請先登入才能投票喔！');
+        window.location.href = '/login.html';
+        return;
+      }
+      try {
+        await window.api.vote('question', id, value);
+        loadQuestions(); // 重新載入更新票數
+      } catch (err) {
+        alert('投票失敗: ' + err.message);
       }
     }
 

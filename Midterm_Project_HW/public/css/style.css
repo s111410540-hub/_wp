@@ -216,6 +216,7 @@ input:focus, textarea:focus {
   box-shadow: 0 20px 40px -10px rgba(139, 90, 43, 0.08); /* 柔和且擴散度高的浮空陰影 */
   border: 1px solid rgba(230, 213, 195, 0.3); /* 極淡的邊框 */
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
 }
 
 .bento-card:hover {
@@ -230,8 +231,13 @@ input:focus, textarea:focus {
   grid-row: span 2;
 }
 
+.bento-card.bento-tall {
+  grid-row: span 2;
+}
+
 @media (max-width: 900px) {
   .bento-card.bento-large { grid-column: span 1; grid-row: span 1; }
+  .bento-card.bento-tall { grid-row: span 1; }
 }
 
 .card {
@@ -296,7 +302,7 @@ input:focus, textarea:focus {
 .vote-section {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.5rem;
   background: rgba(139, 90, 43, 0.05);
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
@@ -309,10 +315,11 @@ input:focus, textarea:focus {
   cursor: pointer;
   font-size: 1.2rem;
   transition: color 0.2s;
+  padding: 0 0.25rem;
 }
 
 .vote-btn:hover { color: var(--primary); }
-.vote-count { font-size: 1rem; font-weight: bold; color: var(--primary); }
+.vote-count { font-size: 1rem; font-weight: bold; color: var(--primary); min-width: 1rem; text-align: center; }
 
 .question-layout { display: flex; align-items: flex-start; gap: 1rem; }
 .content-section { flex: 1; }
