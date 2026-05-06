@@ -64,6 +64,7 @@
               <div class="meta flex-between">
                 <div>
                   <span>作者: <a href="/profile.html?id=${q.user_id}" style="color: var(--primary); text-decoration: none; font-weight: 500;">${escapeHtml(q.username)}</a></span>
+                  ${q.user_badge ? `<span class="user-badge badge-lvl-${q.user_badge.level}">${q.user_badge.title}</span>` : ''}
                   <span>時間: ${formatDate(q.created_at)}</span>
                   ${q.game_tag ? `<span class="tag">${escapeHtml(q.game_tag)}</span>` : ''}
                 </div>
@@ -123,6 +124,7 @@
               <div class="meta flex-between">
                 <div>
                   <span>作者: <a href="/profile.html?id=${a.user_id}" style="color: var(--primary); text-decoration: none; font-weight: 500;">${escapeHtml(a.username)}</a></span>
+                  ${a.user_badge ? `<span class="user-badge badge-lvl-${a.user_badge.level}">${a.user_badge.title}</span>` : ''}
                   <span>時間: ${formatDate(a.created_at)}</span>
                   ${a.is_accepted ? '<span class="accepted-badge">最佳解答 ✓</span>' : ''}
                 </div>

@@ -1,3 +1,5 @@
+import { getBadge } from '../../utils.js';
+
 export async function onRequestGet(context) {
   const { env, params } = context;
   const id = params.id;
@@ -16,6 +18,28 @@ export async function onRequestGet(context) {
     const { results: answers } = await env.DB.prepare(
       "SELECT a.*, u.username FROM answers a JOIN users u ON a.user_id = u.id WHERE a.question_id = ? ORDER BY a.is_accepted DESC, a.vote_count DESC, a.created_at ASC"
     ).bind(id).all();
+
+    // Calculate badges
+    const userIds = [...new Set([question.user_id, ...answers.map(a => a.user_id)])];
+    if (userIds.length > 0) {
+      const placeholders = userIds.map(() => '?').join(',');
+      const userVotes = await env.DB.prepare(`
+        SELECT u.id as user_id, 
+          COALESCE((SELECT SUM(vote_count) FROM questions WHERE user_id = u.id), 0) + 
+          COALESCE((SELECT SUM(vote_count) FROM answers WHERE user_id = u.id), 0) as total_votes
+        FROM users u WHERE id IN (${placeholders})
+      `).bind(...userIds).all();
+      
+      const badgeMap = {};
+      for (const row of userVotes.results) {
+        badgeMap[row.user_id] = getBadge(row.total_votes);
+      }
+      
+      question.user_badge = badgeMap[question.user_id];
+      for (const a of answers) {
+        a.user_badge = badgeMap[a.user_id];
+      }
+    }
     
     return new Response(JSON.stringify({ question, answers }), { status: 200 });
   } catch (e) {

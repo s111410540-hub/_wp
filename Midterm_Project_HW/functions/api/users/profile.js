@@ -1,3 +1,5 @@
+import { getBadge } from '../utils.js';
+
 export async function onRequestGet(context) {
   const { request, env, data } = context;
   const user = data.user;
@@ -30,6 +32,8 @@ export async function onRequestGet(context) {
       accepted_count: accCount.c,
       total_votes: totalVotes
     };
+
+    userInfo.badge = getBadge(totalVotes);
 
     // List Data based on Tab
     let listData = [];

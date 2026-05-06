@@ -76,3 +76,16 @@ export async function verifyJWT(token, secret) {
     return null;
   }
 }
+
+export function getBadge(totalVotes) {
+  if (totalVotes >= 100000) return { title: '榮耀大神',     level: 10 };
+  if (totalVotes >= 50000)  return { title: '全服第一',     level: 9  };
+  if (totalVotes >= 20000)  return { title: '職業選手',     level: 8  };
+  if (totalVotes >= 10000)  return { title: '天榜高手',     level: 7  };
+  if (totalVotes >= 5000)   return { title: '神之領域居民', level: 6  };
+  if (totalVotes >= 1000)   return { title: '菁英冒險者',   level: 5  };
+  if (totalVotes >= 500)    return { title: '熟練玩家',     level: 4  };
+  if (totalVotes >= 200)    return { title: '進階玩家',     level: 3  };
+  if (totalVotes >= 50)     return { title: '見習冒險者',   level: 2  };
+  return                           { title: '新手玩家',     level: 1  };
+}

@@ -1,4 +1,4 @@
-import { verifyJWT } from '../../utils.js';
+import { verifyJWT, getBadge } from '../../utils.js';
 
 export async function onRequestGet(context) {
   const { request, env, params } = context;
@@ -25,11 +25,22 @@ export async function onRequestGet(context) {
       'SELECT COUNT(*) as count FROM answers WHERE user_id = ?'
     ).bind(id).first();
 
+    // 取得他的總讚數
+    const qVotes = await env.DB.prepare("SELECT SUM(vote_count) as s FROM questions WHERE user_id = ?").bind(id).first();
+    const aVotes = await env.DB.prepare("SELECT SUM(vote_count) as s FROM answers WHERE user_id = ?").bind(id).first();
+    const totalVotes = (qVotes?.s || 0) + (aVotes?.s || 0);
+
+    const badge = getBadge(totalVotes);
+
     return Response.json({
       success: true,
-      user,
+      user: {
+        ...user,
+        badge
+      },
       questions,
-      answer_count: answerCount.count
+      answer_count: answerCount.count,
+      total_votes: totalVotes
     });
 
   } catch (e) {

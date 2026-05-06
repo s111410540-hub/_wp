@@ -398,12 +398,41 @@ textarea:focus {
 .vote-btn {
   background: none;
   border: none;
-  color: var(--text-muted);
+  font-family: inherit;
+  font-size: inherit;
   cursor: pointer;
-  font-size: 1.2rem;
-  transition: color 0.2s;
-  padding: 0 0.25rem;
+  border-radius: 4px;
 }
+
+/* 聲望稱號與徽章系統 */
+.user-badge {
+  display: inline-block;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+.badge-lvl-10 {
+  background: linear-gradient(45deg, #ffd700, #ff8c00);
+  color: white;
+  animation: glow-gold 1.5s infinite alternate;
+  box-shadow: 0 0 5px #ffd700;
+}
+@keyframes glow-gold {
+  0% { box-shadow: 0 0 5px #ffd700; }
+  100% { box-shadow: 0 0 15px #ffd700, 0 0 5px #ff8c00; }
+}
+.badge-lvl-9 { background: #d50000; color: white; }
+.badge-lvl-8 { background: #ff1744; color: white; }
+.badge-lvl-7 { background: #9c27b0; color: white; }
+.badge-lvl-6 { background: #ab47bc; color: white; }
+.badge-lvl-5 { background: #29b6f6; color: white; }
+.badge-lvl-4 { background: #2196f3; color: white; }
+.badge-lvl-3 { background: #4caf50; color: white; }
+.badge-lvl-2 { background: #81c784; color: white; }
+.badge-lvl-1 { background: #e0e0e0; color: #757575; }
 
 .vote-btn:hover {
   color: var(--primary);

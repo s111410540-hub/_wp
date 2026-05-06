@@ -144,7 +144,10 @@
               <div class="flex" style="gap: 2rem; align-items: center;">
                 <div class="profile-avatar">${initial}</div>
                 <div>
-                  <h1 style="margin-bottom: 0.5rem;">${escapeHtml(data.user.username)}</h1>
+                  <h1 style="margin-bottom: 0.5rem; display: flex; align-items: center;">
+                    ${escapeHtml(data.user.username)}
+                    ${data.user.badge ? `<span class="user-badge badge-lvl-${data.user.badge.level}">${data.user.badge.title}</span>` : ''}
+                  </h1>
                   <div class="text-muted" style="margin-bottom: 0.5rem;">註冊於 ${formatDate(data.user.created_at)}</div>
                 </div>
               </div>
@@ -187,7 +190,10 @@
         <div class="profile-header">
           <div class="profile-avatar">${initial}</div>
           <div>
-            <h1 style="margin-bottom: 0.5rem;">${escapeHtml(user.username)}</h1>
+            <h1 style="margin-bottom: 0.5rem; display: flex; align-items: center;">
+              ${escapeHtml(user.username)}
+              ${user.badge ? `<span class="user-badge badge-lvl-${user.badge.level}">${user.badge.title}</span>` : ''}
+            </h1>
             <div class="text-muted" style="margin-bottom: 0.5rem;">註冊於 ${formatDate(user.created_at)}</div>
             <div style="font-weight: 600; color: var(--primary)">⭐ 聲望分數: ${user.reputation}</div>
           </div>

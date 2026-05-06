@@ -1,3 +1,5 @@
+import { getBadge } from '../utils.js';
+
 export async function onRequestGet(context) {
   const { request, env } = context;
   const url = new URL(request.url);
@@ -49,6 +51,27 @@ export async function onRequestGet(context) {
     if (dataParams.length > 0) dataStmt = dataStmt.bind(...dataParams);
     
     const { results } = await dataStmt.all();
+
+    if (results.length > 0) {
+      const userIds = [...new Set(results.map(q => q.user_id))];
+      const placeholders = userIds.map(() => '?').join(',');
+      
+      const userVotes = await env.DB.prepare(`
+        SELECT u.id as user_id, 
+          COALESCE((SELECT SUM(vote_count) FROM questions WHERE user_id = u.id), 0) + 
+          COALESCE((SELECT SUM(vote_count) FROM answers WHERE user_id = u.id), 0) as total_votes
+        FROM users u WHERE id IN (${placeholders})
+      `).bind(...userIds).all();
+      
+      const badgeMap = {};
+      for (const row of userVotes.results) {
+        badgeMap[row.user_id] = getBadge(row.total_votes);
+      }
+      
+      for (const q of results) {
+        q.user_badge = badgeMap[q.user_id];
+      }
+    }
     
     return new Response(JSON.stringify({ 
       results,
