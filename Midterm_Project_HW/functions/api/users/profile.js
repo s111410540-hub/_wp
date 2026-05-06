@@ -1,9 +1,9 @@
-import { getBadge } from '../utils.js';
+import { getBadge } from '../../utils.js';
 
 export async function onRequestGet(context) {
   const { request, env, data } = context;
   const user = data.user;
-  
+
   if (!user) {
     return new Response(JSON.stringify({ error: '請先登入' }), { status: 401 });
   }
@@ -20,7 +20,7 @@ export async function onRequestGet(context) {
     const qCount = await env.DB.prepare("SELECT COUNT(*) as c FROM questions WHERE user_id = ?").bind(user.id).first();
     const aCount = await env.DB.prepare("SELECT COUNT(*) as c FROM answers WHERE user_id = ?").bind(user.id).first();
     const accCount = await env.DB.prepare("SELECT COUNT(*) as c FROM answers WHERE user_id = ? AND is_accepted = 1").bind(user.id).first();
-    
+
     // Total Votes Received (Questions + Answers)
     const qVotes = await env.DB.prepare("SELECT SUM(vote_count) as s FROM questions WHERE user_id = ?").bind(user.id).first();
     const aVotes = await env.DB.prepare("SELECT SUM(vote_count) as s FROM answers WHERE user_id = ?").bind(user.id).first();
@@ -60,10 +60,10 @@ export async function onRequestGet(context) {
       listData = res.results;
     }
 
-    return new Response(JSON.stringify({ 
-      user: userInfo, 
-      stats, 
-      list: listData 
+    return new Response(JSON.stringify({
+      user: userInfo,
+      stats,
+      list: listData
     }), { status: 200 });
 
   } catch (e) {
