@@ -87,6 +87,7 @@
         <button class="tab-btn active" id="tab-questions" onclick="switchTab('questions')">我的問題</button>
         <button class="tab-btn" id="tab-answers" onclick="switchTab('answers')">我的回答</button>
         <button class="tab-btn" id="tab-votes" onclick="switchTab('votes')">投票紀錄</button>
+        <button class="tab-btn" id="tab-listings" onclick="switchTab('listings')">我的掛單</button>
       </div>
       
       <div id="list-container">
@@ -107,9 +108,19 @@
 
     async function loadProfile() {
       try {
-        const data = await window.api.getUserProfile(currentTab);
-        renderHeader(data.user, data.stats);
-        renderList(data.list);
+        if (currentTab === 'listings') {
+          const user = window.api.getUser();
+          const [profileData, listingsData] = await Promise.all([
+            window.api.getUserProfile('questions'),
+            window.api.getListings('', '', user.id)
+          ]);
+          renderHeader(profileData.user, profileData.stats);
+          renderList(listingsData.results);
+        } else {
+          const data = await window.api.getUserProfile(currentTab);
+          renderHeader(data.user, data.stats);
+          renderList(data.list);
+        }
       } catch (err) {
         alert('載入失敗: ' + err.message);
       }
@@ -211,6 +222,23 @@
               <div class="card-title" style="font-size: 1.1rem;">
                 <a>${escapeHtml(contextTitle)}</a>
               </div>
+            </div>
+          `;
+        }).join('') + `</div>`;
+      } else if (currentTab === 'listings') {
+        container.innerHTML = `<div class="bento-grid">` + list.map((l, index) => {
+          const typeColor = l.type === '出售' ? 'var(--primary)' : 'var(--success)';
+          return `
+            <div class="bento-card" onclick="window.location.href='/material.html?id=${l.material_id}'" style="padding: 1.5rem; animation-delay: ${index * 0.05}s">
+              <div style="font-size: 0.85rem; font-weight: bold; color: ${typeColor}; margin-bottom: 0.5rem;">[${l.type}] ${escapeHtml(l.material_name)}</div>
+              <div class="flex-between mt-2">
+                <span class="text-muted" style="font-size: 0.85rem">${formatDate(l.created_at)}</span>
+                <div class="flex" style="gap: 1rem;">
+                  <span class="text-muted" style="font-size: 0.85rem">數量: ${l.quantity}</span>
+                  <span style="font-weight: bold; color: var(--primary);">${l.price.toLocaleString()} G</span>
+                </div>
+              </div>
+              ${l.status !== 'active' ? `<div style="margin-top:0.5rem; font-size:0.85rem; color:var(--danger)">狀態: ${l.status}</div>` : ''}
             </div>
           `;
         }).join('') + `</div>`;

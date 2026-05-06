@@ -5,6 +5,7 @@ export async function onRequestGet(context) {
   const url = new URL(request.url);
   const material_id = url.searchParams.get('material_id');
   const type = url.searchParams.get('type');
+  const seller_id = url.searchParams.get('seller_id');
 
   try {
     let query = `
@@ -12,9 +13,16 @@ export async function onRequestGet(context) {
       FROM listings l
       JOIN users u ON l.seller_id = u.id
       JOIN materials m ON l.material_id = m.id
-      WHERE l.status = 'active'
+      WHERE 1=1
     `;
     const params = [];
+
+    if (seller_id) {
+      query += ' AND l.seller_id = ?';
+      params.push(seller_id);
+    } else {
+      query += " AND l.status = 'active'";
+    }
 
     if (material_id) {
       query += ' AND l.material_id = ?';

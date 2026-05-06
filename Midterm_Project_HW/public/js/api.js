@@ -80,10 +80,11 @@ class Api {
     return await this.request(url);
   }
 
-  async getListings(material_id = '', type = '') {
+  async getListings(material_id = '', type = '', seller_id = '') {
     let params = new URLSearchParams();
     if (material_id) params.append('material_id', material_id);
     if (type) params.append('type', type);
+    if (seller_id) params.append('seller_id', seller_id);
     const qs = params.toString();
     const url = qs ? `/listings?${qs}` : '/listings';
     return await this.request(url);
