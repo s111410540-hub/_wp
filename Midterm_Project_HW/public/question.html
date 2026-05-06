@@ -63,7 +63,7 @@
               <p id="q-display-content" style="white-space: pre-wrap; font-size: 1.1rem; margin-bottom: 1rem;">${escapeHtml(q.content)}</p>
               <div class="meta flex-between">
                 <div>
-                  <span>作者: ${escapeHtml(q.username)}</span>
+                  <span>作者: <a href="/profile.html?id=${q.user_id}" style="color: var(--primary); text-decoration: none; font-weight: 500;">${escapeHtml(q.username)}</a></span>
                   <span>時間: ${formatDate(q.created_at)}</span>
                   ${q.game_tag ? `<span class="tag">${escapeHtml(q.game_tag)}</span>` : ''}
                 </div>
@@ -122,7 +122,7 @@
               <p style="white-space: pre-wrap; margin-bottom: 1rem;">${escapeHtml(a.content)}</p>
               <div class="meta flex-between">
                 <div>
-                  <span>作者: ${escapeHtml(a.username)}</span>
+                  <span>作者: <a href="/profile.html?id=${a.user_id}" style="color: var(--primary); text-decoration: none; font-weight: 500;">${escapeHtml(a.username)}</a></span>
                   <span>時間: ${formatDate(a.created_at)}</span>
                   ${a.is_accepted ? '<span class="accepted-badge">最佳解答 ✓</span>' : ''}
                 </div>

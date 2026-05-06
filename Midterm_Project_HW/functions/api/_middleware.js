@@ -14,9 +14,17 @@ export async function onRequest(context) {
     return next();
   }
   
-  // GET requests to questions don't need auth
-  if (request.method === 'GET' && url.pathname.startsWith('/api/questions')) {
-    return next();
+  // Public GET requests
+  if (request.method === 'GET') {
+    const isPublicGet = 
+      url.pathname.startsWith('/api/questions') ||
+      url.pathname.startsWith('/api/materials') ||
+      url.pathname.startsWith('/api/listings') ||
+      (url.pathname.startsWith('/api/users/') && !url.pathname.startsWith('/api/users/profile'));
+      
+    if (isPublicGet) {
+      return next();
+    }
   }
 
   // All other /api/* routes require auth

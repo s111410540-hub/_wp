@@ -99,30 +99,85 @@
   <script src="/js/api.js"></script>
   <script src="/js/app.js"></script>
   <script>
-    if (!window.api.getUser()) {
-      alert('請先登入');
-      window.location.href = '/login.html';
-    }
-
     let currentTab = 'questions';
+    const urlParams = new URLSearchParams(window.location.search);
+    const profileId = urlParams.get('id');
 
     async function loadProfile() {
-      try {
-        if (currentTab === 'listings') {
-          const user = window.api.getUser();
-          const [profileData, listingsData] = await Promise.all([
-            window.api.getUserProfile('questions'),
-            window.api.getListings('', '', user.id)
-          ]);
-          renderHeader(profileData.user, profileData.stats);
-          renderList(listingsData.results);
-        } else {
-          const data = await window.api.getUserProfile(currentTab);
-          renderHeader(data.user, data.stats);
-          renderList(data.list);
+      const myUser = window.api.getUser();
+      const isMyProfile = !profileId || (myUser && myUser.id == profileId);
+
+      if (isMyProfile) {
+        if (!myUser) {
+          alert('請先登入');
+          window.location.href = '/login.html';
+          return;
         }
-      } catch (err) {
-        alert('載入失敗: ' + err.message);
+        document.querySelector('.tabs').style.display = 'flex';
+        try {
+          if (currentTab === 'listings') {
+            const [profileData, listingsData] = await Promise.all([
+              window.api.getUserProfile('questions'),
+              window.api.getListings('', '', myUser.id)
+            ]);
+            renderHeader(profileData.user, profileData.stats);
+            renderList(listingsData.results);
+          } else {
+            const data = await window.api.getUserProfile(currentTab);
+            renderHeader(data.user, data.stats);
+            renderList(data.list);
+          }
+        } catch (err) {
+          alert('載入失敗: ' + err.message);
+        }
+      } else {
+        // Load other user's profile
+        document.querySelector('.tabs').style.display = 'none';
+        try {
+          const res = await fetch(`/api/users/${profileId}`);
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+
+          const initial = data.user.username.charAt(0).toUpperCase();
+          document.getElementById('profile-container').innerHTML = `
+            <div class="profile-header flex-between">
+              <div class="flex" style="gap: 2rem; align-items: center;">
+                <div class="profile-avatar">${initial}</div>
+                <div>
+                  <h1 style="margin-bottom: 0.5rem;">${escapeHtml(data.user.username)}</h1>
+                  <div class="text-muted" style="margin-bottom: 0.5rem;">註冊於 ${formatDate(data.user.created_at)}</div>
+                </div>
+              </div>
+              <div>
+                <button class="btn" onclick="window.location.href='/messages.html?user=${profileId}'">💬 傳送私訊</button>
+              </div>
+            </div>
+            <div class="profile-stats-grid">
+              <div class="stat-box slide-up">
+                <div class="stat-value">${data.questions.length}</div>
+                <div class="stat-label">發佈問題</div>
+              </div>
+              <div class="stat-box slide-up" style="animation-delay: 0.1s">
+                <div class="stat-value">${data.answer_count}</div>
+                <div class="stat-label">回答總數</div>
+              </div>
+            </div>
+          `;
+
+          const container = document.getElementById('list-container');
+          if (data.questions.length === 0) {
+            container.innerHTML = '<p class="text-center text-muted mt-2">目前沒有發布過問題</p>';
+          } else {
+            container.innerHTML = `<h3 class="mb-1 mt-2">最新發布的問題</h3><div class="bento-grid">` + data.questions.map((q, index) => `
+              <div class="bento-card" onclick="window.location.href='/question.html?id=${q.id}'" style="padding: 1.5rem; animation-delay: ${index * 0.05}s">
+                <div class="card-title"><a>${escapeHtml(q.title)}</a></div>
+                <div class="text-muted mt-2" style="font-size: 0.85rem">${formatDate(q.created_at)}</div>
+              </div>
+            `).join('') + `</div>`;
+          }
+        } catch (err) {
+          alert('載入失敗: ' + err.message);
+        }
       }
     }
 

@@ -164,7 +164,7 @@
               
               <div class="flex-between mt-2" style="border-top: 1px solid var(--border); padding-top: 1rem;">
                 <div class="meta">
-                  <span style="font-weight: 500; color: var(--text-main)">${escapeHtml(q.username)}</span>
+                  <a href="/profile.html?id=${q.user_id}" style="font-weight: 500; color: var(--primary); text-decoration: none;">${escapeHtml(q.username)}</a>
                   <span>• ${formatDate(q.created_at)}</span>
                   ${q.is_solved ? '<span class="accepted-badge">已解決 ✓</span>' : ''}
                 </div>
