@@ -272,7 +272,7 @@
             const btnColor = isBuy ? 'var(--primary)' : 'var(--success)';
             actionHtml = `
               <div style="margin-top: 0.5rem; text-align: right;">
-                <button class="btn btn-small" style="background:${btnColor}; border:none; color:white;" onclick="respondToTrade(${l.id}, '${escapeHtml(l.seller_name)}')">${btnText}</button>
+                <button class="btn btn-small" style="background:${btnColor}; border:none; color:white;" onclick="respondToTrade('${escapeHtml(l.seller_name)}', ${l.seller_id})">${btnText}</button>
               </div>
             `;
           } else {
@@ -359,9 +359,16 @@
       }
     }
 
-    function respondToTrade(id, sellerName) {
-      // 這裡採用簡單的 Alert 模擬發送請求，未來可以擴充為系統站內信或直接扣除金幣
-      alert(`已向 ${sellerName} 發送交易請求！\n系統已透過遊戲內信箱通知對方，請留意回覆。`);
+    async function respondToTrade(sellerName, sellerId) {
+      if(confirm(`確定要向 ${sellerName} 發送私訊交易請求嗎？`)) {
+        try {
+          await window.api.sendMessage(sellerId, '你好，我對你的掛單很感興趣，希望能與你交易！');
+          alert('私訊發送成功！');
+          window.location.href = `/messages.html?user=${sellerId}`;
+        } catch(e) {
+          alert('發送失敗: ' + e.message);
+        }
+      }
     }
 
     window.addEventListener('load', loadData);

@@ -3,6 +3,58 @@ document.addEventListener('DOMContentLoaded', () => {
   renderHistory();
 });
 
+class MessagePoller {
+  constructor() {
+    this.timer = null;
+    this.lastCount = 0;
+  }
+
+  start() {
+    this.check();
+    this.timer = setInterval(() => this.check(), 3000);
+  }
+
+  stop() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  }
+
+  async check() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const res = await fetch('/api/messages/unread', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      if (data.count > this.lastCount) {
+        this.showBadge(data.count);
+      } else if (data.count === 0) {
+        this.showBadge(0);
+      }
+
+      this.lastCount = data.count;
+    } catch (e) { }
+  }
+
+  showBadge(count) {
+    const badge = document.getElementById('message-badge');
+    if (badge) {
+      badge.textContent = count;
+      badge.style.display = count > 0 ? 'inline' : 'none';
+    }
+  }
+}
+
+const poller = new MessagePoller();
+// Start poller globally so badge updates everywhere
+poller.start();
+window.addEventListener('beforeunload', () => poller.stop());
+
 function renderLayout() {
   const appRoot = document.getElementById('app-root');
   if (!appRoot) return;
@@ -31,6 +83,7 @@ function renderLayout() {
       <a class="nav-item" onclick="navigateTag('公會榜')">♜ 公會榜</a>
       <a class="nav-item" onclick="navigateTag('天榜')">♚ 天榜(個人排名)</a>
       <a class="nav-item" onclick="navigateTag('材料交易區')">❖ 材料交易區</a>
+      <a class="nav-item" onclick="window.location.href='/messages.html'">💬 私訊信箱 <span id="message-badge" style="display:none; background:var(--danger); color:white; border-radius:10px; padding:2px 6px; font-size:12px; margin-left:5px;">0</span></a>
       <a class="nav-item" onclick="navigateTag('周本boss')">☠ 周本情報區</a>
       <a class="nav-item" onclick="navigateTag('野圖boss')">♞ 野圖boss情報</a>
       <a class="nav-item" onclick="navigateTag('公會戰')">⚑ 公會戰情報</a>

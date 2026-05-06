@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>私訊信箱 - Glory 攻略討論版</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .chat-layout {
+      display: flex;
+      height: 75vh;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+    
+    .chat-sidebar {
+      width: 300px;
+      border-right: 1px solid #f5f5f7;
+      display: flex;
+      flex-direction: column;
+      background: #fafafc;
+    }
+    .chat-sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #f5f5f7;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .conv-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .conv-item {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #f5f5f7;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .conv-item:hover { background: #f0f0f5; }
+    .conv-item.active { background: #fff; border-left: 4px solid var(--primary); }
+    .conv-name { font-weight: 600; margin-bottom: 0.25rem; }
+    .conv-last { font-size: 0.85rem; color: #86868b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .unread-dot {
+      background: var(--danger);
+      color: white;
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
+      position: absolute;
+      right: 1.5rem;
+      top: 1rem;
+      font-weight: bold;
+    }
+
+    .chat-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: white;
+    }
+    .chat-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #f5f5f7;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .msg-list {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .msg-bubble {
+      max-width: 70%;
+      padding: 0.8rem 1.2rem;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .msg-mine {
+      background: var(--primary);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .msg-theirs {
+      background: #f5f5f7;
+      color: #1d1d1f;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .msg-time {
+      font-size: 0.7rem;
+      margin-top: 0.25rem;
+      opacity: 0.7;
+    }
+    .msg-mine .msg-time { text-align: right; }
+
+    .chat-input-area {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #f5f5f7;
+      display: flex;
+      gap: 1rem;
+      background: #fafafc;
+    }
+    .chat-input-area input {
+      flex: 1;
+      padding: 0.8rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      outline: none;
+    }
+    .chat-input-area button {
+      border-radius: 999px;
+      padding: 0.8rem 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout" id="app-root">
+    <main class="main-content">
+      <h1 style="margin-bottom:0">私訊信箱</h1>
+      
+      <div class="chat-layout slide-up">
+        <div class="chat-sidebar">
+          <div class="chat-sidebar-header">對話列表</div>
+          <div class="conv-list" id="conv-list">
+            <div style="padding: 1.5rem; color:#86868b; text-align:center;">載入中...</div>
+          </div>
+        </div>
+        
+        <div class="chat-main">
+          <div class="chat-header" id="chat-header">選擇一個對話開始聊天</div>
+          <div class="msg-list" id="msg-list">
+            <!-- Messages go here -->
+          </div>
+          <div class="chat-input-area" id="chat-input-area" style="display:none">
+            <input type="text" id="msg-input" placeholder="輸入訊息..." onkeypress="if(event.key === 'Enter') sendMsg()">
+            <button class="btn" onclick="sendMsg()">傳送</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    let activeUserId = null;
+    let currentUser = null;
+
+    async function loadData() {
+      currentUser = window.api.getUser();
+      if(!currentUser) {
+        alert('請先登入');
+        window.location.href = '/login.html';
+        return;
+      }
+      await loadConversations();
+      
+      // Auto open if url param ?user=X
+      const urlParams = new URLSearchParams(window.location.search);
+      const userParam = urlParams.get('user');
+      if(userParam) {
+        openChat(parseInt(userParam), '用戶 ' + userParam);
+      }
+    }
+
+    async function loadConversations() {
+      try {
+        const data = await window.api.getConversations();
+        const list = document.getElementById('conv-list');
+        
+        if(!data.results || data.results.length === 0) {
+          list.innerHTML = '<div style="padding: 1.5rem; color:#86868b; text-align:center;">目前沒有對話</div>';
+          return;
+        }
+
+        list.innerHTML = data.results.map(c => `
+          <div class="conv-item ${c.user_id === activeUserId ? 'active' : ''}" onclick="openChat(${c.user_id}, '${escapeHtml(c.username)}')">
+            <div class="conv-name">${escapeHtml(c.username)}</div>
+            <div class="conv-last">${escapeHtml(c.last_message)}</div>
+            ${c.unread_count > 0 ? `<div class="unread-dot">${c.unread_count}</div>` : ''}
+          </div>
+        `).join('');
+        
+        // Ensure badge gets cleared visually if all read
+        if(window.poller) window.poller.check();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function openChat(userId, username) {
+      activeUserId = userId;
+      document.getElementById('chat-header').innerText = '與 ' + username + ' 的對話';
+      document.getElementById('chat-input-area').style.display = 'flex';
+      
+      // Highlight active in list
+      document.querySelectorAll('.conv-item').forEach(item => item.classList.remove('active'));
+      
+      const list = document.getElementById('msg-list');
+      list.innerHTML = '<div style="text-align:center; color:#86868b;">載入中...</div>';
+      
+      try {
+        const data = await window.api.getMessages(userId);
+        if(data.results.length === 0) {
+          list.innerHTML = '<div style="text-align:center; color:#86868b; margin-top:2rem;">還沒有對話紀錄，傳個訊息打招呼吧！</div>';
+        } else {
+          list.innerHTML = data.results.map(m => {
+            const isMine = m.sender_id === currentUser.id;
+            return `
+              <div class="msg-bubble ${isMine ? 'msg-mine' : 'msg-theirs'}">
+                <div>${escapeHtml(m.content)}</div>
+                <div class="msg-time">${formatDate(m.created_at)}</div>
+              </div>
+            `;
+          }).join('');
+          
+          // Scroll to bottom
+          list.scrollTop = list.scrollHeight;
+        }
+        
+        // Refresh list to clear unread dots
+        loadConversations();
+      } catch (e) {
+        list.innerHTML = '載入失敗';
+      }
+    }
+
+    async function sendMsg() {
+      const input = document.getElementById('msg-input');
+      const text = input.value.trim();
+      if(!text || !activeUserId) return;
+      
+      input.value = '';
+      try {
+        await window.api.sendMessage(activeUserId, text);
+        openChat(activeUserId, document.getElementById('chat-header').innerText.replace('與 ','').replace(' 的對話',''));
+      } catch(e) {
+        alert(e.message);
+      }
+    }
+
+    // Refresh chat automatically if active
+    setInterval(() => {
+      if(activeUserId) {
+        // Soft refresh without loading indicator
+        window.api.getMessages(activeUserId).then(data => {
+          const list = document.getElementById('msg-list');
+          // Only re-render if count changed (basic check)
+          if(data.results.length > list.children.length) {
+            list.innerHTML = data.results.map(m => {
+              const isMine = m.sender_id === currentUser.id;
+              return `
+                <div class="msg-bubble ${isMine ? 'msg-mine' : 'msg-theirs'}">
+                  <div>${escapeHtml(m.content)}</div>
+                  <div class="msg-time">${formatDate(m.created_at)}</div>
+                </div>
+              `;
+            }).join('');
+            list.scrollTop = list.scrollHeight;
+            loadConversations();
+          }
+        });
+      }
+    }, 3000);
+
+    window.addEventListener('load', loadData);
+  </script>
+</body>
+</html>

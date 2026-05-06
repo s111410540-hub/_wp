@@ -109,6 +109,16 @@ class Api {
       method: 'DELETE'
     });
   }
+
+  // Messages
+  async getConversations() { return await this.request('/messages'); }
+  async getMessages(userId) { return await this.request(`/messages/${userId}`); }
+  async sendMessage(receiver_id, content) {
+    return await this.request('/messages', {
+      method: 'POST',
+      body: JSON.stringify({ receiver_id, content })
+    });
+  }
 }
 
 window.api = new Api();
